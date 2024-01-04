@@ -38,6 +38,19 @@ in
         };
       }];
     };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+
+    eza = {
+      enable = true;
+      enableAliases = true;
+      git = true;
+      icons = true;
+    };
+
     zellij = {
       enable = true;
       enableFishIntegration = true;

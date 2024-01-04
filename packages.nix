@@ -44,6 +44,8 @@ let
 
     # lua
     lua-language-server
+
+    direnv
   ];
 
   unixTools = with pkgs; [
