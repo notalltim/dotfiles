@@ -46,6 +46,16 @@ let
     lua-language-server
 
     direnv
+
+    # Tools
+    # wireshark needs a capability set on the dump cap file 
+
+    nixgl.nixVulkanIntel
+    nixgl.nixGLIntel
+    # nixgl.auto.nixVulkanNvidia
+    # nixgl.auto.nixGLNvidia
+    # nixgl.auto.nixGLNvidiaBumblebee
+
   ];
 
   unixTools = with pkgs; [

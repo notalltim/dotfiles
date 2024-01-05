@@ -73,7 +73,6 @@ in
         };
       };
     };
-
     fish = {
       enable = true;
       plugins = [
@@ -113,5 +112,8 @@ in
       enableFishIntegration = true;
       useTheme = "pure";
     };
+  };
+  gpg = {
+    enable = true;
   };
 }

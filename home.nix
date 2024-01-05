@@ -10,7 +10,7 @@ let
   configs = import ./programs { inherit pkgs; };
   file = configs.files;
 in
-{
+rec {
   home = {
     inherit homeDirectory packages stateVersion username file;
 
@@ -29,4 +29,5 @@ in
   };
   programs = configs.programs;
 
+  services = import ./services;
 }

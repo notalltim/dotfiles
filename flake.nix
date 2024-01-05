@@ -2,14 +2,22 @@
   description = "Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    system-manager = {
+      url = "github:numtide/system-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixgl = {
+      url = "github:guibou/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager }:
+  outputs = { self, nixpkgs, home-manager, system-manager, nixgl }:
     let
       # Values you should modify
       username = "tgallion"; # $USER
@@ -18,7 +26,7 @@
 
       pkgs = import nixpkgs {
         inherit system;
-
+        overlays = [ nixgl.overlays.default ];
         config = {
           allowUnfree = true;
         };
@@ -30,6 +38,7 @@
       home = (import ./home.nix {
         inherit homeDirectory pkgs stateVersion system username;
       });
+
     in
     {
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
@@ -39,5 +48,11 @@
           home
         ];
       };
+      # Disabled for now not used yet
+      # systemConfigs.default = system-manager.lib.makeSystemConfig {
+      #   modules = [
+      #     ./system
+      #   ];
+      # };
     };
 }
