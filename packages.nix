@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, internalLib, isHome ? false }:
 
 let
   nixTools = with pkgs; [
@@ -9,10 +9,17 @@ let
     # iragenix
   ];
   developerTools = with pkgs; [
-    gdb
+    (gdb.overrideAttrs (old: rec {
+      version = "14.1";
+      src = pkgs.fetchurl {
+        url = "mirror://gnu/gdb/gdb-${version}.tar.xz";
+        hash = "sha256-1m31EnYUNFH8v/RkzIcj1o8enfRaai1WNaVOcWQ+24A=";
+      };
+    }))
     python3
     git
-    clang-tools_17
+    clang-tools
+    valgrind
     pkg-config
     gnumake
     cmake
@@ -38,7 +45,6 @@ let
     bacon
     clippy
 
-
     # markdown
     marksman
 
@@ -55,11 +61,23 @@ let
     # nixgl.auto.nixVulkanNvidia
     # nixgl.auto.nixGLNvidia
     # nixgl.auto.nixGLNvidiaBumblebee
-
+    # kitty
+    tbb
   ];
 
-  unixTools = with pkgs; [
-    gnupg
+  unixTools = with pkgs; [ gnupg wget ];
+
+  guiTools = with pkgs; [ solaar spotify inkscape gimp vlc ];
+
+  homeTools = with pkgs; [
+    (internalLib.writeIntelGLWrapper kicad)
+    (internalLib.writeIntelGLWrapper freecad)
+    discord
+    radeontop
+    bitwarden
+    # musescore
+    audacity
   ];
-in
-nixTools ++ developerTools ++ unixTools
+  workTools = with pkgs; [ gnome.dconf-editor ];
+in nixTools ++ developerTools ++ unixTools ++ guiTools
+++ (if isHome then homeTools else workTools)

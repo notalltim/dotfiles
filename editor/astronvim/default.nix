@@ -1,12 +1,11 @@
-{ pkgs }:
-let
-  fs = pkgs.lib.fileset;
-  config = {
+{ config, pkgs, ... }:
+{
+  programs.neovim = {
     enable = true;
     defaultEditor = true;
   };
 
-  files = {
+  home.file = {
     ".config/nvim".source =
       (pkgs.stdenvNoCC.mkDerivation
         rec {
@@ -33,5 +32,4 @@ let
           '';
         }).outPath;
   };
-in
-{ inherit config; inherit files; }
+}

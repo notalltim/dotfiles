@@ -7,6 +7,6 @@
     system-manager.allowAnyDistro = true;
     # Not supported at the moment
     # programs.wireshark.enable = true;
-    nixpkgs.hostPlatform = "x86_64-linux";
+    # nixpkgs.hostPlatform = "x86_64-linux";
   };
 }
