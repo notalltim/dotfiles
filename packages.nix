@@ -1,5 +1,8 @@
-{ pkgs, internalLib, isHome ? false }:
-
+{ pkgs
+, internalLib
+, isHome ? false
+,
+}:
 let
   nixTools = with pkgs; [
     cachix
@@ -9,7 +12,7 @@ let
     # iragenix
   ];
   developerTools = with pkgs; [
-    (gdb.overrideAttrs (old: rec {
+    (gdb.overrideAttrs (_: rec {
       version = "14.1";
       src = pkgs.fetchurl {
         url = "mirror://gnu/gdb/gdb-${version}.tar.xz";
@@ -18,6 +21,7 @@ let
     }))
     python3
     git
+    git-filter-repo
     clang-tools
     valgrind
     pkg-config
@@ -54,7 +58,7 @@ let
     direnv
 
     # Tools
-    # wireshark needs a capability set on the dump cap file 
+    # wireshark needs a capability set on the dump cap file
 
     nixgl.nixVulkanIntel
     nixgl.nixGLIntel
@@ -65,9 +69,9 @@ let
     tbb
   ];
 
-  unixTools = with pkgs; [ gnupg wget ];
+  unixTools = with pkgs; [ gnupg wget htop ];
 
-  guiTools = with pkgs; [ solaar spotify inkscape gimp vlc ];
+  guiTools = with pkgs; [ solaar spotify inkscape gimp vlc obsidian ];
 
   homeTools = with pkgs; [
     (internalLib.writeIntelGLWrapper kicad)
@@ -78,6 +82,14 @@ let
     # musescore
     audacity
   ];
-  workTools = with pkgs; [ gnome.dconf-editor ];
-in nixTools ++ developerTools ++ unixTools ++ guiTools
-++ (if isHome then homeTools else workTools)
+  workTools = with pkgs; [ gnome.dconf-editor onedrive intel-gpu-tools ];
+in
+nixTools
+++ developerTools
+++ unixTools
+++ guiTools
+++ (
+  if isHome
+  then homeTools
+  else workTools
+)

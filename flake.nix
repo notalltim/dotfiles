@@ -17,7 +17,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, system-manager, nixgl }:
+  outputs =
+    { nixpkgs
+    , home-manager
+    , nixgl
+    , system-manager
+    , ...
+    }:
     let
       home = {
         username = "tgallion";
@@ -32,6 +38,7 @@
         system = "x86_64-linux";
         stateVersion = "23.11";
         email = "tgallion@anduril.com";
+        signingKey = "";
       };
 
       createConfig = attrs:
@@ -41,29 +48,41 @@
           pkgs = import nixpkgs {
             inherit system;
             overlays = [ nixgl.overlays.default ];
-            config = { allowUnfree = true; };
+            config = {
+              allowUnfree = true;
+              permittedInsecurePackages = [
+                "electron-25.9.0"
+              ];
+            };
           };
 
           homeDirectory = "/home/${attrs.username}";
 
-          module = with attrs;
-            (import ./home.nix {
-              inherit homeDirectory pkgs stateVersion system username email
-                signingKey;
-            });
-        in home-manager.lib.homeManagerConfiguration {
+          module = with attrs; (import ./home.nix {
+            inherit
+              homeDirectory
+              pkgs
+              stateVersion
+              system
+              username
+              email
+              signingKey
+              ;
+          });
+        in
+        home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ module ];
         };
-
-    in {
+    in
+    {
       homeConfigurations.${home.username} = createConfig home;
       homeConfigurations.${work.username} = createConfig work;
       # Disabled for now not used yet
-      # systemConfigs.default = system-manager.lib.makeSystemConfig {
-      #   modules = [
-      #     ./system
-      #   ];
-      # };
+      systemConfigs.default = system-manager.lib.makeSystemConfig {
+        modules = [
+          ./system
+        ];
+      };
     };
 }

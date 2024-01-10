@@ -1,20 +1,33 @@
-{ homeDirectory, pkgs, stateVersion, system, username, email, signingKey ? ""
-, useAstro ? false }:
+{ homeDirectory
+, pkgs
+, stateVersion
+, system
+, username
+, email
+, signingKey ? ""
+, useAstro ? false
+,
+}:
 let
-  isHome = (email == "timbama@gmail.com");
+  isHome = email == "timbama@gmail.com";
   internalLib = import ./lib.nix { inherit pkgs; };
   packages = import ./packages.nix { inherit pkgs internalLib isHome; };
-in rec {
+in
+rec {
   home = {
     inherit homeDirectory packages stateVersion username;
     enableDebugInfo = true;
     shellAliases = {
-      reload-home-manager-config =
-        "home-manager switch --flake ${builtins.toString ./.}";
+      reload-home-manager-config = "home-manager switch --flake ${builtins.toString ./.}";
     };
   };
-  imports = [ ./terminal ./tools ]
-    ++ (if useAstro then [ ./editor/astronvim ] else [ ./editor/neovim ]);
+  imports =
+    [ ./terminal ./tools ]
+    ++ (
+      if useAstro
+      then [ ./editor/astronvim ]
+      else [ ./editor/neovim ]
+    );
 
   _module.args.internalLib = internalLib;
   _module.args.userEmail = email;

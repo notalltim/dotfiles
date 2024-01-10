@@ -1,12 +1,11 @@
-{ config, pkgs, ... }: {
-
+{ pkgs, ... }: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
 
-    extraLuaConfig = (builtins.readFile ./init.lua);
+    extraLuaConfig = builtins.readFile ./init.lua;
     plugins = with pkgs.vimPlugins; [ rainbow-delimiters-nvim ];
   };
 
@@ -22,6 +21,6 @@
     ./lualine.nix
     ./dap
     ./comment.nix
+    ./git
   ];
-
 }
