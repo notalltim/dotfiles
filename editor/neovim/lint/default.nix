@@ -1,11 +1,11 @@
-{ pkgs
-, internalLib
-, ...
+{
+  pkgs,
+  internalLib,
+  ...
 }: {
   programs.neovim = {
     plugins = internalLib.createLuaPlugin {
       package = pkgs.vimPlugins.none-ls-nvim;
-      dependencies = with pkgs.vimPlugins; [ gitsigns-nvim ];
       configs = builtins.readFile ./lint.lua;
     };
     extraPackages = with pkgs; [

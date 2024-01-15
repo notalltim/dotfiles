@@ -1,8 +1,10 @@
-{ pkgs }: rec {
+{ pkgs
+, isHome
+,
+}: rec {
   inherit (pkgs) writeShellApplication stdenvNoCC;
 
   inherit (pkgs.nixgl) nixVulkanIntel nixGLIntel;
-  inherit (pkgs.nixgl.auto) nixVulkanNvidia nixGLNvidia nixGLNvidiaBumblebee nixGLDefault;
 
   writeNixGLWrapper = runner: package:
     stdenvNoCC.mkDerivation
@@ -24,11 +26,13 @@
         };
       };
 
-  writeIntelGLWrapper = writeNixGLWrapper nixGLDefault;
+  writeIntelGLWrapper = writeNixGLWrapper (
+    if isHome
+    then nixGLIntel
+    else pkgs.nixgl.auto.nixGLDefault
+  );
+
   writeIntelVulkanWrapper = writeNixGLWrapper nixVulkanIntel;
-  writeNvidiaGLWrapper = writeNixGLWrapper nixGLNvidia;
-  writeNvidiaVulkanWrapper = writeNixGLWrapper nixVulkanNvidia;
-  writeNvidiaBumblebeeWrapper = writeNixGLWrapper nixGLNvidiaBumblebee;
 
   createLuaPlugin =
     { package

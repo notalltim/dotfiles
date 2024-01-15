@@ -62,10 +62,6 @@ let
 
     nixgl.nixVulkanIntel
     nixgl.nixGLIntel
-    nixgl.auto.nixGLDefault
-    # nixgl.auto.nixVulkanNvidia
-    # nixgl.auto.nixGLNvidia
-    # nixgl.auto.nixGLNvidiaBumblebee
     # kitty
     tbb
     compdb
@@ -84,7 +80,7 @@ let
     # musescore
     audacity
   ];
-  workTools = with pkgs; [ gnome.dconf-editor onedrive signal-desktop ];
+  workTools = with pkgs; [ gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault ];
 in
 nixTools
 ++ developerTools
