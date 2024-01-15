@@ -22,7 +22,7 @@ let
     python3
     git
     git-filter-repo
-    clang-tools
+    clang-tools_15
     valgrind
     pkg-config
     gnumake
@@ -62,16 +62,18 @@ let
 
     nixgl.nixVulkanIntel
     nixgl.nixGLIntel
+    nixgl.auto.nixGLDefault
     # nixgl.auto.nixVulkanNvidia
     # nixgl.auto.nixGLNvidia
     # nixgl.auto.nixGLNvidiaBumblebee
     # kitty
     tbb
+    compdb
   ];
 
-  unixTools = with pkgs; [ gnupg wget htop ];
+  unixTools = with pkgs; [ gnupg wget htop rs-git-fsmonitor watchman ];
 
-  guiTools = with pkgs; [ solaar spotify inkscape gimp vlc obsidian ];
+  guiTools = with pkgs; [ solaar openvpn3 spotify inkscape gimp vlc obsidian ];
 
   homeTools = with pkgs; [
     (internalLib.writeIntelGLWrapper kicad)
@@ -82,7 +84,7 @@ let
     # musescore
     audacity
   ];
-  workTools = with pkgs; [ gnome.dconf-editor onedrive intel-gpu-tools ];
+  workTools = with pkgs; [ gnome.dconf-editor onedrive signal-desktop ];
 in
 nixTools
 ++ developerTools

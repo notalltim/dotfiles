@@ -3,6 +3,9 @@ local null_ls = require("null-ls")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 local on_attach = function(client, bufnr)
+  if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+    return
+  end
   if client.supports_method("textDocument/formatting") then
     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -18,8 +21,6 @@ local on_attach = function(client, bufnr)
     -- })
   end
 end
--- ["]g"] = { function() require("gitsigns").next_hunk() end, desc = "Next Git hunk" }
---   ["[g"] = { function() require("gitsigns").prev_hunk() end, desc = "Previous Git hunk" }
 
 local opts = {
   mode = "n",       -- NORMAL mode
@@ -30,35 +31,22 @@ local opts = {
   nowait = true     -- use `nowait` when creating keymaps
 }
 
-local git_icon =
-    require 'nvim-web-devicons'.get_icon("git", "", { default = true })
-local telescope = "";
-
-local mappings = {
-  f = {
-    name = telescope .. "Search",
-    b = {
-      "<cmd>lua require('telescope.builtin').buffers()<cr>",
-      "Find buffers"
-    },
-    c = {
-      "<cmd>lua require('telescope.builtin').grep_string()<cr>",
-      "Find word under cursor"
-    },
-    C = {
-      "<cmd>lua require('telescope.builtin').commands()<cr>",
-      "Find commands"
-    },
-    f = {
-      "<cmd>lua require('telescope.builtin').find_files()<cr>",
-      "Find files"
-    },
-    F = {
-      "<cmd>lua require('telescope.builtin').find_files  { hidden = true, no_ignore = true }<cr>",
-      "Find all files"
-    }
-  }
-}
+vim.api.nvim_create_user_command("FormatDisable", function(args)
+  if args.bang then
+    -- FormatDisable! will disable formatting just for this buffer
+    vim.b.disable_autoformat = true
+  else
+    vim.g.disable_autoformat = true
+  end
+end, { desc = "Disable autoformat-on-save", bang = true })
+vim.api.nvim_create_user_command("FormatEnable", function(args)
+  if args.bang then
+    vim.b.disable_autoformat = false
+  else
+    vim.g.disable_autoformat = false
+    vim.b.disable_autoformat = false
+  end
+end, { desc = "Re-enable autoformat-on-save", bang = true })
 
 require("which-key").register(mappings, opts)
 
