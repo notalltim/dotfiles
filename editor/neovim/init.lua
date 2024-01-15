@@ -11,24 +11,24 @@ vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
 vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
 
 vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
--- vim.wo.number = true
+vim.wo.number = true
 vim.wo.relativenumber = true
 vim.o.cmdheight = 0
 
 local opts = {
-  mode = "n",     -- NORMAL mode
-  prefix = "<leader>",
-  buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true,  -- use `silent` when creating keymaps
-  noremap = true, -- use `noremap` when creating keymaps
-  nowait = true,  -- use `nowait` when creating keymaps
+    mode = "n", -- NORMAL mode
+    prefix = "<leader>",
+    buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+    silent = true, -- use `silent` when creating keymaps
+    noremap = true, -- use `noremap` when creating keymaps
+    nowait = true -- use `nowait` when creating keymaps
 }
 
 local mappings = {
-  w = { "<cmd>w<cr>", "Save" },
-  q = { "<cmd>q<cr>", "Quit" },
-  Q = { "<cmd>qall<cr>", "Quit all" },
-  n = { "<cmd>enew<cr>", "New file" },
+    w = {"<cmd>w<cr>", "Save"},
+    q = {"<cmd>q<cr>", "Quit"},
+    Q = {"<cmd>qall<cr>", "Quit all"},
+    n = {"<cmd>new<cr>", "New file"}
 }
 
 require("which-key").register(mappings, opts)

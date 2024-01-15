@@ -1,0 +1,19 @@
+diff --git a/lua/gitsigns/hunks.lua b/lua/gitsigns/hunks.lua
+index 6f4d576..78062fa 100644
+--- a/lua/gitsigns/hunks.lua
++++ b/lua/gitsigns/hunks.lua
+@@ -169,10 +169,10 @@ end
+ --- @param untracked boolean
+ --- @return Gitsigns.Sign[]
+ function M.calc_signs(hunk, min_lnum, max_lnum, untracked)
+-  assert(
+-    not untracked or hunk.type == 'add',
+-    string.format('Invalid hunk with untracked=%s hunk="%s"', untracked, hunk.head)
+-  )
++--  assert(
++--    not untracked or hunk.type == 'add',
++--    string.format('Invalid hunk with untracked=%s hunk="%s"', untracked, hunk.head)
++--  )
+   min_lnum = min_lnum or 1
+   max_lnum = max_lnum or math.huge
+   local start, added, removed = hunk.added.start, hunk.added.count, hunk.removed.count

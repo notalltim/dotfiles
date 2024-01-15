@@ -10,7 +10,7 @@
 }:
 let
   isHome = email == "timbama@gmail.com";
-  internalLib = import ./lib.nix { inherit pkgs; };
+  internalLib = import ./lib.nix { inherit pkgs isHome; };
   packages = import ./packages.nix { inherit pkgs internalLib isHome; };
 in
 rec {
