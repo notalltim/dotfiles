@@ -32,6 +32,8 @@
       python3Packages.pycodestyle
       codespell
       deadnix
+      nodePackages.jsonlint
+      nodePackages.fixjson
     ];
   };
 }

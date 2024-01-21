@@ -1,13 +1,14 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   pretty-printers = pkgs.stdenvNoCC.mkDerivation {
     name = "gcc-python-pretty-printers";
     version = "13.2";
-    src = (pkgs.fetchgit {
-      url = "https://gcc.gnu.org/git/gcc.git";
-      sparseCheckout = [ "libstdc++-v3/python/" ];
-      hash = "sha256-0dI3dYQXgQSdmkGSUBImhg/bnWiQZJ0lCmlZu9M5VMQ=";
-    }) + "/libstdc++-v3/python";
+    src =
+      (pkgs.fetchgit {
+        url = "https://gcc.gnu.org/git/gcc.git";
+        sparseCheckout = ["libstdc++-v3/python/"];
+        hash = "sha256-yz1Hvgv8mARvjsfvCOnbyQ7IWeCvZUPMyXHpM2exHQ8=";
+      })
+      + "/libstdc++-v3/python";
     dontConfigure = true;
     dontBuild = true;
     dontPatch = true;

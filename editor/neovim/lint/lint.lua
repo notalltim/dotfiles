@@ -67,6 +67,7 @@ null_ls.setup({
         null_ls.builtins.diagnostics.hadolint,
         null_ls.builtins.diagnostics.proselint,
         null_ls.builtins.diagnostics.pycodestyle,
+        null_ls.builtins.diagnostics.jsonlint,
 
         null_ls.builtins.formatting.alejandra,
         null_ls.builtins.formatting.black,
@@ -81,7 +82,8 @@ null_ls.setup({
         null_ls.builtins.formatting.yamlfmt,
         null_ls.builtins.formatting.codespell,
         null_ls.builtins.formatting.protolint,
-        null_ls.builtins.formatting.autopep8, null_ls.builtins.hover.printenv
+        null_ls.builtins.formatting.autopep8, null_ls.builtins.hover.printenv,
+        null_ls.builtins.formatting.fixjson
     },
     on_attach = on_attach
 })

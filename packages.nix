@@ -1,9 +1,8 @@
-{ pkgs
-, internalLib
-, isHome ? false
-,
-}:
-let
+{
+  pkgs,
+  internalLib,
+  isHome ? false,
+}: let
   nixTools = with pkgs; [
     cachix
     lorri
@@ -22,7 +21,7 @@ let
     python3
     git
     git-filter-repo
-    clang-tools_15
+    clang-tools_17
     valgrind
     pkg-config
     gnumake
@@ -67,9 +66,9 @@ let
     compdb
   ];
 
-  unixTools = with pkgs; [ gnupg wget htop rs-git-fsmonitor watchman ];
+  unixTools = with pkgs; [gnupg wget htop rs-git-fsmonitor watchman];
 
-  guiTools = with pkgs; [ solaar openvpn3 spotify inkscape gimp vlc obsidian ];
+  guiTools = with pkgs; [solaar openvpn3 spotify inkscape gimp vlc obsidian];
 
   homeTools = with pkgs; [
     (internalLib.writeIntelGLWrapper kicad)
@@ -80,14 +79,14 @@ let
     # musescore
     audacity
   ];
-  workTools = with pkgs; [ gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault ];
+  workTools = with pkgs; [gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault winePackages.stable];
 in
-nixTools
-++ developerTools
-++ unixTools
-++ guiTools
-++ (
-  if isHome
-  then homeTools
-  else workTools
-)
+  nixTools
+  ++ developerTools
+  ++ unixTools
+  ++ guiTools
+  ++ (
+    if isHome
+    then homeTools
+    else workTools
+  )
