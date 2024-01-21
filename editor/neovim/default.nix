@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{
+  pkgs,
+  isHome,
+  ...
+}: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -6,7 +10,11 @@
     vimAlias = true;
 
     extraLuaConfig = builtins.readFile ./init.lua;
-    plugins = with pkgs.vimPlugins; [ rainbow-delimiters-nvim ];
+    plugins = with pkgs.vimPlugins; [rainbow-delimiters-nvim];
+    extraPackages = with pkgs;
+      if isHome
+      then [wl-clipboard]
+      else [xclip];
   };
 
   imports = [

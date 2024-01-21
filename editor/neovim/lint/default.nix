@@ -34,6 +34,7 @@
       deadnix
       nodePackages.jsonlint
       nodePackages.fixjson
+      commitlint
     ];
   };
 }
