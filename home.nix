@@ -1,19 +1,17 @@
-{ homeDirectory
-, pkgs
-, stateVersion
-, system
-, username
-, email
-, signingKey ? ""
-, useAstro ? false
-,
-}:
-let
+{
+  homeDirectory,
+  pkgs,
+  stateVersion,
+  system,
+  username,
+  email,
+  signingKey ? "",
+  useAstro ? false,
+}: let
   isHome = email == "timbama@gmail.com";
-  internalLib = import ./lib.nix { inherit pkgs isHome; };
-  packages = import ./packages.nix { inherit pkgs internalLib isHome; };
-in
-rec {
+  internalLib = import ./lib.nix {inherit pkgs isHome;};
+  packages = import ./packages.nix {inherit pkgs internalLib isHome;};
+in rec {
   home = {
     inherit homeDirectory packages stateVersion username;
     enableDebugInfo = true;
@@ -22,11 +20,11 @@ rec {
     };
   };
   imports =
-    [ ./terminal ./tools ]
+    [./terminal ./tools ./services]
     ++ (
       if useAstro
-      then [ ./editor/astronvim ]
-      else [ ./editor/neovim ]
+      then [./editor/astronvim]
+      else [./editor/neovim]
     );
 
   _module.args.internalLib = internalLib;
@@ -37,6 +35,12 @@ rec {
   targets.genericLinux.enable = true;
   xdg.mime.enable = true;
   xdg.enable = true;
+  news.display = "silent";
+  manual = {
+    html.enable = true;
+    json.enable = true;
+    manpages.enable = true;
+  };
 
   nixpkgs = {
     config = {
@@ -46,5 +50,5 @@ rec {
       experimental-features = "nix-command flakes";
     };
   };
-  services = import ./services;
+  # services = import ./services;
 }
