@@ -25,6 +25,11 @@ in rec {
       if useAstro
       then [./editor/astronvim]
       else [./editor/neovim]
+    )
+    ++ (
+      if isHome
+      then []
+      else [./system/display.nix]
     );
 
   _module.args.internalLib = internalLib;
@@ -50,5 +55,4 @@ in rec {
       experimental-features = "nix-command flakes";
     };
   };
-  # services = import ./services;
 }

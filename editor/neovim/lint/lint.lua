@@ -55,7 +55,7 @@ null_ls.setup({
 
         -- null_ls.builtins.completion.spell,
 
-        null_ls.builtins.diagnostics.commitlint,
+        null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.cmake_lint,
         null_ls.builtins.diagnostics.deadnix, null_ls.builtins.diagnostics.fish,
         null_ls.builtins.diagnostics.mlint,
