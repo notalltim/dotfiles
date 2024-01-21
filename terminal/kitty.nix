@@ -1,5 +1,11 @@
-{ config, pkgs, internalLib, lib, isHome, ... }:
-let
+{
+  config,
+  pkgs,
+  internalLib,
+  lib,
+  isHome,
+  ...
+}: let
   inherit (internalLib) writeIntelGLWrapper;
   kitty = writeIntelGLWrapper pkgs.kitty;
   font_features = types:
@@ -15,14 +21,14 @@ in {
       name = "CaskaydiaCove Nerd Font";
       # Only pull in the CaskaydiaCove nerd font + Fall back REVISIT: Why need fall back?
       package =
-        (pkgs.nerdfonts.override { fonts = [ "CascadiaCode" "Iosevka" ]; });
+        pkgs.nerdfonts.override {fonts = ["CascadiaCode" "Iosevka"];};
     };
     settings = {
       enable_audio_bell = false;
       disable_ligatures = "cursor";
     };
     theme = "Nightfox";
-    extraConfig = (font_features [
+    extraConfig = font_features [
       "Regular"
       "Bold"
       "BoldItalic"
@@ -35,7 +41,7 @@ in {
       "SemiBoldItalic"
       "SemiLight"
       "SemiLightItalic"
-    ]);
+    ];
   };
   # This is needed for kitty to find the font
   fonts.fontconfig.enable = true;
@@ -47,7 +53,7 @@ in {
     comment = "Fast, feature-rich, GPU based terminal";
     exec = "${kitty}/bin/kitty";
     icon = "${kitty}/share/icons/hicolor/256x256/apps/kitty.png";
-    categories = [ "System" "TerminalEmulator" ];
+    categories = ["System" "TerminalEmulator"];
   };
 
   xdg.desktopEntries.kitty-open = {
@@ -57,7 +63,7 @@ in {
     comment = "Open URLs with kitty";
     exec = "${kitty}/bin/kitty +open %U";
     icon = "${kitty}/share/icons/hicolor/256x256/apps/kitty.png";
-    categories = [ "System" "TerminalEmulator" ];
+    categories = ["System" "TerminalEmulator"];
     noDisplay = true;
     mimeType = [
       "image/*"
@@ -71,23 +77,23 @@ in {
 
   home.activation = {
     linkDesktopApplications = {
-      after = [ "writeBoundary" "createXdgUserDirectories" ];
-      before = [ ];
+      after = ["writeBoundary" "createXdgUserDirectories"];
+      before = [];
       data = ''
         rm -rf ${config.xdg.dataHome}/"applications/home-manager"
         mkdir -p ${config.xdg.dataHome}/"applications/home-manager"
-        cp -Lr ${config.home.homeDirectory}/.nix-profile/share/applications/* ${config.xdg.dataHome}/"applications/home-manager/"
+        cp -Lr ${config.home.homeDirectory}/.nix-profile/share/applications/kitty* ${config.xdg.dataHome}/"applications/home-manager/"
       '';
     };
   };
 
-  dconf.settings = (if isHome then
-    { }
-  else {
-    "org/gnome/desktop/applications/terminal" = {
-      exec = "${kitty}/bin/kitty";
-      exec-arg = "";
+  dconf.settings =
+    if isHome
+    then {}
+    else {
+      "org/gnome/desktop/applications/terminal" = {
+        exec = "${kitty}/bin/kitty";
+        exec-arg = "";
+      };
     };
-  });
-
 }

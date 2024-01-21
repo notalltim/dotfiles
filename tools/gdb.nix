@@ -6,7 +6,7 @@
       (pkgs.fetchgit {
         url = "https://gcc.gnu.org/git/gcc.git";
         sparseCheckout = ["libstdc++-v3/python/"];
-        hash = "sha256-yz1Hvgv8mARvjsfvCOnbyQ7IWeCvZUPMyXHpM2exHQ8=";
+        hash = "sha256-TkgLp1sgdn2CZsW9Kp4X8drRWYSK00CSEyJcadndoY0=";
       })
       + "/libstdc++-v3/python";
     dontConfigure = true;
@@ -16,7 +16,6 @@
       runHook preInstall
       mkdir -p $out/python
       cp -r $src/* $out/python
-      ls -R $out
       runHook postInstall
     '';
   };

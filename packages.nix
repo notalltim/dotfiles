@@ -22,6 +22,7 @@
     git
     git-filter-repo
     clang-tools_17
+    elfutils
     valgrind
     pkg-config
     gnumake
@@ -78,6 +79,8 @@
     bitwarden
     # musescore
     audacity
+    mprime
+    openrgb-with-all-plugins
   ];
   workTools = with pkgs; [gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault winePackages.stable];
 in
