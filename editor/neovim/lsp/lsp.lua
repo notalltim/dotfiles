@@ -33,7 +33,7 @@ end
 
 lspconfig.clangd.setup({
     capabilities = capabilities,
-    filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto", "tpp"},
+    filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "tpp"},
     on_attach = on_attach
 })
 

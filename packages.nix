@@ -18,9 +18,10 @@
         hash = "sha256-1m31EnYUNFH8v/RkzIcj1o8enfRaai1WNaVOcWQ+24A=";
       };
     }))
-    python3
+    python3Full
     git
     git-filter-repo
+    lazygit
     clang-tools_17
     elfutils
     valgrind
@@ -28,6 +29,7 @@
     gnumake
     cmake
     cmake-language-server
+    grpcui
     # gersemi
     #rust
     # nix
@@ -82,7 +84,7 @@
     mprime
     openrgb-with-all-plugins
   ];
-  workTools = with pkgs; [gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault winePackages.stable];
+  workTools = with pkgs; [gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault winePackages.stable sshpass] ++ (with pkgs.python3Packages; [pip tkinter paramiko scp hexdump psutil]);
 in
   nixTools
   ++ developerTools

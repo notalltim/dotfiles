@@ -1,12 +1,11 @@
-{ pkgs
-, userEmail
-, signingKey
-, ...
-}:
-let
-  hasKey = signingKey != "";
-in
 {
+  pkgs,
+  userEmail,
+  signingKey,
+  ...
+}: let
+  hasKey = signingKey != "";
+in {
   programs.git = {
     enable = true;
     lfs.enable = true;
@@ -20,13 +19,17 @@ in
     includes = [
       {
         contents = {
-          commit = { gpgSign = hasKey; };
+          commit = {gpgSign = hasKey;};
           core = {
             editor = "nvim";
-            fsmonitor = "${pkgs.rs-git-fsmonitor}/bin/rs-git-fsmonitor";
+            # fsmonitor = "${pkgs.rs-git-fsmonitor}/bin/rs-git-fsmonitor";
+            # fsmonitor = ".git/hooks/fsmonitor-watchman.sample";
+            autocrlf = "input";
+            # fsmonitorHookVersion = "2";
+            # core.untrackedcache = true;
           };
-          color = { ui = "auto"; };
-          push = { autoSetupRemote = true; };
+          color = {ui = "auto";};
+          push = {autoSetupRemote = true;};
         };
       }
     ];

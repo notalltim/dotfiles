@@ -57,10 +57,13 @@ null_ls.setup({
 
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.cmake_lint,
-        null_ls.builtins.diagnostics.deadnix, null_ls.builtins.diagnostics.fish,
+        null_ls.builtins.diagnostics.deadnix,
+        null_ls.builtins.diagnostics.fish,
         null_ls.builtins.diagnostics.mlint,
         null_ls.builtins.diagnostics.markdownlint_cli2,
         null_ls.builtins.diagnostics.protolint,
+        disabled_filetypes = {"lua"},
+        -- null_ls.builtins.diagnostics.protoc_gen_lint,
         null_ls.builtins.diagnostics.clang_check,
         null_ls.builtins.diagnostics.codespell,
         null_ls.builtins.diagnostics.pydocstyle,
@@ -71,7 +74,9 @@ null_ls.setup({
 
         null_ls.builtins.formatting.alejandra,
         null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.clang_format,
+        null_ls.builtins.formatting.clang_format.with({
+            disabled_filetypes = {"proto"}
+        }),
         null_ls.builtins.formatting.cmake_format,
         null_ls.builtins.formatting.isort,
         null_ls.builtins.formatting.lua_format,
@@ -82,7 +87,8 @@ null_ls.setup({
         null_ls.builtins.formatting.yamlfmt,
         null_ls.builtins.formatting.codespell,
         null_ls.builtins.formatting.protolint,
-        null_ls.builtins.formatting.autopep8, null_ls.builtins.hover.printenv,
+        null_ls.builtins.formatting.autopep8,
+        null_ls.builtins.hover.printenv,
         null_ls.builtins.formatting.fixjson
     },
     on_attach = on_attach
