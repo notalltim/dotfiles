@@ -37,19 +37,24 @@
     alejandra
     nixpkgs-fmt
     nixfmt
-    rnix-lsp
+    # rnix-lsp
     # rust
-    rustc
-    rustfmt
-    cargo
+    (fenix.complete.withComponents [
+      "cargo"
+      "clippy"
+      "rust-src"
+      "rustc"
+      "rustfmt"
+      "rust-analyzer"
+      "miri"
+      "rust-docs"
+    ])
     cargo-info
     cargo-audit
     cargo-license
     cargo-feature
     cargo-tarpaulin
-    rust-analyzer
     bacon
-    clippy
 
     # markdown
     marksman

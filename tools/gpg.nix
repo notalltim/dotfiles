@@ -1,1 +1,1 @@
-{ pkgs, ... }: { programs.gpg = { enable = true; }; }
+{pkgs, ...}: {programs.gpg = {enable = true;};}

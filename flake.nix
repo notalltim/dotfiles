@@ -15,6 +15,10 @@
       url = "github:guibou/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fenix = {
+      url = "github:nix-community/fenix/monthly";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -22,6 +26,7 @@
     home-manager,
     nixgl,
     system-manager,
+    fenix,
     ...
   }: let
     home = {
@@ -45,7 +50,7 @@
 
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [nixgl.overlays.default];
+        overlays = [nixgl.overlays.default fenix.overlays.default];
         config = {
           allowUnfree = true;
           permittedInsecurePackages = [
@@ -80,6 +85,17 @@
       modules = [
         ./system
       ];
+    };
+
+    legacyPackages."x86_64-linux" = import nixpkgs {
+      system = "x86_64-linux";
+      overlays = [nixgl.overlays.default];
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "electron-25.9.0"
+        ];
+      };
     };
   };
 }
