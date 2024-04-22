@@ -2,13 +2,9 @@
   description = "Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    system-manager = {
-      url = "github:numtide/system-manager";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixgl = {
@@ -19,83 +15,46 @@
       url = "github:nix-community/fenix/monthly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs = {
     nixpkgs,
     home-manager,
     nixgl,
-    system-manager,
     fenix,
+    nixvim,
     ...
-  }: let
-    home = {
-      username = "tgallion";
-      system = "x86_64-linux";
-      stateVersion = "23.11";
-      email = "timbama@gmail.com";
-      signingKey = "5A2DAA31F5457F29";
-    };
-
-    work = {
-      username = "tim";
-      system = "x86_64-linux";
-      stateVersion = "23.11";
-      email = "tgallion@anduril.com";
-      signingKey = "";
-    };
-
-    createConfig = attrs: let
-      system = attrs.system;
-
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [nixgl.overlays.default fenix.overlays.default];
-        config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [
-            "electron-25.9.0"
-          ];
-        };
-      };
-
-      homeDirectory = "/home/${attrs.username}";
-
-      module = with attrs; (import ./home.nix {
-        inherit
-          homeDirectory
-          pkgs
-          stateVersion
-          system
-          username
-          email
-          signingKey
-          ;
-      });
-    in
-      home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [module];
-      };
-  in {
-    homeConfigurations.${home.username} = createConfig home;
-    homeConfigurations.${work.username} = createConfig work;
-    # Disabled for now not used yet
-    systemConfigs.default = system-manager.lib.makeSystemConfig {
-      modules = [
-        ./system
-      ];
-    };
-
-    legacyPackages."x86_64-linux" = import nixpkgs {
-      system = "x86_64-linux";
-      overlays = [nixgl.overlays.default];
+  } @ inputs: let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+      overlays = [nixgl.overlays.default fenix.overlays.default];
       config = {
         allowUnfree = true;
         permittedInsecurePackages = [
           "electron-25.9.0"
         ];
+        allowUnsupportedSystem = true;
+        experimental-features = "nix-command flakes";
       };
     };
+    lib = import ./lib.nix {inherit pkgs;};
+  in {
+    homeConfigurations.tgallion = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [./home/tgallion.nix nixvim.homeManagerModules.nixvim];
+      extraSpecialArgs = {
+        inherit inputs;
+        inherit (lib) writeNixGLWrapper;
+      };
+    };
+
+    legacyPackages.${system} = pkgs;
+    homeManagerMangerModules = import ./home;
   };
 }
