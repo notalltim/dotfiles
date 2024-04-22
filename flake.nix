@@ -55,7 +55,7 @@
     };
 
     legacyPackages.${system} = pkgs;
-    homeManagerMangerModules = import ./home;
+    homeManagerModules = import ./home;
     inherit lib;
   };
 }
