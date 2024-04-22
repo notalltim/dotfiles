@@ -1,53 +1,22 @@
-{ pkgs
-, isHome
-,
-}: rec {
+{pkgs}: let
   inherit (pkgs) writeShellApplication stdenvNoCC;
-
-  inherit (pkgs.nixgl) nixVulkanIntel nixGLIntel;
-
+in {
   writeNixGLWrapper = runner: package:
-    stdenvNoCC.mkDerivation
-      rec {
-        name = package.name;
-        installPhase = ''
-          runHook preInstall
-          mkdir -p $out/bin
-          cp -r ${package}/* $out
-          cp -rf $src/* $out
-          runHook postInstall
+    stdenvNoCC.mkDerivation {
+      name = package.name;
+      installPhase = ''
+        runHook preInstall
+        mkdir -p $out/bin
+        cp -r ${package}/* $out
+        cp -rf $src/* $out
+        runHook postInstall
+      '';
+      src = writeShellApplication {
+        name = package.pname;
+        runtimeInputs = [package runner];
+        text = ''
+          ${runner.name} ${package.pname};
         '';
-        src = writeShellApplication {
-          name = package.pname;
-          runtimeInputs = [ package runner ];
-          text = ''
-            ${runner.name} ${package.pname};
-          '';
-        };
       };
-
-  writeIntelGLWrapper = writeNixGLWrapper (
-    if isHome
-    then nixGLIntel
-    else pkgs.nixgl.auto.nixGLDefault
-  );
-
-  writeIntelVulkanWrapper = writeNixGLWrapper nixVulkanIntel;
-
-  createLuaPlugin =
-    { package
-    , dependencies ? [ ]
-    , configs ? ""
-    , optional ? false
-    ,
-    }:
-    let
-      plugin = {
-        type = "lua";
-        config = configs;
-        inherit optional;
-        plugin = package;
-      };
-    in
-    [ plugin ] ++ dependencies;
+    };
 }
