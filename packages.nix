@@ -37,7 +37,8 @@
     alejandra
     nixpkgs-fmt
     nixfmt
-    rnix-lsp
+    # nixd
+    # rnix-lsp
     # rust
     rustc
     rustfmt
@@ -58,12 +59,12 @@
     lua-language-server
 
     direnv
-
+    nix-tree
     # Tools
     # wireshark needs a capability set on the dump cap file
 
-    nixgl.nixVulkanIntel
-    nixgl.nixGLIntel
+    # nixgl.nixVulkanIntel
+    # nixgl.nixGLIntel
     # kitty
     tbb
     compdb
@@ -84,7 +85,17 @@
     mprime
     openrgb-with-all-plugins
   ];
-  workTools = with pkgs; [gnome.dconf-editor onedrive signal-desktop nixgl.auto.nixGLDefault winePackages.stable sshpass] ++ (with pkgs.python3Packages; [pip tkinter paramiko scp hexdump psutil]);
+  workTools = with pkgs;
+    [
+      gnome.dconf-editor
+      onedrive
+      signal-desktop
+      nixgl.auto.nixGLDefault
+      winePackages.stable
+      sshpass
+      jq
+    ]
+    ++ (with pkgs.python3Packages; [pip tkinter paramiko scp hexdump psutil]);
 in
   nixTools
   ++ developerTools

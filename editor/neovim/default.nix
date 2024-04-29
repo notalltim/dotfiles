@@ -10,7 +10,7 @@
     vimAlias = true;
 
     extraLuaConfig = builtins.readFile ./init.lua;
-    plugins = with pkgs.vimPlugins; [rainbow-delimiters-nvim];
+    plugins = with pkgs.vimPlugins; [rainbow-delimiters-nvim whitespace-nvim];
     extraPackages = with pkgs;
       if isHome
       then [wl-clipboard]

@@ -1,13 +1,17 @@
-{ pkgs, internalLib, ... }: {
+{
+  pkgs,
+  internalLib,
+  ...
+}: {
   programs.neovim = {
     plugins = internalLib.createLuaPlugin {
       package = pkgs.vimPlugins.nvim-lspconfig;
-      dependencies = with pkgs.vimPlugins; [ clangd_extensions-nvim ];
-      configs = (builtins.readFile ./lsp.lua);
+      dependencies = with pkgs.vimPlugins; [clangd_extensions-nvim];
+      configs = builtins.readFile ./lsp.lua;
     };
     extraPackages = with pkgs; [
       clang-tools
-      rnix-lsp
+      # rnix-lsp
       nodePackages.pyright
       rust-analyzer
       marksman

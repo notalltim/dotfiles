@@ -30,12 +30,14 @@ local opts = {
     nowait = true -- use `nowait` when creating keymaps
 }
 
+require("whitespace-nvim").setup()
 local mappings = {
     w = {"<cmd>w<cr>", "Save"},
     q = {"<cmd>q<cr>", "Quit"},
     Q = {"<cmd>qall<cr>", "Quit all"},
     n = {"<cmd>new<cr>", "New file"},
-    ["<leader>"] = {"<cmd>bn<cr>", "Cycle buffers"}
+    ["<leader>"] = {"<cmd>bn<cr>", "Cycle buffers"},
+    ["tt"] = {require("whitespace-nvim").trim, "Trim whitespace"}
 }
 
 require("which-key").register(mappings, opts)

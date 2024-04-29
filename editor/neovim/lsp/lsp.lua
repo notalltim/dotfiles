@@ -40,7 +40,7 @@ lspconfig.clangd.setup({
 -- tpp files are cpp files to!
 vim.filetype.add({extension = {tpp = 'cpp'}})
 
-lspconfig.rnix.setup({capabilities = capabilities})
+-- lspconfig.rnix.setup({capabilities = capabilities})
 lspconfig.lua_ls.setup({capabilities = capabilities})
 
 lspconfig.pyright.setup({capabilities = capabilities})

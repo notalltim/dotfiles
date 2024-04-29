@@ -1,6 +1,6 @@
-{ pkgs
-, isHome
-,
+{
+  pkgs,
+  isHome,
 }: rec {
   inherit (pkgs) writeShellApplication stdenvNoCC;
 
@@ -8,23 +8,24 @@
 
   writeNixGLWrapper = runner: package:
     stdenvNoCC.mkDerivation
-      rec {
-        name = package.name;
-        installPhase = ''
-          runHook preInstall
-          mkdir -p $out/bin
-          cp -r ${package}/* $out
-          cp -rf $src/* $out
-          runHook postInstall
+    rec {
+      name = package.name;
+      installPhase = ''
+        runHook preInstall
+        mkdir -p $out/bin
+        cp -r ${package}/* $out
+        cp -rf $src/* $out
+        runHook postInstall
+      '';
+      src = writeShellApplication {
+        name = package.pname;
+        runtimeInputs = [package runner];
+        text = ''
+          #!/bin/sh
+          exec -a "$0" ${runner.name} ${package.pname} "$@";
         '';
-        src = writeShellApplication {
-          name = package.pname;
-          runtimeInputs = [ package runner ];
-          text = ''
-            ${runner.name} ${package.pname};
-          '';
-        };
       };
+    };
 
   writeIntelGLWrapper = writeNixGLWrapper (
     if isHome
@@ -34,20 +35,18 @@
 
   writeIntelVulkanWrapper = writeNixGLWrapper nixVulkanIntel;
 
-  createLuaPlugin =
-    { package
-    , dependencies ? [ ]
-    , configs ? ""
-    , optional ? false
-    ,
-    }:
-    let
-      plugin = {
-        type = "lua";
-        config = configs;
-        inherit optional;
-        plugin = package;
-      };
-    in
-    [ plugin ] ++ dependencies;
+  createLuaPlugin = {
+    package,
+    dependencies ? [],
+    configs ? "",
+    optional ? false,
+  }: let
+    plugin = {
+      type = "lua";
+      config = configs;
+      inherit optional;
+      plugin = package;
+    };
+  in
+    [plugin] ++ dependencies;
 }
