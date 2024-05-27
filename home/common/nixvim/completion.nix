@@ -5,6 +5,7 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
+  inherit (config.nixvim.helpers) mkRaw;
   cfg = config.baseline.nixvim.completion;
 in {
   options = {
@@ -17,8 +18,7 @@ in {
       keymaps = [
         {
           key = "<C-b>";
-          action = "function() require('cmp').mapping.scroll_docs(-4) end";
-          lua = true;
+          action = mkRaw "function() require('cmp').mapping.scroll_docs(-4) end";
           options = {
             desc = "Scroll back in completion results";
             silent = true;
@@ -26,8 +26,7 @@ in {
         }
         {
           key = "<C-f>";
-          action = "function() require('cmp').mapping.scroll_docs(4) end";
-          lua = true;
+          action = mkRaw "function() require('cmp').mapping.scroll_docs(4) end";
           options = {
             desc = "Scroll forward in completion results";
             silent = true;
@@ -35,8 +34,7 @@ in {
         }
         {
           key = "<C-Space>";
-          action = "function() require('cmp').mapping.complete() end";
-          lua = true;
+          action = mkRaw "function() require('cmp').mapping.complete() end";
           options = {
             desc = "Complete with current selection";
             silent = true;
@@ -44,8 +42,7 @@ in {
         }
         {
           key = "<C-e>";
-          action = "function() require('cmp').mapping.abort() end";
-          lua = true;
+          action = mkRaw "function() require('cmp').mapping.abort() end";
           options = {
             desc = "Abort completion";
             silent = true;
@@ -53,8 +50,7 @@ in {
         }
         {
           key = "<CR>";
-          action = "function() require('cmp').mapping.confirm({ select = true }) end";
-          lua = true;
+          action = mkRaw "function() require('cmp').mapping.confirm({ select = true }) end";
           options = {
             desc = "Select the current results";
             silent = true;

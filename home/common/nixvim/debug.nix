@@ -8,6 +8,7 @@
   inherit (lib) mkIf;
   inherit (lib.meta) getExe';
   inherit (lib.attrsets) mapAttrs mapAttrsToList;
+  inherit (config.nixvim.helpers) mkRaw;
   cfg = config.baseline.nixvim.debug;
 in {
   options = {
@@ -102,8 +103,7 @@ in {
       keymaps = [
         {
           key = "<F5>";
-          action = "function() require('dap').continue() end";
-          lua = true;
+          action = mkRaw "function() require('dap').continue() end";
           options = {
             desc = "Start debugger";
             silent = true;
@@ -112,8 +112,7 @@ in {
         {
           # Shift-F5
           key = "<F17>";
-          action = "function() require('dap').terminate() end";
-          lua = true;
+          action = mkRaw "function() require('dap').terminate() end";
           options = {
             desc = "Stop debugger";
             silent = true;
@@ -122,13 +121,12 @@ in {
         {
           # Shift-F9
           key = "<F21>";
-          action = ''
+          action = mkRaw ''
             function()
               vim.ui.input({ prompt = "Condition: " }, function(condition)
                         if condition then require("dap").set_breakpoint(condition) end end)
               end
           '';
-          lua = true;
           options = {
             desc = "Set conditional breakpoint";
             silent = true;
@@ -137,8 +135,7 @@ in {
         {
           # Control-F5
           key = "<F29>";
-          action = "function() require('dap').restart_frame() end";
-          lua = true;
+          action = mkRaw "function() require('dap').restart_frame() end";
           options = {
             desc = "Restart debugger";
             silent = true;
@@ -146,8 +143,7 @@ in {
         }
         {
           key = "<F6>";
-          action = "function() require('dap').pause() end";
-          lua = true;
+          action = mkRaw "function() require('dap').pause() end";
           options = {
             desc = "Pause debugger";
             silent = true;
@@ -155,8 +151,7 @@ in {
         }
         {
           key = "<F9>";
-          action = "function() require('dap').toggle_breakpoint() end";
-          lua = true;
+          action = mkRaw "function() require('dap').toggle_breakpoint() end";
           options = {
             desc = "Toggle breakpoint";
             silent = true;
@@ -164,16 +159,14 @@ in {
         }
         {
           key = "<F10>";
-          action = "function() require('dap').step_over() end";
-          lua = true;
+          action = mkRaw "function() require('dap').step_over() end";
           options = {
             desc = "Step over";
           };
         }
         {
           key = "<F11>";
-          action = "function() require('dap').step_into() end";
-          lua = true;
+          action = mkRaw "function() require('dap').step_into() end";
           options = {
             desc = "Step into";
             silent = true;
@@ -182,8 +175,7 @@ in {
         {
           # Shift-F11
           key = "<F23>";
-          action = "function() require('dap').step_out() end";
-          lua = true;
+          action = mkRaw "function() require('dap').step_out() end";
           options = {
             desc = "Step out";
             silent = true;
@@ -191,8 +183,7 @@ in {
         }
         {
           key = "<leader>db";
-          action = "function() require('dap').toggle_breakpoint() end";
-          lua = true;
+          action = mkRaw "function() require('dap').toggle_breakpoint() end";
           options = {
             desc = "Toggle breakpoint (F9)";
             silent = true;
@@ -200,8 +191,7 @@ in {
         }
         {
           key = "<leader>dB";
-          action = "function() require('dap').clear_breakpoint() end";
-          lua = true;
+          action = mkRaw "function() require('dap').clear_breakpoint() end";
           options = {
             desc = "Clear breakpoints";
             silent = true;
@@ -209,8 +199,7 @@ in {
         }
         {
           key = "<leader>dc";
-          action = "function() require('dap').continue() end";
-          lua = true;
+          action = mkRaw "function() require('dap').continue() end";
           options = {
             desc = "Start/Continue (F5)";
             silent = true;
@@ -218,14 +207,13 @@ in {
         }
         {
           key = "<leader>dC";
-          action = ''
+          action = mkRaw ''
             function()
             vim.ui.input({ prompt = "Condition: " }, function(condition)
               if condition then require("dap").set_breakpoint(condition) end
              end)
              end
           '';
-          lua = true;
           options = {
             desc = "Conditional breakpoint (S-F9)";
             silent = true;
@@ -233,8 +221,7 @@ in {
         }
         {
           key = "<leader>do";
-          action = "function() require('dap').step_over() end";
-          lua = true;
+          action = mkRaw "function() require('dap').step_over() end";
           options = {
             desc = "Step over (F10)";
             silent = true;
@@ -242,8 +229,7 @@ in {
         }
         {
           key = "<leader>di";
-          action = "function() require('dap').step_into() end";
-          lua = true;
+          action = mkRaw "function() require('dap').step_into() end";
           options = {
             desc = "Step into (F11)";
             silent = true;
@@ -251,8 +237,7 @@ in {
         }
         {
           key = "<leader>dO";
-          action = "function() require('dap').step_out() end";
-          lua = true;
+          action = mkRaw "function() require('dap').step_out() end";
           options = {
             desc = "Step out (S-F11)";
             silent = true;
@@ -260,8 +245,7 @@ in {
         }
         {
           key = "<leader>dr";
-          action = "function() require('dap').restart_frame() end";
-          lua = true;
+          action = mkRaw "function() require('dap').restart_frame() end";
           options = {
             desc = "Restart debugger (C-F5)";
             silent = true;
@@ -269,8 +253,7 @@ in {
         }
         {
           key = "<leader>dp";
-          action = "function() require('dap').pause() end";
-          lua = true;
+          action = mkRaw "function() require('dap').pause() end";
           options = {
             desc = "Pause debugger (F6)";
             silent = true;
@@ -278,8 +261,7 @@ in {
         }
         {
           key = "<leader>dq";
-          action = "function() require('dap').close() end";
-          lua = true;
+          action = mkRaw "function() require('dap').close() end";
           options = {
             desc = "Close session";
             silent = true;
@@ -287,8 +269,7 @@ in {
         }
         {
           key = "<leader>dQ";
-          action = "function() require('dap').terminate() end";
-          lua = true;
+          action = mkRaw "function() require('dap').terminate() end";
           options = {
             desc = "Terminate session (S-F5)";
             silent = true;
@@ -297,8 +278,7 @@ in {
 
         {
           key = "<leader>dR";
-          action = "function() require('dap').repl.toggle() end";
-          lua = true;
+          action = mkRaw "function() require('dap').repl.toggle() end";
           options = {
             desc = "Toggle repl";
             silent = true;
@@ -306,8 +286,7 @@ in {
         }
         {
           key = "<leader>ds";
-          action = "function() require('dap').run_to_cursor() end";
-          lua = true;
+          action = mkRaw "function() require('dap').run_to_cursor() end";
           options = {
             desc = "Run to cursor";
             silent = true;
@@ -315,7 +294,7 @@ in {
         }
         {
           key = "<leader>dE";
-          action = ''
+          action = mkRaw ''
             function()
               vim.ui.input({ prompt = "Expression: " },
                 function(expr)
@@ -323,7 +302,6 @@ in {
                 end)
                 end
           '';
-          lua = true;
           options = {
             desc = "Evaluate expression";
             silent = true;
@@ -331,8 +309,7 @@ in {
         }
         {
           key = "<leader>dI";
-          action = "function() require('dapui').eval() end";
-          lua = true;
+          action = mkRaw "function() require('dapui').eval() end";
           options = {
             desc = "Evaluate input";
             silent = true;
@@ -340,8 +317,7 @@ in {
         }
         {
           key = "<leader>du";
-          action = "function() require('dapui').toggle() end";
-          lua = true;
+          action = mkRaw "function() require('dapui').toggle() end";
           options = {
             desc = "Toggle debug ui";
             silent = true;
@@ -349,8 +325,7 @@ in {
         }
         {
           key = "<leader>dh";
-          action = "function() require('dap.ui.widgets').hover() end";
-          lua = true;
+          action = mkRaw "function() require('dap.ui.widgets').hover() end";
           options = {
             desc = "Debugger hover";
             silent = true;

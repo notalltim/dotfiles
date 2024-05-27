@@ -5,6 +5,7 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
+  inherit (config.nixvim.helpers) mkRaw;
   cfg = config.baseline.nixvim.search;
 in {
   options = {
@@ -106,8 +107,7 @@ in {
       keymaps = [
         {
           key = "<leader>fF";
-          action = "function() require('telescope').find_files({ hidden = true, no_ignore = true }) end";
-          lua = true;
+          action = mkRaw "function() require('telescope').find_files({ hidden = true, no_ignore = true }) end";
           options = {
             desc = "Find all files";
             silent = true;

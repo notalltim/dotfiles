@@ -47,7 +47,7 @@
   in {
     homeConfigurations.tgallion = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
-      modules = [./home/tgallion.nix nixvim.homeManagerModules.nixvim];
+      modules = [nixvim.homeManagerModules.nixvim ./home/tgallion.nix];
       extraSpecialArgs = {
         inherit inputs;
         inherit (lib) writeNixGLWrapper;
