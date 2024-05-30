@@ -18,12 +18,13 @@ in {
       overlays = [self.inputs.nixgl.overlays.default self.inputs.fenix.overlays.default];
     };
     xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
-    xdg.configFile."nixpkgs/overlays/default.nix".text = ''
-      [
-        (builtins.getFlake "${self.inputs.nixgl}").overlays.default
-        (builtins.getFlake "${self.inputs.fenix}").overlays.default
-      ]
-
-    '';
+    # Not working gets a weird overlay must be a function
+    # xdg.configFile."nixpkgs/overlays/default.nix".text = ''
+    #   [
+    #     (builtins.getFlake "${self.inputs.nixgl}").overlays.default
+    #     (builtins.getFlake "${self.inputs.fenix}").overlays.default
+    #   ]
+    #
+    # '';
   };
 }
