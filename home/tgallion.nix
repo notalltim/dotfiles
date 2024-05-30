@@ -1,12 +1,10 @@
 {
   lib,
   pkgs,
-  inputs,
-  writeNixGLWrapper,
   ...
 }: let
   inherit (lib.attrsets) mapAttrsToList;
-  writeIntelGLWrapper = writeNixGLWrapper pkgs.nixgl.nixGLIntel;
+  inherit (pkgs.lib) gpuWrapCheck;
 in {
   home = rec {
     stateVersion = "23.11";
@@ -18,8 +16,8 @@ in {
     };
 
     packages = with pkgs; [
-      (writeIntelGLWrapper kicad)
-      (writeIntelGLWrapper freecad)
+      (gpuWrapCheck kicad)
+      (gpuWrapCheck freecad)
       discord
       radeontop
       bitwarden
@@ -37,7 +35,7 @@ in {
   services.ssh-agent.enable = true;
 
   # Support kitty on non nixos system
-  programs.kitty.package = writeIntelGLWrapper pkgs.kitty;
+  programs.kitty.package = gpuWrapCheck pkgs.kitty;
 
   # Common config expressed as basic modules
   baseline = {
@@ -47,6 +45,9 @@ in {
     git.enable = true;
     gdb.enable = true;
     home-manager.enable = true;
+    gpu.enable = true;
+    nix.enable = true; #TODO: this does not cover the case I want it does not control the nix version
+    nixpkgs.enable = true;
   };
 
   programs.git = {
@@ -55,17 +56,5 @@ in {
     };
     userEmail = "timbama@gmail.com";
     userName = "Timothy Gallion";
-  };
-
-  # inherit the package set from the flake
-  nixpkgs = {
-    overlays = [inputs.nixgl.overlays.default inputs.fenix.overlays.default];
-    config = {
-      allowUnfree = true;
-      permittedInsecurePackages = [
-        "electron-25.9.0"
-      ];
-      allowUnsupportedSystem = true;
-    };
   };
 }

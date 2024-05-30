@@ -43,9 +43,6 @@
     cargo-tarpaulin
     bacon
 
-    # kitty
-    nixgl.nixVulkanIntel
-    nixgl.nixGLIntel
     tbb
     compdb
   ];

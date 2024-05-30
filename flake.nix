@@ -20,42 +20,35 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    nix = {
+      url = "github:DeterminateSystems/nix";
+      inputs.nix.url = "https://flakehub.com/f/NixOS/nix/=2.22.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
+    self,
     nixpkgs,
     home-manager,
     nixgl,
-    fenix,
-    nixvim,
     ...
-  } @ inputs: let
+  }: let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
-      overlays = [nixgl.overlays.default fenix.overlays.default];
-      config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [
-          "electron-25.9.0"
-        ];
-        allowUnsupportedSystem = true;
-        experimental-features = "nix-command flakes";
-      };
     };
-    lib = import ./lib.nix {inherit pkgs;};
   in {
     homeConfigurations.tgallion = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
-      modules = [nixvim.homeManagerModules.nixvim ./home/tgallion.nix];
+      modules = [./home/tgallion.nix];
       extraSpecialArgs = {
-        inherit inputs;
-        inherit (lib) writeNixGLWrapper;
+        inherit self;
       };
     };
 
     legacyPackages.${system} = pkgs;
+    gpuWrappers = nixgl.packages;
     homeManagerModules = import ./home;
-    inherit lib;
   };
 }
