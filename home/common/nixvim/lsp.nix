@@ -113,7 +113,7 @@ in {
           };
           hover.printenv.enable = true;
         };
-        onAttach = ''
+        settings.on_attach = ''
           function(client, bufnr)
               require('lsp-format').on_attach(client, bufnr)
               if client.supports_method("textDocument/formatting") then

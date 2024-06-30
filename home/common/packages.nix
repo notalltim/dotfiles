@@ -42,7 +42,7 @@
     cargo-feature
     cargo-tarpaulin
     bacon
-
+    nix-tree
     tbb
     compdb
   ];

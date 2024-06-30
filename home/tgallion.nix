@@ -18,6 +18,7 @@ in {
     packages = with pkgs; [
       (gpuWrapCheck kicad)
       (gpuWrapCheck freecad)
+      jellyfin-media-player
       discord
       radeontop
       bitwarden
