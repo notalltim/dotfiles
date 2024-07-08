@@ -12,7 +12,6 @@
   ];
   developerTools = with pkgs; [
     gdb
-    python3Full
     git
     git-filter-repo
     lazygit

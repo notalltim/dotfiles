@@ -25,6 +25,8 @@ in {
       audacity
       mprime
       openrgb-with-all-plugins
+      (python3Full.withPackages
+        (pkgs: with pkgs; [numpy scipy matplotlib]))
     ];
   };
 
