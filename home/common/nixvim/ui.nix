@@ -67,9 +67,11 @@ in {
       # Syntax highlighting
       plugins.treesitter = {
         enable = true;
-        indent = true;
         folding = true;
-        incrementalSelection.enable = true;
+        settings = {
+          incremental_selection.enable = true;
+          indent.enable = true;
+        };
       };
 
       # Show color codes in the editor and a color picker

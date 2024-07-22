@@ -100,7 +100,7 @@ in {
             black.enable = true;
             clang_format = {
               enable = true;
-              withArgs = "{disabled_filetypes = {\"proto\"}}";
+              settings = "{disabled_filetypes = {\"proto\"}}";
             };
             cmake_format.enable = true;
             isort.enable = true;

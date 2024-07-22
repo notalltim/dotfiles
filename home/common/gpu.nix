@@ -30,6 +30,7 @@ in {
           system = final.system;
           nixglPkgs = "${self}#gpuWrappers.${system}";
           wrapIntel = type: lib.getExe self.inputs.nixgl.packages.${system}."nix${type}Intel";
+          inherit (final.lib.strings) escapeNixString;
         in
           final.runCommand "gpu-wrappers" {} ''
             bin=$out/bin
@@ -53,12 +54,12 @@ in {
                 glbin=\$(nix eval --quiet --raw --impure "${nixglPkgs}.nixGLNvidia.meta.name")
                 vkbin=${
                   if cfg.enableVulkan
-                  then "\$(echo \$glbin | sed s/GL/Vulkan/)"
+                  then escapeNixString "\$(echo \$glbin | sed s/GL/Vulkan/)"
                   else ""
                 }
                 packages=${
                   if cfg.enableVulkan
-                  then "${nixglPkgs}.nixGLNvidia ${nixglPkgs}.nixVulkanNvidia"
+                  then "\"${nixglPkgs}.nixGLNvidia ${nixglPkgs}.nixVulkanNvidia\""
                   else "${nixglPkgs}.nixGLNvidia"
                 }
                 exec nix shell --quiet --impure \$packages -c \$glbin \$vkbin "\$@"
