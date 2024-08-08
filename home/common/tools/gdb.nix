@@ -35,6 +35,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.packages = [
+      pkgs.gdb
+      pkgs.valgrind
+      (lib.getBin (pkgs.elfutils.override {enableDebuginfod = true;}))
+    ];
     home.file.".gdbinit".text = ''
       set debuginfod enabled on
       python

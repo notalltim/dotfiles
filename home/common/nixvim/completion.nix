@@ -5,12 +5,12 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
-  inherit (config.nixvim.helpers) mkRaw;
+  inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.completion;
 in {
   options = {
     baseline.nixvim.completion = {
-      enable = mkEnableOption "Enable baseline completion  configuiration";
+      enable = mkEnableOption "Enable baseline completion configuiration";
     };
   };
   config = mkIf cfg.enable {

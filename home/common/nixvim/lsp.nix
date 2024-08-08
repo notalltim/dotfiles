@@ -7,6 +7,7 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nixvim.lsp;
+  nixvim = config.programs.nixvim;
 in {
   options = {
     baseline.nixvim.lsp = {
@@ -16,26 +17,6 @@ in {
 
   config = mkIf cfg.enable {
     programs.nixvim = {
-      # HACK: This is needed because the userCommand module does not handle lua for user commands
-      extraConfigLuaPre = ''
-        vim.api.nvim_create_user_command("AutoFormatDisable", function(args)
-            if args.bang then
-                vim.b.disable_autoformat = false
-            else
-                vim.g.disable_autoformat = false
-                vim.b.disable_autoformat = false
-            end
-        end, {desc = "Re-enable autoformat-on-save", bang = true})
-
-        vim.api.nvim_create_user_command("AutoFormatEnable", function(args)
-            if args.bang then
-                -- FormatDisable! will disable formatting just for this buffer
-                vim.b.disable_autoformat = true
-            else
-                vim.g.disable_autoformat = true
-            end
-        end, {desc = "Disable autoformat-on-save", bang = true})
-      '';
       # Add inlays for clangd
       plugins.clangd-extensions = {
         enable = true;
@@ -49,7 +30,7 @@ in {
       };
 
       # Enable telescope key map if telescope is enabled
-      plugins.telescope.keymaps = {
+      plugins.telescope.keymaps = mkIf nixvim.plugins.telescope.enable {
         "<leader>ls" = {
           action = "lsp_document_symbols";
           options = {
@@ -60,9 +41,6 @@ in {
 
       # Add to dictionary ltex
       plugins.ltex-extra.enable = true;
-
-      # Setup linters and formatters
-      autoGroups.LspFormatting = {};
 
       plugins.lsp-format.enable = true;
       plugins.none-ls = {
@@ -116,42 +94,61 @@ in {
         settings.on_attach = ''
           function(client, bufnr)
               require('lsp-format').on_attach(client, bufnr)
-              if client.supports_method("textDocument/formatting") then
-                  vim.api.nvim_buf_create_user_command(bufnr, "LspFormatting", function()
-                    vim.lsp.buf.format({
-                        filter = function(client)
-                            if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-                                return false
-                            end
-                        end,
-                        bufnr = bufnr
-                    })
-                  end, {})
-                  vim.api.nvim_clear_autocmds({group = augroup, buffer = bufnr})
-                  vim.api.nvim_create_autocmd("BufWritePre", {
-                      group = augroup,
-                      buffer = bufnr,
-                      command = "LspFormatting"
-                  })
-              end
           end
         '';
       };
 
-      plugins.which-key.registrations = {
-        "<leader>l" = "🌡LSP";
-        K = "LSP hover action";
-        "<leader>le" = "Go to references";
-        "<leader>ld" = "Go to declaration";
-        "<leader>lD" = "Go to definition";
-        "<leader>li" = "Go to implementation";
-        "<leader>lt" = "Go to type definition";
-        "<leader>la" = "List code actions";
-        "<leader>lf" = "Show function signature";
-        "<leader>lr" = "Rename symbol";
-        "<leader>lq" = "Show diagnostics";
-        "<space>ll" = "Show floating diagnostics";
-      };
+      plugins.which-key.settings.spec = mkIf nixvim.plugins.which-key.enable [
+        {
+          __unkeyed-1 = "<leader>l";
+          desc = "LSP";
+          icon = "🌡";
+        }
+        {
+          __unkeyed-1 = "K";
+          desc = "LSP hover action";
+        }
+        {
+          __unkeyed-1 = "<leader>le";
+          desc = "Go to references";
+        }
+        {
+          __unkeyed-1 = "<leader>ld";
+          desc = "Go to declaration";
+        }
+        {
+          __unkeyed-1 = "<leader>lD";
+          desc = "Go to definition";
+        }
+        {
+          __unkeyed-1 = "<leader>li";
+          desc = "Go to implementation";
+        }
+        {
+          __unkeyed-1 = "<leader>lt";
+          desc = "Go to type definition";
+        }
+        {
+          __unkeyed-1 = "<leader>la";
+          desc = "List code actions";
+        }
+        {
+          __unkeyed-1 = "<leader>lf";
+          desc = "Show function signature";
+        }
+        {
+          __unkeyed-1 = "<leader>lr";
+          desc = "Rename symbol";
+        }
+        {
+          __unkeyed-1 = "<leader>lq";
+          desc = "Show diagnostics";
+        }
+        {
+          __unkeyed-1 = "<space>ll";
+          desc = "Show floating diagnostics";
+        }
+      ];
 
       plugins.lsp = {
         enable = true;

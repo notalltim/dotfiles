@@ -20,7 +20,6 @@ in {
     };
     targets.genericLinux.enable = true;
 
-    xdg.mime.enable = true;
     xdg.enable = true;
 
     news.display = "silent";

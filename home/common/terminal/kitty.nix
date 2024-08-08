@@ -6,23 +6,27 @@
 }: let
   inherit (lib.strings) concatMapStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf;
+  inherit (lib.trivial) throwIf;
+  inherit (lib) mkIf mkDefault;
+  inherit (pkgs.lib) gpuWrapCheck;
   font_features = types:
     concatMapStringsSep "\n"
     (type: "font_features CaskaydiaCoveNF-" + type + " +ss02 +ss20 +ss19")
     types;
   cfg = config.programs.kitty;
   baseline = config.baseline.kitty;
+  terminal = config.baseline.terminal;
+  gpu = config.baseline.gpu;
 in {
   options = {
     baseline.kitty = {
       enableKeybind = mkEnableOption "Enable opening the termninal via ctrl+alt+t (uses dconf)";
     };
   };
-  config = {
-    programs.kitty = {
-      enable = true;
-      shellIntegration.enableFishIntegration = true;
+  config = mkIf terminal.enable {
+    programs.kitty = throwIf (!gpu.enable) "Kitty requires the `baseline.gpu` module to be enabled" {
+      enable = mkDefault true;
+      shellIntegration.enableFishIntegration = mkDefault true;
       font = {
         name = "CaskaydiaCove Nerd Font";
         # Only pull in the CaskaydiaCove nerd font + Fall back REVISIT: Why need fall back?
@@ -33,6 +37,9 @@ in {
         enable_audio_bell = false;
         disable_ligatures = "cursor";
       };
+      # Support kitty on non nixos system
+      package = gpuWrapCheck pkgs.kitty;
+
       theme = "Nightfox";
       extraConfig = font_features [
         "Regular"
@@ -49,6 +56,10 @@ in {
         "SemiLightItalic"
       ];
     };
+
+    programs.fish.interactiveShellInit = ''
+      set -e LD_LIBRARY_PATH VK_LAYER_PATH VK_ICD_FILENAMES LIBGL_DRIVERS_PATH  LIBVA_DRIVERS_PATH __EGL_VENDOR_LIBRARY_FILENAMES
+    '';
     # This is needed for kitty to find the font
     fonts.fontconfig.enable = true;
 

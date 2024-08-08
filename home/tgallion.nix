@@ -37,20 +37,20 @@ in {
 
   services.ssh-agent.enable = true;
 
-  # Support kitty on non nixos system
-  programs.kitty.package = gpuWrapCheck pkgs.kitty;
-
   # Common config expressed as basic modules
   baseline = {
     nixvim.enableAll = true;
     kitty.enableKeybind = true;
     packages.enable = true;
-    git.enable = true;
-    gdb.enable = true;
     home-manager.enable = true;
-    gpu.enable = true;
+    gpu = {
+      enable = true;
+      enableVulkan = true;
+    };
     nix.enable = true; #TODO: this does not cover the case I want it does not control the nix version
     nixpkgs.enable = true;
+    tools.enable = true;
+    terminal.enable = true;
   };
 
   programs.git = {

@@ -1,5 +1,13 @@
-{ pkgs, ... }: {
-  programs.fish = {
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}: let
+  inherit (lib) mkIf;
+  cfg = config.baseline.terminal;
+in {
+  programs.fish = mkIf cfg.enable {
     enable = true;
     plugins = [
       {

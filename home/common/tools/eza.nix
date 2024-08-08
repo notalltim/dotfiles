@@ -1,8 +1,15 @@
-{pkgs, ...}: {
-  programs.eza = {
-    enable = true;
-    enableFishIntegration = true;
-    git = true;
-    icons = true;
+{
+  config,
+  lib,
+  ...
+}: let
+  inherit (lib) mkIf mkDefault;
+  cfg = config.baseline.tools;
+in {
+  programs.eza = mkIf cfg.enable {
+    enable = mkDefault true;
+    enableFishIntegration = mkDefault true;
+    git = mkDefault true;
+    icons = mkDefault true;
   };
 }

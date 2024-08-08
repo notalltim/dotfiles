@@ -8,8 +8,9 @@
   inherit (lib) mkIf;
   inherit (lib.meta) getExe';
   inherit (lib.attrsets) mapAttrs mapAttrsToList;
-  inherit (config.nixvim.helpers) mkRaw;
+  inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.debug;
+  nixvim = config.programs.nixvim;
 in {
   options = {
     baseline.nixvim.debug = {
@@ -98,8 +99,12 @@ in {
         };
       };
 
-      plugins.which-key.registrations."<leader>d" = "󰨮 Debugger ";
-
+      plugins.which-key.settings.spec = mkIf nixvim.plugins.which-key.enable [
+        {
+          __unkeyed-1 = "<leader>d";
+          desc = "Debugger ";
+        }
+      ];
       keymaps = [
         {
           key = "<F5>";

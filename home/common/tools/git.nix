@@ -4,9 +4,10 @@
   ...
 }: let
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
   cfg = config.baseline.git;
   hasKey = config.programs.git.signing.key != null;
+  nixvimEnabled = config.baseline.nixvim.enable;
 in {
   options.baseline.git = {
     enable = mkEnableOption "Enable baseline git configuration";
@@ -14,20 +15,20 @@ in {
 
   config = mkIf cfg.enable {
     programs.git = {
-      enable = true;
-      lfs.enable = true;
-      signing.signByDefault = hasKey;
+      enable = mkDefault true;
+      lfs.enable = mkDefault true;
+      signing.signByDefault = mkDefault hasKey;
 
       includes = [
         {
           contents = {
-            commit = {gpgSign = hasKey;};
+            commit = {gpgSign = mkDefault hasKey;};
             core = {
-              editor = "nvim";
-              autocrlf = "input";
+              editor = mkIf nixvimEnabled "nvim";
+              autocrlf = mkDefault "input";
             };
-            color = {ui = "auto";};
-            push = {autoSetupRemote = true;};
+            color = {ui = mkDefault "auto";};
+            push = {autoSetupRemote = mkDefault true;};
           };
         }
       ];

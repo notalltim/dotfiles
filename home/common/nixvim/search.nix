@@ -5,8 +5,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
-  inherit (config.nixvim.helpers) mkRaw;
+  inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.search;
+  nixvim = config.programs.nixvim;
 in {
   options = {
     baseline.nixvim.search = {
@@ -17,10 +18,16 @@ in {
   config = mkIf cfg.enable {
     programs.nixvim = {
       # symbols for which key maps
-      plugins.which-key.registrations = {
-        "<leader>f" = " File search";
-        "<leader>s" = " Telescope search";
-      };
+      plugins.which-key.settings.spec = mkIf nixvim.plugins.which-key.enable [
+        {
+          __unkeyed-1 = "<leader>f";
+          desc = "File search";
+        }
+        {
+          __unkeyed-1 = "<leader>s";
+          desc = "Telescope search";
+        }
+      ];
       plugins.telescope = {
         enable = true;
         extensions = {

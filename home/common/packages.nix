@@ -11,13 +11,11 @@
     lorri
   ];
   developerTools = with pkgs; [
-    gdb
     git
     git-filter-repo
     lazygit
     clang-tools_17
     elfutils
-    valgrind
     pkg-config
     gnumake
     cmake
