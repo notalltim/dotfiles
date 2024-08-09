@@ -164,6 +164,23 @@
         "type": "github"
       }
     },
+    "gcc-python-pretty-printers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1716276744,
+        "narHash": "sha256-MHDkRKt2SVLPSOOJOteC3XBgm6+ivtnN7TUKV5hkj4g=",
+        "owner": "gcc-mirror",
+        "repo": "gcc",
+        "rev": "b71f1de6e9cf7181a288c0f39f9b1ef6580cf5c8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gcc-mirror",
+        "ref": "releases/gcc-13.3.0",
+        "repo": "gcc",
+        "type": "github"
+      }
+    },
     "git-hooks": {
       "inputs": {
         "flake-compat": [
@@ -402,11 +419,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1723064649,
-        "narHash": "sha256-J7p/kv0GHAnvg2HH3vJ3JVz1LEzCtdhcH0prmdYfRog=",
+        "lastModified": 1723156179,
+        "narHash": "sha256-rqdhRPPtxi/Mi73YC5mz/XAi/r8AJfH0Smhz6ZeS2nI=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "593f5215cb1df010451675c19f2ad5c5481ccee3",
+        "rev": "fab51138b7f8d2196b359d1a0986eaf0b69a9b9e",
         "type": "github"
       },
       "original": {
@@ -476,6 +493,7 @@
     "root": {
       "inputs": {
         "fenix": "fenix",
+        "gcc-python-pretty-printers": "gcc-python-pretty-printers",
         "home-manager": "home-manager",
         "nix": "nix",
         "nixgl": "nixgl",

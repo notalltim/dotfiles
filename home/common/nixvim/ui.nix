@@ -31,21 +31,6 @@ in {
         vim.o.cmdheight = 0
         vim.opt.termguicolors = true
       '';
-
-      # UI to see key commands
-      plugins.which-key.enable = true;
-
-      # Buffer line
-      plugins.lualine.enable = true;
-
-      # Make brackets readable
-      plugins.rainbow-delimiters.enable = true;
-
-      # Make TODO: highlighting work
-      plugins.todo-comments.enable = true;
-
-      # File viewer
-      plugins.neo-tree.enable = true;
       keymaps = [
         # Neo-tree key maps
         {
@@ -64,20 +49,37 @@ in {
         }
       ];
 
-      # Syntax highlighting
-      plugins.treesitter = {
-        enable = true;
-        folding = true;
-        settings = {
-          incremental_selection.enable = true;
-          indent.enable = true;
-        };
-      };
+      # UI to see key commands
+      plugins = {
+        which-key.enable = true;
 
-      # Show color codes in the editor and a color picker
-      plugins.ccc = {
-        enable = true;
-        settings.highlighter.auto_enable = true;
+        # Buffer line
+        lualine.enable = true;
+
+        # Make brackets readable
+        rainbow-delimiters.enable = true;
+
+        # Make TODO: highlighting work
+        todo-comments.enable = true;
+
+        # File viewer
+        neo-tree.enable = true;
+        # Syntax highlighting
+        treesitter = {
+          enable = true;
+          folding = true;
+          settings = {
+            incremental_selection.enable = true;
+            indent.enable = true;
+          };
+        };
+        treesitter-context.enable = true;
+
+        # Show color codes in the editor and a color picker
+        ccc = {
+          enable = true;
+          settings.highlighter.auto_enable = true;
+        };
       };
     };
   };

@@ -14,7 +14,7 @@
     git
     git-filter-repo
     lazygit
-    clang-tools_17
+    clang-tools
     elfutils
     pkg-config
     gnumake

@@ -2,27 +2,22 @@
   pkgs,
   config,
   lib,
+  self,
   ...
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   pretty-printers = pkgs.stdenvNoCC.mkDerivation {
     name = "gcc-python-pretty-printers";
-    version = "13.2";
-    src =
-      (pkgs.fetchgit {
-        url = "https://gcc.gnu.org/git/gcc.git";
-        sparseCheckout = ["libstdc++-v3/python/"];
-        hash = "sha256-YA8RsqiaJiS1S7oMzK/B9nnbK7sPwOMZdq2yRiOB1Gk";
-      })
-      + "/libstdc++-v3/python";
+    version = "13.3";
+    src = self.inputs.gcc-python-pretty-printers;
     dontConfigure = true;
     dontBuild = true;
     dontPatch = true;
     installPhase = ''
       runHook preInstall
       mkdir -p $out/python
-      cp -r $src/* $out/python
+      cp -r $src/libstdc++-v3/python $out
       runHook postInstall
     '';
   };

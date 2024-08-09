@@ -25,6 +25,12 @@
       inputs.nix.url = "https://flakehub.com/f/NixOS/nix/=2.22.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Input sources for internal packages
+    gcc-python-pretty-printers = {
+      url = "github:gcc-mirror/gcc?ref=releases/gcc-13.3.0&shallow=1";
+      flake = false;
+    };
   };
 
   outputs = {
