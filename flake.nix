@@ -21,8 +21,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     nix = {
-      url = "github:DeterminateSystems/nix";
-      inputs.nix.url = "https://flakehub.com/f/NixOS/nix/=2.22.1";
+      url = "github:NixOS/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -43,6 +42,7 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
+      overlays = [nixgl.overlays.default];
     };
   in {
     homeConfigurations.tgallion = home-manager.lib.homeManagerConfiguration {
@@ -56,5 +56,9 @@
     legacyPackages.${system} = pkgs;
     gpuWrappers = nixgl.packages;
     homeManagerModules = import ./home;
+    overlays = import ./overlays {
+      inherit self;
+      lib = nixpkgs.lib;
+    };
   };
 }

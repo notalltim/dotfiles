@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  self,
   ...
 }: let
   inherit (lib.options) mkEnableOption;
@@ -13,10 +12,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs = {
-      config = import ./nixpkgs-config.nix;
-      overlays = [self.inputs.nixgl.overlays.default self.inputs.fenix.overlays.default];
-    };
+    nixpkgs.config = import ./nixpkgs-config.nix;
     xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
   };
 }

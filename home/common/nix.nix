@@ -1,5 +1,4 @@
 {
-  self,
   config,
   lib,
   pkgs,
@@ -15,7 +14,7 @@ in {
 
   config = mkIf cfg.enable {
     nix = {
-      package = self.inputs.nix.packages.${pkgs.stdenv.system}.default;
+      package = pkgs.nix;
 
       registry.nixpkgs = {
         exact = true;

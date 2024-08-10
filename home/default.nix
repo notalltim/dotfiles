@@ -5,7 +5,7 @@
   services = import ./common/services;
   packages = import ./common/packages.nix;
   home-manager = import ./common/home-manager.nix;
-  gpu = import ./common/gpu.nix;
+  gpu = import ./common/gpu;
   nix = import ./common/nix.nix;
   nixpkgs = import ./common/nixpkgs;
 }

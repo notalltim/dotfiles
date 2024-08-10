@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  self,
   ...
 }: let
   inherit (lib.attrsets) mapAttrsToList;
@@ -52,6 +53,11 @@ in {
     tools.enable = true;
     terminal.enable = true;
   };
+
+  #TODO: this is not my favorite way to get overlays still torn over using self in common modules
+  nixpkgs.overlays = [
+    self.overlays.default
+  ];
 
   programs.git = {
     signing = {

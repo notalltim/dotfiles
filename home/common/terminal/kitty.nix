@@ -6,7 +6,6 @@
 }: let
   inherit (lib.strings) concatMapStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (lib.trivial) throwIf;
   inherit (lib) mkIf mkDefault;
   inherit (pkgs.lib) gpuWrapCheck;
   font_features = types:
@@ -16,7 +15,6 @@
   cfg = config.programs.kitty;
   baseline = config.baseline.kitty;
   terminal = config.baseline.terminal;
-  gpu = config.baseline.gpu;
 in {
   options = {
     baseline.kitty = {
@@ -24,7 +22,17 @@ in {
     };
   };
   config = mkIf terminal.enable {
-    programs.kitty = throwIf (!gpu.enable) "Kitty requires the `baseline.gpu` module to be enabled" {
+    assertions = [
+      {
+        assertion = builtins.hasAttr "gpu" config.baseline;
+        message = "Kitty requires the `baseline.gpu` module to be imported";
+      }
+      {
+        assertion = config.baseline.gpu.enable or false;
+        message = "Kitty requires the `baseline.gpu` module to be enabled";
+      }
+    ];
+    programs.kitty = {
       enable = mkDefault true;
       shellIntegration.enableFishIntegration = mkDefault true;
       font = {

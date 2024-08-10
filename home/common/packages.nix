@@ -6,6 +6,7 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
+  inherit (builtins) hasAttr;
   nixTools = with pkgs; [
     cachix
     lorri
@@ -54,6 +55,14 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = hasAttr "fenix" pkgs;
+        message = ''
+          fenix is missing you need to include either the `overlays.fenix` 
+          or `overlays.default` from the notalltim's flake in the `nixpkgs.overlays` option'';
+      }
+    ];
     home.packages =
       nixTools
       ++ developerTools
