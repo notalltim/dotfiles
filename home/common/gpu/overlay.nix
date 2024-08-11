@@ -12,82 +12,81 @@ in
       wrapIntel = type: lib.getExe final.nixgl."nix${type}Intel";
       inherit (final.lib.strings) escapeNixString optionalString;
     in
-      final.runCommand "gpu-wrappers" {} ''
-        bin=$out/bin
-        mkdir -p $bin
+      final.runCommand "gpu-wrappers" {} (''
+          bin=$out/bin
+          mkdir -p $bin
 
-        cat > $bin/nixgl-intel <<EOF
-        #!/bin/sh
-        exec ${wrapIntel "GL"} ${
-          if cfg.enableVulkan
-          then wrapIntel "Vulkan"
-          else ""
-        } "\$@"
-        EOF
-        chmod +x $bin/nixgl-intel
+          cat > $bin/nixgl-intel <<EOF
+          #!/bin/sh
+          exec ${wrapIntel "GL"} ${
+            if cfg.enableVulkan
+            then wrapIntel "Vulkan"
+            else ""
+          } "\$@"
+          EOF
+          chmod +x $bin/nixgl-intel
 
-        cat > $bin/nixgl <<EOF
-        #!/bin/sh
-        ${
-          if cfg.enableNvidiaOffload
-          then ''
-            if [ "\$__NV_PRIME_RENDER_OFFLOAD" = "1" ]
-            then
-              if [ ! -h "${config.xdg.cacheHome}/nixgl/result" ]
+          cat > $bin/nixgl <<EOF
+          #!/bin/sh
+          ${
+            if cfg.enableNvidiaOffload
+            then ''
+              if [ "\$__NV_PRIME_RENDER_OFFLOAD" = "1" ]
               then
-                  mkdir -p "${config.xdg.cacheHome}/nixgl"
-                  nix build --quiet --impure \
-                    --out-link "${config.xdg.cacheHome}/nixgl/result" \
-                    ${nixglPkgs}.nixGLNvidia ${
-              if cfg.enableVulkan
-              then "${nixglPkgs}.nixVulkanNvidia"
-              else ""
-            }
+                if [ ! -h "${config.xdg.cacheHome}/nixgl/result" ]
+                then
+                    mkdir -p "${config.xdg.cacheHome}/nixgl"
+                    nix build --quiet --impure \
+                      --out-link "${config.xdg.cacheHome}/nixgl/result" \
+                      ${nixglPkgs}.nixGLNvidia ${
+                if cfg.enableVulkan
+                then "${nixglPkgs}.nixVulkanNvidia"
+                else ""
+              }
+                fi
+                nixgl-nvidia "\$@"
+              else
+                nixgl-intel "\$@"
               fi
-              nixgl-nvidia "\$@"
-            else
-              nixgl-intel "\$@"
-            fi
-          ''
-          else ''nixgl-intel "\$@"''
-        }
-        EOF
-        chmod +x $bin/nixgl
+            ''
+            else ''nixgl-intel "\$@"''
+          }
+          EOF
+          chmod +x $bin/nixgl
+        ''
+        + optionalString cfg.enableNvidiaOffload
+        ''
+          cat > $bin/nixgl-nvidia <<EOF
+          #!/bin/sh
+          glbin=\$(nix eval --quiet --raw --impure "${nixglPkgs}.nixGLNvidia.meta.name")
+          vkbin=${
+            if cfg.enableVulkan
+            then escapeNixString "\$(echo \$glbin | sed s/GL/Vulkan/)"
+            else ""
+          }
+          packages=${
+            if cfg.enableVulkan
+            then "\"${nixglPkgs}.nixGLNvidia ${nixglPkgs}.nixVulkanNvidia\""
+            else "${nixglPkgs}.nixGLNvidia"
+          }
+          exec nix shell --quiet --impure \$packages -c \$glbin \$vkbin "\$@"
+          EOF
+          chmod +x $bin/nixgl-nvidia
 
-      ''
-      + optionalString cfg.enableNvidiaOffload
-      ''
-        cat > $bin/nixgl-nvidia <<EOF
-        #!/bin/sh
-        glbin=\$(nix eval --quiet --raw --impure "${nixglPkgs}.nixGLNvidia.meta.name")
-        vkbin=${
-          if cfg.enableVulkan
-          then escapeNixString "\$(echo \$glbin | sed s/GL/Vulkan/)"
-          else ""
-        }
-        packages=${
-          if cfg.enableVulkan
-          then "\"${nixglPkgs}.nixGLNvidia ${nixglPkgs}.nixVulkanNvidia\""
-          else "${nixglPkgs}.nixGLNvidia"
-        }
-        exec nix shell --quiet --impure \$packages -c \$glbin \$vkbin "\$@"
-        EOF
-        chmod +x $bin/nixgl-nvidia
-
-        cat > $bin/nvidia-offload <<EOF
-        #!/bin/sh
-        export __NV_PRIME_RENDER_OFFLOAD=1
-        export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-        export __GLX_VENDOR_LIBRARY_NAME=nvidia
-        ${
-          if cfg.enableVulkan
-          then "export __VK_LAYER_NV_optimus=NVIDIA_only"
-          else ""
-        }
-        exec "\$@"
-        EOF
-        chmod +x $bin/nvidia-offload
-      '';
+          cat > $bin/nvidia-offload <<EOF
+          #!/bin/sh
+          export __NV_PRIME_RENDER_OFFLOAD=1
+          export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+          export __GLX_VENDOR_LIBRARY_NAME=nvidia
+          ${
+            if cfg.enableVulkan
+            then "export __VK_LAYER_NV_optimus=NVIDIA_only"
+            else ""
+          }
+          exec "\$@"
+          EOF
+          chmod +x $bin/nvidia-offload
+        '');
 
     lib = prev.lib.extend (_: _: let
       gpuWrapPackage = pkg:
