@@ -8,7 +8,7 @@ in
   final: prev: {
     gpu-wrappers = let
       system = final.system;
-      nixglPkgs = "${self}#gpuWrappers${system}";
+      nixglPkgs = "${self}#gpuWrappers.${system}";
       wrapIntel = type: lib.getExe final.nixgl."nix${type}Intel";
       inherit (final.lib.strings) escapeNixString optionalString;
     in
@@ -53,6 +53,7 @@ in
         }
         EOF
         chmod +x $bin/nixgl
+
       ''
       + optionalString cfg.enableNvidiaOffload
       ''
