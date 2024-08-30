@@ -8,14 +8,6 @@ let
   impure = cfg.nvidia.driverHash == null && cfg.nvidia.driverVersion == null;
 in
 final: prev: {
-  nixgl =
-    if cfg.nvidia.enable && !impure then
-      prev.nixgl.override {
-        nvidiaVersion = cfg.nvidia.driverVersion;
-        nvidiaHash = cfg.nvidia.driverHash;
-      }
-    else
-      final.nixgl;
 
   gpu-wrappers =
     let

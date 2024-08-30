@@ -8,6 +8,7 @@
 let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) str nullOr;
+  inherit (lib.lists) optional;
   inherit (builtins) hasAttr;
   inherit (lib) mkIf fakeSha256;
   cfg = config.baseline.gpu;
@@ -102,7 +103,13 @@ in
           '';
         };
       };
-      nixpkgs.overlays = [ (import ./overlay.nix { inherit self config lib; }) ];
+      nixpkgs.overlays =
+        [ (import ./overlay.nix { inherit self config lib; }) ]
+        ++ optional (cfg.nvidia.enable && nietherNull) [
+          (import ./nixgl.nix cfg)
+        ]
+
+      ;
     }
   );
 }
