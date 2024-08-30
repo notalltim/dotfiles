@@ -10,7 +10,7 @@ let
   inherit (lib.types) str nullOr;
   inherit (lib.lists) optional;
   inherit (builtins) hasAttr;
-  inherit (lib) mkIf fakeSha256;
+  inherit (lib) mkIf fakeSha256 mkAfter;
   cfg = config.baseline.gpu;
 in
 {
@@ -103,9 +103,12 @@ in
           '';
         };
       };
-      nixpkgs.overlays = [
-        (import ./overlay.nix { inherit self config lib; })
-      ] ++ optional (cfg.nvidia.enable && nietherNull) ((import ./nixgl.nix) cfg);
+      nixpkgs.overlays = mkAfter (
+        [
+          (import ./overlay.nix { inherit self config lib; })
+        ]
+        ++ optional (cfg.nvidia.enable && nietherNull) ((import ./nixgl.nix) cfg)
+      );
     }
   );
 }
