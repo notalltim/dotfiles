@@ -9,7 +9,7 @@ let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) str nullOr;
   inherit (builtins) hasAttr;
-  inherit (lib) mkIf fakeSha256 toString;
+  inherit (lib) mkIf fakeSha256;
   cfg = config.baseline.gpu;
 in
 {
@@ -72,11 +72,22 @@ in
           '';
         }
         {
-          assertion = !cfg.nvidia.enable || bothNull && (hasAttr self "outputs.legacyPackages.nixgl");
+          assertion = !cfg.nvidia.enable || bothNull && (hasAttr "outputs" self);
           message = ''
-            Nvidia is enabled in impure mode and the self has not been passed to `extraSpecialArgs` or does not contain a `legacyPackages`.
-            The legacyPackages is used to form a nix expression that is run in impure mode as part of the gpu wrapper script.
-            NOTE: the nixgl overlay must be applied to `legacyPackages`.
+            Nvidia is enabled in impure mode and the self has not been passed to `extraSpecialArgs`.          
+          '';
+        }
+        {
+          assertion = !cfg.nvidia.enable || bothNull && (hasAttr "legacyPackages" self.outputs);
+          message = ''
+            The legacyPackages is used to form a nix expression that is run in impure mode as part of the gpu wrapper script          
+          '';
+        }
+        {
+          assertion =
+            !cfg.nvidia.enable || bothNull && (hasAttr "nixgl" self.outputs.legacyPackages.${pkgs.system});
+          message = ''
+            the nixgl overlay must be applied to `legacyPackages`.
           '';
         }
       ];

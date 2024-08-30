@@ -19,7 +19,7 @@ final: prev: {
 
   gpu-wrappers =
     let
-      nixglPkgs = "${self}#legacyPackage.${final.system}";
+      nixglPkgs = "${self}#legacyPackages.${final.system}.nixgl";
       wrapIntel = type: lib.getExe final.nixgl."nix${type}Intel";
       wrapNvidia = type: lib.getExe final.nixgl."nix${type}Nvidia";
       inherit (final.lib.strings) escapeNixString optionalString;
