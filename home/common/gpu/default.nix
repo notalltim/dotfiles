@@ -72,20 +72,23 @@ in
           '';
         }
         {
-          assertion = !cfg.nvidia.enable || bothNull && (hasAttr "outputs" self);
+          assertion = !cfg.nvidia.enable || bothNull && (hasAttr "outputs" self) || nietherNull;
           message = ''
             Nvidia is enabled in impure mode and the self has not been passed to `extraSpecialArgs`.          
           '';
         }
         {
-          assertion = !cfg.nvidia.enable || bothNull && (hasAttr "legacyPackages" self.outputs);
+          assertion =
+            !cfg.nvidia.enable || bothNull && (hasAttr "legacyPackages" self.outputs) || nietherNull;
           message = ''
             The legacyPackages is used to form a nix expression that is run in impure mode as part of the gpu wrapper script          
           '';
         }
         {
           assertion =
-            !cfg.nvidia.enable || bothNull && (hasAttr "nixgl" self.outputs.legacyPackages.${pkgs.system});
+            !cfg.nvidia.enable
+            || bothNull && (hasAttr "nixgl" self.outputs.legacyPackages.${pkgs.system})
+            || nietherNull;
           message = ''
             the nixgl overlay must be applied to `legacyPackages`.
           '';
