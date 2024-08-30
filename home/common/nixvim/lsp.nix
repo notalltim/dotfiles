@@ -74,7 +74,8 @@ in {
           };
 
           formatting = {
-            alejandra.enable = true;
+            # alejandra.enable = true;
+            nixfmt.enable = true;
             black.enable = true;
             clang_format = {
               enable = true;

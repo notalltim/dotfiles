@@ -9,7 +9,7 @@
   inherit (builtins) hasAttr;
   nixTools = with pkgs; [
     cachix
-    lorri
+    # lorri
   ];
   developerTools = with pkgs; [
     git
@@ -34,7 +34,7 @@
       "miri"
       "rust-docs"
     ])
-    cargo-info
+    cargo-information
     cargo-audit
     cargo-license
     cargo-feature
@@ -60,7 +60,7 @@ in {
         assertion = hasAttr "fenix" pkgs;
         message = ''
           fenix is missing you need to include either the `overlays.fenix` 
-          or `overlays.default` from the notalltim's flake in the `nixpkgs.overlays` option'';
+          or `overlays.default` notalltim's flake in the `nixpkgs.overlays` option'';
       }
     ];
     home.packages =

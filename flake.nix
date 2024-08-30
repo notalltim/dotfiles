@@ -53,9 +53,12 @@
       };
     };
 
+    formatter.${system} = pkgs.nixfmt-rfc-style;
+
     legacyPackages.${system} = pkgs;
-    gpuWrappers = nixgl.packages;
-    homeManagerModules = import ./home;
+
+    homeModules = (import ./home) self;
+
     overlays = import ./overlays {
       inherit self;
       lib = nixpkgs.lib;

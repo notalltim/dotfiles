@@ -3,7 +3,7 @@
   lib,
 }: let
   inherit (lib.fixedPoints) composeManyExtensions;
-  inherit (lib.attrsets) mapAttrsToList;
+  inherit (lib.attrsets) attrValues;
   overlays = {
     pretty-printers = import ./pretty-printers.nix {inherit self;};
     fenix = self.inputs.fenix.overlays.default;
@@ -11,4 +11,4 @@
     nix = self.inputs.nix.overlays.default;
   };
 in
-  overlays // {default = composeManyExtensions (mapAttrsToList (_:overlay: overlay) overlays);}
+  overlays // {default = composeManyExtensions (attrValues overlays);}

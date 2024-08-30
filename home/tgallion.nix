@@ -4,7 +4,7 @@
   self,
   ...
 }: let
-  inherit (lib.attrsets) mapAttrsToList;
+  inherit (lib.attrsets) attrValues;
   inherit (pkgs.lib) gpuWrapCheck;
 in {
   home = rec {
@@ -31,7 +31,7 @@ in {
     ];
   };
 
-  imports = mapAttrsToList (_: module: module) (import ./.);
+  imports = attrValues self.outputs.homeModules;
 
   # For gdb debugging
   services.nixseparatedebuginfod.enable = true;

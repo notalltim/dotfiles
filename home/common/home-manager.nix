@@ -18,6 +18,7 @@ in {
       startServices = true;
       systemctlPath = "/usr/bin/systemctl";
     };
+    # TODO: this is not great for nixos hosts
     targets.genericLinux.enable = true;
 
     xdg.enable = true;

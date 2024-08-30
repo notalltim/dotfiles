@@ -1,4 +1,4 @@
-{
+self: {
   nixvim = import ./common/nixvim;
   terminal = import ./common/terminal;
   tool = import ./common/tools;
@@ -8,4 +8,5 @@
   gpu = import ./common/gpu;
   nix = import ./common/nix.nix;
   nixpkgs = import ./common/nixpkgs;
+  nixvimUpstream = self.inputs.nixvim.homeManagerModules.nixvim;
 }

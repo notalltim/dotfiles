@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  self,
   ...
 }: let
   inherit (lib.options) mkEnableOption;
@@ -10,7 +9,6 @@
   cfg = config.baseline.nixvim;
 in {
   imports = [
-    self.inputs.nixvim.homeManagerModules.nixvim
     ./debug.nix
     ./git.nix
     ./lsp.nix
