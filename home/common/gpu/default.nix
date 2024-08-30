@@ -103,13 +103,9 @@ in
           '';
         };
       };
-      nixpkgs.overlays =
-        [ (import ./overlay.nix { inherit self config lib; }) ]
-        ++ optional (cfg.nvidia.enable && nietherNull) [
-          (import ./nixgl.nix cfg)
-        ]
-
-      ;
+      nixpkgs.overlays = [
+        (import ./overlay.nix { inherit self config lib; })
+      ] ++ optional (cfg.nvidia.enable && nietherNull) ((import ./nixgl.nix) cfg);
     }
   );
 }
