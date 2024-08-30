@@ -1,11 +1,9 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   inherit (lib) mkIf mkDefault;
   cfg = config.baseline.tools;
-in {
+in
+{
   programs.eza = mkIf cfg.enable {
     enable = mkDefault true;
     enableFishIntegration = mkDefault true;

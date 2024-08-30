@@ -3,17 +3,19 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nix;
-in {
+in
+{
   options.baseline.nix = {
     enable = mkEnableOption "nix install configuration";
   };
 
   config = mkIf cfg.enable {
-    home.packages = [pkgs.nix];
+    home.packages = [ pkgs.nix ];
     nix = {
       package = pkgs.nix;
 
@@ -33,8 +35,11 @@ in {
         auto-optimise-store = true;
         always-allow-substitutes = true;
         bash-prompt-prefix = "(nix:$name)\\040";
-        experimental-features = ["nix-command" "flakes"];
-        extra-nix-path = ["nixpkgs=flake:nixpkgs"];
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+        extra-nix-path = [ "nixpkgs=flake:nixpkgs" ];
         upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
       };
     };

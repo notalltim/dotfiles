@@ -3,12 +3,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   inherit (builtins) hasAttr;
   cfg = config.baseline.gdb;
-in {
+in
+{
   options = {
     baseline.gdb = {
       enable = mkEnableOption "Enable GDB configuration";
@@ -27,7 +29,7 @@ in {
     home.packages = [
       pkgs.gdb
       pkgs.valgrind
-      (lib.getBin (pkgs.elfutils.override {enableDebuginfod = true;}))
+      (lib.getBin (pkgs.elfutils.override { enableDebuginfod = true; }))
     ];
     home.file.".gdbinit".text = ''
       set debuginfod enabled on

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nixvim.ui;
-in {
+in
+{
   options = {
     baseline.nixvim.ui = {
       enable = mkEnableOption "Enable baseline UI configuiration";
@@ -17,9 +19,7 @@ in {
   config = mkIf cfg.enable {
     programs.nixvim = {
       colorscheme = "nightfox";
-      extraPlugins = [
-        pkgs.vimPlugins.nightfox-nvim
-      ];
+      extraPlugins = [ pkgs.vimPlugins.nightfox-nvim ];
 
       extraConfigLuaPre = ''
         vim.cmd("set expandtab")

@@ -3,10 +3,12 @@
   pkgs,
   self,
   ...
-}: let
+}:
+let
   inherit (lib.attrsets) attrValues;
   inherit (pkgs.lib) gpuWrapCheck;
-in {
+in
+{
   home = rec {
     stateVersion = "23.11";
     homeDirectory = "/home/${username}";
@@ -26,8 +28,13 @@ in {
       audacity
       mprime
       openrgb-with-all-plugins
-      (python3Full.withPackages
-        (pkgs: with pkgs; [numpy scipy matplotlib]))
+      (python3Full.withPackages (
+        pkgs: with pkgs; [
+          numpy
+          scipy
+          matplotlib
+        ]
+      ))
     ];
   };
 
@@ -48,16 +55,14 @@ in {
       enable = true;
       enableVulkan = true;
     };
-    nix.enable = true; #TODO: this does not cover the case I want it does not control the nix version
+    nix.enable = true; # TODO: this does not cover the case I want it does not control the nix version
     nixpkgs.enable = true;
     tools.enable = true;
     terminal.enable = true;
   };
 
   #TODO: this is not my favorite way to get overlays still torn over using self in common modules
-  nixpkgs.overlays = [
-    self.overlays.default
-  ];
+  nixpkgs.overlays = [ self.overlays.default ];
 
   programs.git = {
     signing = {

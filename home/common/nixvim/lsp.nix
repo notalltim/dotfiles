@@ -3,12 +3,14 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nixvim.lsp;
   nixvim = config.programs.nixvim;
-in {
+in
+{
   options = {
     baseline.nixvim.lsp = {
       enable = mkEnableOption "Enable baseline LSP configuiration";
@@ -75,7 +77,10 @@ in {
 
           formatting = {
             # alejandra.enable = true;
-            nixfmt.enable = true;
+            nixfmt = {
+              enable = true;
+              package = pkgs.nixfmt-rfc-style;
+            };
             black.enable = true;
             clang_format = {
               enable = true;
@@ -179,7 +184,14 @@ in {
           clangd = {
             enable = true;
             # Add tpp files to the lsp list and remove proto
-            filetypes = ["c" "cpp" "objc" "objcpp" "cuda" "tpp"];
+            filetypes = [
+              "c"
+              "cpp"
+              "objc"
+              "objcpp"
+              "cuda"
+              "tpp"
+            ];
             onAttach.function = ''
               if client == "clangd" then
                   require("clangd_extensions.inlay_hints").setup_autocmd()

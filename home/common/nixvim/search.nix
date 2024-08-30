@@ -1,14 +1,12 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.search;
   nixvim = config.programs.nixvim;
-in {
+in
+{
   options = {
     baseline.nixvim.search = {
       enable = mkEnableOption "Enable baseline search configuiration";

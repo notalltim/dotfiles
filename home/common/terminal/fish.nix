@@ -3,10 +3,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   cfg = config.baseline.terminal;
-in {
+in
+{
   programs.fish = mkIf cfg.enable {
     enable = true;
     plugins = [

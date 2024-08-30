@@ -3,19 +3,22 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.strings) concatMapStringsSep;
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf mkDefault;
   inherit (pkgs.lib) gpuWrapCheck;
-  font_features = types:
-    concatMapStringsSep "\n"
-    (type: "font_features CaskaydiaCoveNF-" + type + " +ss02 +ss20 +ss19")
-    types;
+  font_features =
+    types:
+    concatMapStringsSep "\n" (
+      type: "font_features CaskaydiaCoveNF-" + type + " +ss02 +ss20 +ss19"
+    ) types;
   cfg = config.programs.kitty;
   baseline = config.baseline.kitty;
   terminal = config.baseline.terminal;
-in {
+in
+{
   options = {
     baseline.kitty = {
       enableKeybind = mkEnableOption "Enable opening the termninal via ctrl+alt+t (uses dconf)";
@@ -38,8 +41,12 @@ in {
       font = {
         name = "CaskaydiaCove Nerd Font";
         # Only pull in the CaskaydiaCove nerd font + Fall back REVISIT: Why need fall back?
-        package =
-          pkgs.nerdfonts.override {fonts = ["CascadiaCode" "Iosevka"];};
+        package = pkgs.nerdfonts.override {
+          fonts = [
+            "CascadiaCode"
+            "Iosevka"
+          ];
+        };
       };
       settings = {
         enable_audio_bell = false;
@@ -78,7 +85,10 @@ in {
       comment = "Fast, feature-rich, GPU based terminal";
       exec = "${cfg.package}/bin/kitty";
       icon = "${cfg.package}/share/icons/hicolor/256x256/apps/kitty.png";
-      categories = ["System" "TerminalEmulator"];
+      categories = [
+        "System"
+        "TerminalEmulator"
+      ];
     };
 
     xdg.desktopEntries.kitty-open = {
@@ -88,7 +98,10 @@ in {
       comment = "Open URLs with kitty";
       exec = "${cfg.package}/bin/kitty +open %U";
       icon = "${cfg.package}/share/icons/hicolor/256x256/apps/kitty.png";
-      categories = ["System" "TerminalEmulator"];
+      categories = [
+        "System"
+        "TerminalEmulator"
+      ];
       noDisplay = true;
       mimeType = [
         "image/*"
@@ -102,8 +115,11 @@ in {
 
     home.activation = {
       linkDesktopApplications = {
-        after = ["writeBoundary" "createXdgUserDirectories"];
-        before = [];
+        after = [
+          "writeBoundary"
+          "createXdgUserDirectories"
+        ];
+        before = [ ];
         data = ''
           rm -rf ${config.xdg.dataHome}/"applications/home-manager"
           mkdir -p ${config.xdg.dataHome}/"applications/home-manager"

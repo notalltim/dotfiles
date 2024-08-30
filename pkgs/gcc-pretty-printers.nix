@@ -1,7 +1,4 @@
-{
-  src,
-  stdenvNoCC,
-}:
+{ src, stdenvNoCC }:
 stdenvNoCC.mkDerivation {
   name = "gcc-pretty-printers";
   version = "13.3";

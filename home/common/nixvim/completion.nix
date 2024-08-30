@@ -1,13 +1,11 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.completion;
-in {
+in
+{
   options = {
     baseline.nixvim.completion = {
       enable = mkEnableOption "Enable baseline completion configuiration";
@@ -88,29 +86,21 @@ in {
               "<C-e>" = "cmp.mapping.close()";
             };
             window = {
-              completion = {border = "solid";};
-              documentation = {border = "solid";};
+              completion = {
+                border = "solid";
+              };
+              documentation = {
+                border = "solid";
+              };
             };
 
             sources = [
-              {
-                name = "luasnip";
-              }
-              {
-                name = "nvim_lsp";
-              }
-              {
-                name = "nvim_lsp_document_symbol";
-              }
-              {
-                name = "nvim_lsp_signature_help";
-              }
-              {
-                name = "buffer";
-              }
-              {
-                name = "codeium";
-              }
+              { name = "luasnip"; }
+              { name = "nvim_lsp"; }
+              { name = "nvim_lsp_document_symbol"; }
+              { name = "nvim_lsp_signature_help"; }
+              { name = "buffer"; }
+              { name = "codeium"; }
             ];
           };
         };

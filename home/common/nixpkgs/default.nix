@@ -1,12 +1,10 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nixpkgs;
-in {
+in
+{
   options.baseline.nixpkgs = {
     enable = mkEnableOption "nixpkgs config managments";
   };

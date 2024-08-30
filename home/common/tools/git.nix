@@ -1,14 +1,12 @@
-{
-  lib,
-  config,
-  ...
-}: let
+{ lib, config, ... }:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf mkDefault;
   cfg = config.baseline.git;
   hasKey = config.programs.git.signing.key != null;
   nixvimEnabled = config.baseline.nixvim.enable;
-in {
+in
+{
   options.baseline.git = {
     enable = mkEnableOption "Enable baseline git configuration";
   };
@@ -22,13 +20,19 @@ in {
       includes = [
         {
           contents = {
-            commit = {gpgSign = mkDefault hasKey;};
+            commit = {
+              gpgSign = mkDefault hasKey;
+            };
             core = {
               editor = mkIf nixvimEnabled "nvim";
               autocrlf = mkDefault "input";
             };
-            color = {ui = mkDefault "auto";};
-            push = {autoSetupRemote = mkDefault true;};
+            color = {
+              ui = mkDefault "auto";
+            };
+            push = {
+              autoSetupRemote = mkDefault true;
+            };
           };
         }
       ];

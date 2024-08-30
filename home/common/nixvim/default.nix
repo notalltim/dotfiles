@@ -3,11 +3,13 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nixvim;
-in {
+in
+{
   imports = [
     ./debug.nix
     ./git.nix

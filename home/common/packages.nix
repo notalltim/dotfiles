@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
   inherit (builtins) hasAttr;
@@ -43,13 +44,29 @@
     nix-tree
     tbb
     compdb
+    nixfmt-rfc-style
   ];
 
-  unixTools = with pkgs; [gnupg wget htop rs-git-fsmonitor watchman];
-  guiTools = with pkgs; [solaar openvpn3 spotify inkscape gimp vlc obsidian];
+  unixTools = with pkgs; [
+    gnupg
+    wget
+    htop
+    rs-git-fsmonitor
+    watchman
+  ];
+  guiTools = with pkgs; [
+    solaar
+    openvpn3
+    spotify
+    inkscape
+    gimp
+    vlc
+    obsidian
+  ];
 
   cfg = config.baseline.packages;
-in {
+in
+{
   options = {
     baseline.packages.enable = mkEnableOption "Enable the base set of packages";
   };
@@ -63,10 +80,6 @@ in {
           or `overlays.default` notalltim's flake in the `nixpkgs.overlays` option'';
       }
     ];
-    home.packages =
-      nixTools
-      ++ developerTools
-      ++ unixTools
-      ++ guiTools;
+    home.packages = nixTools ++ developerTools ++ unixTools ++ guiTools;
   };
 }

@@ -1,12 +1,10 @@
-{
-  lib,
-  config,
-  ...
-}: let
+{ lib, config, ... }:
+let
   inherit (lib) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.baseline.home-manager;
-in {
+in
+{
   options = {
     baseline.home-manager.enable = mkEnableOption "Enable baseline home-manager configuration";
   };

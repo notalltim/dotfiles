@@ -32,36 +32,39 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    nixgl,
-    ...
-  }: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-      overlays = [nixgl.overlays.default];
-    };
-  in {
-    homeConfigurations.tgallion = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [./home/tgallion.nix];
-      extraSpecialArgs = {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      nixgl,
+      ...
+    }:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ nixgl.overlays.default ];
+      };
+    in
+    {
+      homeConfigurations.${"tgallion"} = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./home/tgallion.nix ];
+        extraSpecialArgs = {
+          inherit self;
+        };
+      };
+
+      formatter.${system} = pkgs.nixfmt-rfc-style;
+
+      legacyPackages.${system} = pkgs;
+
+      homeModules = (import ./home) self;
+
+      overlays = import ./overlays {
         inherit self;
+        lib = nixpkgs.lib;
       };
     };
-
-    formatter.${system} = pkgs.nixfmt-rfc-style;
-
-    legacyPackages.${system} = pkgs;
-
-    homeModules = (import ./home) self;
-
-    overlays = import ./overlays {
-      inherit self;
-      lib = nixpkgs.lib;
-    };
-  };
 }

@@ -1,12 +1,18 @@
-{ lib, self ? { }, # self is required for the impure version of nvidia support
-config, pkgs, ... }:
+{
+  lib,
+  self ? { }, # self is required for the impure version of nvidia support
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) str nullOr;
   inherit (builtins) hasAttr;
   inherit (lib) mkIf fakeSha256 toString;
   cfg = config.baseline.gpu;
-in {
+in
+{
   options.baseline.gpu = {
     enable = mkEnableOption "Enable GPU overlay";
     enableVulkan = mkEnableOption "Vulkan support";
@@ -39,56 +45,50 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (let
-    bothNull = cfg.nvidia.driverHash == null && cfg.nvidia.driverVersion
-      == null;
-    nietherNull = cfg.nvidia.driverHash != null && cfg.nvidia.driverVersion
-      != null;
-  in {
-    assertions = [
-      {
-        assertion = !cfg.nvidia.enable || bothNull || nietherNull;
-        message = ''
-          nvidia driver is enabled but the nvidia driver version (${
-            if cfg.nvidia.driverVersion == null then
-              "null"
-            else
-              cfg.nvidia.driverVersion
-          })
-          and hash (${
-            if cfg.nvidia.driverHash == null then
-              "null"
-            else
-              cfg.nvidia.driverHash
-          }) must both be null or both be non-null.
-          If they are null impure mode will be used otherwise pure eval will be used.
-        '';
-      }
-      {
-        assertion = hasAttr "nixgl" pkgs;
-        message = ''
-          nixgl is missing you need to include either the `overlays.nixgl` from nixgl
-          or `overlays.default` from notalltim's flake in the `nixpkgs.overlays` option.
-        '';
-      }
-      {
-        assertion = !cfg.nvidia.enable || bothNull
-          && (hasAttr self "outputs.legacyPackages.nixgl");
-        message = ''
-          Nvidia is enabled in impure mode and the self has not been passed to `extraSpecialArgs` or does not contain a `legacyPackages`.
-          The legacyPackages is used to form a nix expression that is run in impure mode as part of the gpu wrapper script.
-          NOTE: the nixgl overlay must be applied to `legacyPackages`.
-        '';
-      }
-    ];
-    home = {
-      packages = [ pkgs.gpu-wrappers ];
-      activation = mkIf (cfg.nvidia.enable && bothNull) {
-        clearNixglCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          [ -v DRY_RUN ] || rm -f ${config.xdg.cacheHome}/nixgl/result*
-        '';
+  config = mkIf cfg.enable (
+    let
+      bothNull = cfg.nvidia.driverHash == null && cfg.nvidia.driverVersion == null;
+      nietherNull = cfg.nvidia.driverHash != null && cfg.nvidia.driverVersion != null;
+    in
+    {
+      assertions = [
+        {
+          assertion = !cfg.nvidia.enable || bothNull || nietherNull;
+          message = ''
+            nvidia driver is enabled but the nvidia driver version (${
+              if cfg.nvidia.driverVersion == null then "null" else cfg.nvidia.driverVersion
+            })
+            and hash (${
+              if cfg.nvidia.driverHash == null then "null" else cfg.nvidia.driverHash
+            }) must both be null or both be non-null.
+            If they are null impure mode will be used otherwise pure eval will be used.
+          '';
+        }
+        {
+          assertion = hasAttr "nixgl" pkgs;
+          message = ''
+            nixgl is missing you need to include either the `overlays.nixgl` from nixgl
+            or `overlays.default` from notalltim's flake in the `nixpkgs.overlays` option.
+          '';
+        }
+        {
+          assertion = !cfg.nvidia.enable || bothNull && (hasAttr self "outputs.legacyPackages.nixgl");
+          message = ''
+            Nvidia is enabled in impure mode and the self has not been passed to `extraSpecialArgs` or does not contain a `legacyPackages`.
+            The legacyPackages is used to form a nix expression that is run in impure mode as part of the gpu wrapper script.
+            NOTE: the nixgl overlay must be applied to `legacyPackages`.
+          '';
+        }
+      ];
+      home = {
+        packages = [ pkgs.gpu-wrappers ];
+        activation = mkIf (cfg.nvidia.enable && bothNull) {
+          clearNixglCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            [ -v DRY_RUN ] || rm -f ${config.xdg.cacheHome}/nixgl/result*
+          '';
+        };
       };
-    };
-    nixpkgs.overlays = [ (import ./overlay.nix { inherit self config lib; }) ];
-  });
+      nixpkgs.overlays = [ (import ./overlay.nix { inherit self config lib; }) ];
+    }
+  );
 }

@@ -1,11 +1,9 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   inherit (lib) mkIf;
   cfg = config.baseline.tools;
-in {
+in
+{
   programs.direnv = mkIf cfg.enable {
     enable = true;
     nix-direnv.enable = true;
