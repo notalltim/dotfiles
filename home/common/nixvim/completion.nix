@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
   inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.completion;
 in
@@ -56,15 +56,15 @@ in
         }
       ];
       plugins = {
-        luasnip.enable = true;
+        luasnip.enable = mkDefault true;
         codeium-nvim = {
-          enable = true;
-          extraOptions = {
-            enable_chat = true;
+          enable = mkDefault true;
+          settings = {
+            enable_chat = mkDefault true;
           };
         };
         cmp = {
-          enable = true;
+          enable = mkDefault true;
           settings = {
             snippet = {
               expand = ''
