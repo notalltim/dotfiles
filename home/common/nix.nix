@@ -6,7 +6,8 @@
 }:
 let
   inherit (lib.options) mkEnableOption mkPackageOption;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf optionalAttrs versionAtLeast;
+  inherit (lib.versions) majorMinor;
   cfg = config.baseline.nix;
 in
 {
@@ -32,17 +33,20 @@ in
         };
       };
 
-      settings = {
-        auto-optimise-store = true;
-        always-allow-substitutes = true;
-        bash-prompt-prefix = "(nix:$name)\\040";
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
-        extra-nix-path = [ "nixpkgs=flake:nixpkgs" ];
-        upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
-      };
+      settings =
+        {
+          auto-optimise-store = true;
+          bash-prompt-prefix = "(nix:$name)\\040";
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
+          extra-nix-path = [ "nixpkgs=flake:nixpkgs" ];
+        }
+        // optionalAttrs (versionAtLeast (majorMinor cfg.package.version) "2.20") {
+          upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
+          always-allow-substitutes = true;
+        };
     };
   };
 }
