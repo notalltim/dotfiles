@@ -3,7 +3,7 @@ let
   inherit (lib.fixedPoints) composeManyExtensions;
   inherit (lib.attrsets) attrValues;
   overlays = {
-    pretty-printers = import ./pretty-printers.nix { inherit self; };
+    pretty-printers = import ./pretty-printers.nix self;
     fenix = self.inputs.fenix.overlays.default;
     nixgl = self.inputs.nixgl.overlays.default;
     nix = self.inputs.nix.overlays.default;
