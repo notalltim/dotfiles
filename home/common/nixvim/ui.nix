@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
   cfg = config.baseline.nixvim.ui;
 in
 {
@@ -51,34 +51,35 @@ in
 
       # UI to see key commands
       plugins = {
-        which-key.enable = true;
+        which-key.enable = mkDefault true;
 
         # Buffer line
-        lualine.enable = true;
+        lualine.enable = mkDefault true;
 
         # Make brackets readable
-        rainbow-delimiters.enable = true;
+        rainbow-delimiters.enable = mkDefault true;
 
         # Make TODO: highlighting work
-        todo-comments.enable = true;
+        todo-comments.enable = mkDefault true;
 
         # File viewer
-        neo-tree.enable = true;
+        neo-tree.enable = mkDefault true;
         # Syntax highlighting
         treesitter = {
-          enable = true;
-          folding = true;
+          enable = mkDefault true;
+          folding = mkDefault true;
           settings = {
-            incremental_selection.enable = true;
-            indent.enable = true;
+            incremental_selection.enable = mkDefault true;
+            indent.enable = mkDefault true;
+            highlight.enable = mkDefault true;
           };
         };
-        treesitter-context.enable = true;
+        treesitter-context.enable = mkDefault true;
 
         # Show color codes in the editor and a color picker
         ccc = {
-          enable = true;
-          settings.highlighter.auto_enable = true;
+          enable = mkDefault true;
+          settings.highlighter.auto_enable = mkDefault true;
         };
       };
     };
