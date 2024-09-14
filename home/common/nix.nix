@@ -5,19 +5,20 @@
   ...
 }:
 let
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkEnableOption mkPackageOption;
   inherit (lib) mkIf;
   cfg = config.baseline.nix;
 in
 {
   options.baseline.nix = {
     enable = mkEnableOption "nix install configuration";
+    package = mkPackageOption pkgs "nix" { };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.nix ];
+    home.packages = [ cfg.package ];
     nix = {
-      package = pkgs.nix;
+      package = cfg.package;
 
       registry.nixpkgs = {
         exact = true;

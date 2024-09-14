@@ -21,7 +21,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     nix = {
-      url = "github:NixOS/nix";
+      url = "github:NixOS/nix?ref=2.24-maintenance";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
