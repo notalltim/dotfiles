@@ -37,17 +37,21 @@
       self,
       nixpkgs,
       home-manager,
-      nixgl,
       ...
     }:
     let
+      overlays = import ./overlays {
+        inherit self;
+        lib = nixpkgs.lib;
+      };
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ nixgl.overlays.default ];
+        overlays = [ overlays.default ];
       };
     in
     {
+      inherit overlays;
       homeConfigurations.${"tgallion"} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [ ./home/tgallion.nix ];
@@ -62,9 +66,5 @@
 
       homeModules = (import ./home) self;
 
-      overlays = import ./overlays {
-        inherit self;
-        lib = nixpkgs.lib;
-      };
     };
 }
