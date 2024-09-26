@@ -55,7 +55,7 @@ in
       # Support kitty on non nixos system
       package = gpuWrapCheck pkgs.kitty;
 
-      theme = "Nightfox";
+      themeFile = "Nightfox";
       extraConfig = font_features [
         "Regular"
         "Bold"

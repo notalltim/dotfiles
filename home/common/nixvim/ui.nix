@@ -51,6 +51,10 @@ in
 
       # UI to see key commands
       plugins = {
+        # File icons for telescope and neo-tree
+        web-devicons.enable = mkDefault true;
+
+        # Key command help
         which-key.enable = mkDefault true;
 
         # Buffer line
