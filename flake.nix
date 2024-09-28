@@ -20,11 +20,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
     nix = {
       url = "github:NixOS/nix?ref=2.24-maintenance";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # secrets = {
+    #   url = "github:notalltim/secrets?shallow=1";
+    #   flake = false;
+    # };
+    #
     # Input sources for internal packages
     gcc-python-pretty-printers = {
       url = "github:gcc-mirror/gcc?ref=releases/gcc-13.3.0&shallow=1";
@@ -49,6 +60,11 @@
         inherit system;
         overlays = [ overlays.default ];
       };
+
+      configVars = {
+        enableSops = true;
+
+      };
     in
     {
       inherit overlays;
@@ -57,6 +73,7 @@
         modules = [ ./home/tgallion.nix ];
         extraSpecialArgs = {
           inherit self;
+          inherit configVars;
         };
       };
 

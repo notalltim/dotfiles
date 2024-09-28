@@ -27,6 +27,8 @@ in
       bitwarden
       audacity
       mprime
+      age
+      sops
       openrgb-with-all-plugins
       (python3Full.withPackages (
         pkgs: with pkgs; [
@@ -38,7 +40,7 @@ in
     ];
   };
 
-  imports = attrValues self.outputs.homeModules;
+  imports = attrValues self.outputs.homeModules ++ [ self.inputs.sops-nix.homeManagerModules.sops ];
 
   # For gdb debugging
   services.nixseparatedebuginfod.enable = true;
