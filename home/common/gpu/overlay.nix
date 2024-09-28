@@ -8,7 +8,6 @@ let
   nonNixos = config.targets.genericLinux.enable;
 in
 final: prev: {
-
   gpu-wrappers =
     let
       nixglPkgs = cfg.nvidia.nixGLPkgs;
