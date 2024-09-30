@@ -1,23 +1,24 @@
 {
   config,
-  self ? { },
   lib,
 }:
 let
   cfg = config.baseline.gpu;
   impure = cfg.nvidia.driverHash == null && cfg.nvidia.driverVersion == null;
+  nonNixos = config.targets.genericLinux.enable;
 in
 final: prev: {
 
   gpu-wrappers =
     let
-      nixglPkgs = "${self}#legacyPackages.${final.system}.nixgl";
+      nixglPkgs = cfg.nvidia.nixGLPkgs;
       wrapIntel = type: lib.getExe final.nixgl."nix${type}Intel";
       wrapNvidia = type: lib.getExe final.nixgl."nix${type}Nvidia";
       inherit (final.lib.strings) escapeNixString optionalString;
     in
     final.runCommand "gpu-wrappers" { } (
-      ''
+      ""
+      + optionalString nonNixos (''
         bin=$out/bin
         mkdir -p $bin
 
@@ -58,44 +59,48 @@ final: prev: {
         }
         EOF
         chmod +x $bin/nixgl
-      ''
+      '')
       + optionalString cfg.nvidia.enable (
-        if impure then
-          ''
-            cat > $bin/nixgl-nvidia <<EOF
-            #!/bin/sh
-            glbin=\$(nix eval --quiet --raw --impure "${nixglPkgs}.nixGLNvidia.meta.name")
-            vkbin=${if cfg.enableVulkan then escapeNixString "\$(echo \$glbin | sed s/GL/Vulkan/)" else ""}
-            packages=${
-              if cfg.enableVulkan then
-                "\"${nixglPkgs}.nixGLNvidia ${nixglPkgs}.nixVulkanNvidia\""
-              else
-                "${nixglPkgs}.nixGLNvidia"
-            }
-            exec nix shell --quiet --impure \$packages -c \$glbin \$vkbin "\$@"
-            EOF
-            chmod +x $bin/nixgl-nvidia
-          ''
-        else
-          ''
-            cat > $bin/nixgl-nvidia <<EOF
-            #!/bin/sh
-            exec ${wrapNvidia "GL"} ${if cfg.enableVulkan then wrapNvidia "Vulkan" else ""} "\$@"
-            EOF
-            chmod +x $bin/nixgl-nvidia
-          ''
+        ''
+          cat > $bin/nvidia-offload <<EOF
+          #!/bin/sh
+          export __NV_PRIME_RENDER_OFFLOAD=1
+          export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+          export __GLX_VENDOR_LIBRARY_NAME=nvidia
+          ${if cfg.enableVulkan then "export __VK_LAYER_NV_optimus=NVIDIA_only" else ""}
+          exec "\$@"
+          EOF
+          chmod +x $bin/nvidia-offload
+        ''
+        + (
+          if impure && nonNixos then
+            ''
+              cat > $bin/nixgl-nvidia <<EOF
+              #!/bin/sh
+              glbin=\$(nix eval --quiet --raw --impure "${nixglPkgs}.nixGLNvidia.meta.name")
+              vkbin=${if cfg.enableVulkan then escapeNixString "\$(echo \$glbin | sed s/GL/Vulkan/)" else ""}
+              packages=${
+                if cfg.enableVulkan then
+                  "\"${nixglPkgs}.nixGLNvidia ${nixglPkgs}.nixVulkanNvidia\""
+                else
+                  "${nixglPkgs}.nixGLNvidia"
+              }
+              exec nix shell --quiet --impure \$packages -c \$glbin \$vkbin "\$@"
+              EOF
+              chmod +x $bin/nixgl-nvidia
+            ''
+          else if nonNixos then
+            ''
+              cat > $bin/nixgl-nvidia <<EOF
+              #!/bin/sh
+              exec ${wrapNvidia "GL"} ${if cfg.enableVulkan then wrapNvidia "Vulkan" else ""} "\$@"
+              EOF
+              chmod +x $bin/nixgl-nvidia
+            ''
+          else
+            ""
+        )
       )
-      + ''
-        cat > $bin/nvidia-offload <<EOF
-        #!/bin/sh
-        export __NV_PRIME_RENDER_OFFLOAD=1
-        export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-        export __GLX_VENDOR_LIBRARY_NAME=nvidia
-        ${if cfg.enableVulkan then "export __VK_LAYER_NV_optimus=NVIDIA_only" else ""}
-        exec "\$@"
-        EOF
-        chmod +x $bin/nvidia-offload
-      ''
     );
 
   lib = prev.lib.extend (
@@ -137,8 +142,7 @@ final: prev: {
     in
     {
       inherit gpuWrapPackage;
-      gpuWrapCheck =
-        pkg: if config.targets.genericLinux.enable && cfg.enable then gpuWrapPackage pkg else pkg;
+      gpuWrapCheck = pkg: if nonNixos && cfg.enable then gpuWrapPackage pkg else pkg;
     }
   );
 }
