@@ -50,9 +50,9 @@ in
       nixGLPkgs = mkOption {
         type = nullOr str;
         default = null;
-        example = "\${self}#legacyPackages.\${system}.nixgl";
+        example = "\${self}#legacyPkgs.\${system}.nixgl";
         description = ''
-          The location to pull nixgl from could be ''${self}#legacyPackages.''${system}.nixgl with the nixgl overlay applied or github:nix-community/nixGL#packages.''${system}.
+          The location to pull nixgl from could be ''${self}#legacyPkgs.''${system}.nixgl with the nixgl overlay applied or github:nix-community/nixGL#packages.''${system}.
 
           NOTE: if you pull from the nixGL repo the run will require internet to eval. So nixgl-nvidia / nvidia-offload will not work without internet.
         '';
@@ -64,9 +64,7 @@ in
   config = mkIf cfg.enable (
     let
       impureMode =
-        cfg.nvidia.driverHash == null
-        && cfg.nvidia.driverVersion == null
-        && cfg.nvidia.nixGLPackages != null;
+        cfg.nvidia.driverHash == null && cfg.nvidia.driverVersion == null && cfg.nvidia.nixGLPkgs != null;
       pureMode = cfg.nvidia.driverHash != null && cfg.nvidia.driverVersion != null;
 
     in
@@ -82,8 +80,8 @@ in
               if cfg.nvidia.driverHash == null then "null" else cfg.nvidia.driverHash
             }) must both be null or both be non-null.
 
-            If they are null impure mode  nixGLPackages (${
-              if cfg.nvidia.nixGLPackages == null then "null" else cfg.nvidia.nixGLPackages
+            If they are null impure mode  nixGLPkgs (${
+              if cfg.nvidia.nixGLPkgs == null then "null" else cfg.nvidia.nixGLPackages
             }) must be set must be non-null used otherwise pure eval will be used.
           '';
         }
