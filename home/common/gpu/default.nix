@@ -50,7 +50,7 @@ in
       nixGLPkgs = mkOption {
         type = nullOr str;
         default = null;
-        example = "\${self}#legacyPkgs.\${system}.nixgl";
+        example = "\${self}#legacyPkgs.\${system}.nixgl.auto";
         description = ''
           The location to pull nixgl from could be ''${self}#legacyPkgs.''${system}.nixgl with the nixgl overlay applied or github:nix-community/nixGL#packages.''${system}.
 
