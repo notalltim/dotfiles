@@ -47,7 +47,7 @@ in
         '';
       };
 
-      nixGLPackages = mkOption {
+      nixGLPkgs = mkOption {
         type = nullOr str;
         default = null;
         example = "\${self}#legacyPackages.\${system}.nixgl";
