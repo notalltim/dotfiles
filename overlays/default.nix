@@ -4,6 +4,7 @@ let
   inherit (lib.attrsets) attrValues;
   overlays = {
     pretty-printers = import ./pretty-printers.nix self;
+    shared-mime-info = import ./shared-mime-info.nix;
     fenix = self.inputs.fenix.overlays.default;
     nixgl = self.inputs.nixgl.overlays.default;
     nix = self.inputs.nix.overlays.default;

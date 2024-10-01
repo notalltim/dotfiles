@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
   inherit (lib.options) mkEnableOption;
@@ -20,6 +25,8 @@ in
     targets.genericLinux.enable = true;
 
     xdg.enable = true;
+    xdg.mime.sharedMimeInfoPackage = pkgs.shared-mime-info-2-1;
+    xdg.mime.desktopFileUtilsPackage = pkgs.desktop-file-utils;
 
     news.display = "silent";
     manual = {

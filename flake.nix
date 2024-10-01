@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:notalltim/home-manager?ref=mime-type-package-option";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixgl = {
@@ -48,6 +48,7 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [ overlays.default ];
+        config.allowUnfree = true;
       };
     in
     {
