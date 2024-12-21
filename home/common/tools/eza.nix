@@ -8,6 +8,6 @@ in
     enable = mkDefault true;
     enableFishIntegration = mkDefault true;
     git = mkDefault true;
-    icons = mkDefault true;
+    icons = mkDefault "auto";
   };
 }

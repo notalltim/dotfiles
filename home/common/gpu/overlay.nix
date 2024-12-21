@@ -17,7 +17,9 @@ final: prev: {
       inherit (final.lib.strings) escapeNixString optionalString;
     in
     final.runCommand "gpu-wrappers" { } (
-      ""
+      ''
+        mkdir -p $out
+      ''
       + optionalString nonNixos (''
         bin=$out/bin
         mkdir -p $bin

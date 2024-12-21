@@ -30,6 +30,11 @@ in
         }
       ];
 
+      plugins.git-conflict = {
+        enable = true;
+        settings.disable_diagnostics = true;
+      };
+
       plugins.gitsigns.enable = true;
 
       plugins.telescope.keymaps = mkIf nixvim.plugins.telescope.enable {

@@ -69,7 +69,6 @@ in
             };
             markdownlint_cli2.enable = true;
             protolint.enable = true;
-            codespell.enable = true;
             hadolint.enable = true;
             proselint.enable = true;
             mypy.enable = true;
@@ -92,8 +91,6 @@ in
             mdformat.enable = true;
             tidy.enable = true;
             yamlfmt.enable = true;
-            codespell.enable = true;
-            protolint.enable = true;
           };
           hover.printenv.enable = true;
         };
@@ -199,7 +196,7 @@ in
               end
             '';
           };
-          lua-ls.enable = true;
+          lua_ls.enable = true;
           pyright.enable = true;
           # TODO: verify that I dont need to add neo cmake
           cmake.enable = true;
@@ -210,6 +207,25 @@ in
           # Add the cpp for comment grammar/spelling
           ltex = {
             enable = true;
+            filetypes = [
+              "bib"
+              "gitcommit"
+              "markdown"
+              "org"
+              "plaintex"
+              "rst"
+              "rnoweb"
+              "tex"
+              "pandoc"
+              "quatro"
+              "rmd"
+              "context"
+              "html"
+              "xhtml"
+              "mail"
+              "text"
+              "rust"
+            ];
             settings.enabled = [
               "bibtex"
               "context"
@@ -226,20 +242,21 @@ in
               "objcpp"
               "cuda"
               "tpp"
+              "rust"
             ];
           };
           lemminx.enable = true;
           yamlls.enable = true;
           dockerls.enable = true;
-          docker-compose-language-service.enable = true;
-          rust-analyzer = {
+          docker_compose_language_service.enable = true;
+          rust_analyzer = {
             enable = true;
             cargoPackage = pkgs.cargo;
             rustcPackage = pkgs.rustc;
             installRustc = false;
             installCargo = false;
           };
-          nil-ls.enable = true;
+          nil_ls.enable = true;
           texlab.enable = true;
         };
       };
