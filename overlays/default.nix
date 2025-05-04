@@ -6,7 +6,6 @@ let
     pretty-printers = import ./pretty-printers.nix self;
     fenix = self.inputs.fenix.overlays.default;
     nixgl = self.inputs.nixgl.overlays.default;
-    nix = self.inputs.nix.overlays.default;
   };
 in
 overlays // { default = composeManyExtensions (attrValues overlays); }

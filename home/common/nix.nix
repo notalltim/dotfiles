@@ -2,11 +2,17 @@
   config,
   lib,
   pkgs,
+  self,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption mkPackageOption;
-  inherit (lib) mkIf optionalAttrs versionAtLeast;
+  inherit (lib)
+    mkIf
+    optionalAttrs
+    versionAtLeast
+    mkForce
+    ;
   inherit (lib.versions) majorMinor;
   cfg = config.baseline.nix;
 in
@@ -18,19 +24,15 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
+    systemd.user.sessionVariables.NIX_PATH = mkForce "";
     nix = {
+      keepOldNixPath = false;
       package = cfg.package;
 
+      # Make nixpkgs# use the nixpkgs used to eval
       registry.nixpkgs = {
         exact = true;
-        from = {
-          type = "indirect";
-          id = "nixpkgs";
-        };
-        to = {
-          type = "tarball";
-          url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.1.0.tar.gz";
-        };
+        flake = self;
       };
 
       settings =
@@ -41,7 +43,8 @@ in
             "nix-command"
             "flakes"
           ];
-          extra-nix-path = [ "nixpkgs=flake:nixpkgs" ];
+          # Make nix-shell work see default.nix at the root
+          nix-path = [ "nixpkgs=${self.outPath}" ];
         }
         // optionalAttrs (versionAtLeast (majorMinor cfg.package.version) "2.20") {
           upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";

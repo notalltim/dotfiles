@@ -2,6 +2,7 @@
   lib,
   pkgs,
   self,
+  nonNixos ? false,
   ...
 }:
 let
@@ -59,6 +60,7 @@ in
     nixpkgs.enable = true;
     tools.enable = true;
     terminal.enable = true;
+    non-nixos.enable = nonNixos;
   };
 
   #TODO: this is not my favorite way to get overlays still torn over using self in common modules

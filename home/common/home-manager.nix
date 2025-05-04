@@ -10,14 +10,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    programs.home-manager.enable = true;
-    # For non nixos hosts to declare where systemctl is
-    systemd.user = {
-      startServices = true;
-      systemctlPath = "/usr/bin/systemctl";
-    };
-    # TODO: this is not great for nixos hosts
-    targets.genericLinux.enable = true;
 
     xdg.enable = true;
 

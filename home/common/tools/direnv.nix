@@ -6,6 +6,6 @@ in
 {
   programs.direnv = mkIf cfg.enable {
     enable = true;
-    nix-direnv.enable = true;
+    nix-direnv.enable = false;
   };
 }

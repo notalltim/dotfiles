@@ -9,4 +9,5 @@ self: {
   nix = import ./common/nix.nix;
   nixpkgs = import ./common/nixpkgs;
   nixvimUpstream = self.inputs.nixvim.homeManagerModules.nixvim;
+  non-nixos = import ./common/non-nixos.nix;
 }

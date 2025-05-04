@@ -7,6 +7,11 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # TODO: Remove this when the flake-module is availible on stable
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      flake = false;
+    };
     nixgl = {
       url = "github:guibou/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,9 +25,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    nix = {
-      url = "github:NixOS/nix?ref=2.24-maintenance";
-      inputs.nixpkgs.follows = "nixpkgs";
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
     };
 
     # Input sources for internal packages
@@ -33,38 +38,40 @@
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }:
-    let
-      overlays = import ./overlays {
-        inherit self;
-        lib = nixpkgs.lib;
-      };
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [ overlays.default ];
-      };
-    in
-    {
-      inherit overlays;
-      homeConfigurations.${"tgallion"} = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./home/tgallion.nix ];
-        extraSpecialArgs = {
+    inputs@{ self, flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = with inputs; [ (import "${home-manager-unstable}/flake-module.nix") ];
+
+      flake = {
+        # Put your original flake attributes here.
+        overlays = import ./overlays {
           inherit self;
+          inherit (inputs.nixpkgs) lib;
+        };
+        homeModules = (import ./home) self;
+
+        homeConfigurations.${"tgallion"} = inputs.home-manager.lib.homeManagerConfiguration {
+          pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
+          modules = [ ./home/tgallion.nix ];
+          extraSpecialArgs = {
+            nonNixos = true;
+            inherit self;
+          };
         };
       };
-
-      formatter.${system} = pkgs.nixfmt-rfc-style;
-
-      legacyPackages.${system} = pkgs;
-
-      homeModules = (import ./home) self;
-
+      systems = [
+        # systems for which you want to build the `perSystem` attributes
+        "x86_64-linux"
+        # ...
+      ];
+      perSystem =
+        {
+          pkgs,
+          ...
+        }:
+        {
+          legacyPackages = pkgs;
+          formatter = pkgs.nixfmt-rfc-style;
+        };
     };
 }
