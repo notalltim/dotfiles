@@ -101,6 +101,13 @@ in
             desc = "Cycle buffer";
           };
         }
+        {
+          key = "<leader>tf";
+          action = "<cmd>FormatToggle<cr>";
+          options = {
+            desc = "Toggle formatting";
+          };
+        }
       ];
     };
   };

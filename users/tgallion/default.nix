@@ -1,12 +1,10 @@
 {
   lib,
   pkgs,
-  self,
   nonNixos ? false,
   ...
 }:
 let
-  inherit (lib.attrsets) attrValues;
   inherit (pkgs.lib) gpuWrapCheck;
 in
 {
@@ -39,8 +37,6 @@ in
     ];
   };
 
-  imports = attrValues self.outputs.homeModules;
-
   # For gdb debugging
   services.nixseparatedebuginfod.enable = true;
 
@@ -62,9 +58,6 @@ in
     terminal.enable = true;
     non-nixos.enable = nonNixos;
   };
-
-  #TODO: this is not my favorite way to get overlays still torn over using self in common modules
-  nixpkgs.overlays = [ self.overlays.default ];
 
   programs.git = {
     signing = {

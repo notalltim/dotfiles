@@ -396,7 +396,8 @@
         "home-manager-unstable": "home-manager-unstable",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs",
-        "nixvim": "nixvim"
+        "nixvim": "nixvim",
+        "treefmt-nix": "treefmt-nix_2"
       }
     },
     "rust-analyzer-src": {
@@ -444,6 +445,26 @@
         "owner": "numtide",
         "repo": "treefmt-nix",
         "rev": "8d404a69efe76146368885110f29a2ca3700bee6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "treefmt-nix_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1746216483,
+        "narHash": "sha256-4h3s1L/kKqt3gMDcVfN8/4v2jqHrgLIe4qok4ApH5x4=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "29ec5026372e0dec56f890e50dbe4f45930320fd",
         "type": "github"
       },
       "original": {
