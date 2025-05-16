@@ -59,7 +59,10 @@ in
       };
       Service = {
         ExecStart = "${cfg.package}/bin/yubikey-touch-detector ${concatStringsSep " " cfg.extraArgs}";
-        Environment = [ "PATH=${lib.makeBinPath [ pkgs.gnupg ]}" ];
+        Environment = [
+          "PATH=${lib.makeBinPath [ pkgs.gnupg ]}"
+          "SSH_AUTH_SOCK=%t/ssh-agent"
+        ];
         Restart = "on-failure";
         RestartSec = "1sec";
       };

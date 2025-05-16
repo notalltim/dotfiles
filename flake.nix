@@ -36,9 +36,30 @@
       };
     };
 
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
+    agenix-rekey = {
+      url = "github:oddlama/agenix-rekey";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+
     # Input sources for internal packages
     gcc-python-pretty-printers = {
       url = "github:gcc-mirror/gcc?ref=releases/gcc-13.3.0&shallow=1";
+      flake = false;
+    };
+
+    age-secret-nvim = {
+      url = "git+file:///home/tgallion/age-secret.nvim";
       flake = false;
     };
 
@@ -50,6 +71,7 @@
       imports = with inputs; [
         (import "${home-manager-unstable}/flake-module.nix")
         treefmt-nix.flakeModule
+        agenix-rekey.flakeModule
         (import ./modules)
         (import ./users)
         (import ./overlays)

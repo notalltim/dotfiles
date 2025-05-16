@@ -1,7 +1,7 @@
 {
-  lib,
   pkgs,
   nonNixos ? false,
+  hostPubkey,
   ...
 }:
 let
@@ -9,7 +9,7 @@ let
 in
 {
   home = rec {
-    stateVersion = "23.11";
+    stateVersion = "24.11";
     homeDirectory = "/home/${username}";
     username = "tgallion";
     enableDebugInfo = true;
@@ -36,15 +36,22 @@ in
       ))
     ];
   };
+  programs.fish.functions = {
+    sudos = {
+      body = ''command sudo env "PATH=\$PATH" $argv'';
+      wraps = "sudo";
+    };
+  };
 
   # For gdb debugging
   services.nixseparatedebuginfod.enable = true;
 
-  services.ssh-agent.enable = true;
-
   # Common config expressed as basic modules
   baseline = {
-    nixvim.enableAll = true;
+    nixvim = {
+      enableAll = true;
+      completion.codeium.apikey = ./secrets/codeium-apikey.age;
+    };
     kitty.enableKeybind = true;
     packages.enable = true;
     home-manager.enable = true;
@@ -57,6 +64,15 @@ in
     tools.enable = true;
     terminal.enable = true;
     non-nixos.enable = nonNixos;
+    secrets = {
+      enable = true;
+      inherit hostPubkey;
+    };
+    ssh = {
+      enable = true;
+      pubkey = ./id_ed25519.pub;
+      privkey = ./secrets/ssh-key-home.age;
+    };
   };
 
   programs.git = {

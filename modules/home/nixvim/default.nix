@@ -39,6 +39,7 @@ in
 
     programs.nixvim = mkIf cfg.enable {
       enable = true;
+      defaultEditor = true;
       extraConfigLuaPre = ''
         -- Global undo files
         vim.cmd("set undodir=~/.nvim/undodir")

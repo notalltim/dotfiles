@@ -12,5 +12,9 @@
     nixpkgs = import ./home/nixpkgs;
     nixvimUpstream = inputs.nixvim.homeManagerModules.nixvim;
     non-nixos = import ./home/non-nixos.nix;
+    secrets = import ./home/secrets;
+    ssh = import ./home/ssh.nix;
+    agenix = inputs.agenix.homeManagerModules.default;
+    agenix-rekey = inputs.agenix-rekey.homeManagerModules.default;
   };
 }

@@ -53,6 +53,10 @@ let
     htop
     rs-git-fsmonitor
     watchman
+    # ykman
+    yubikey-manager
+    # fido2-token
+    libfido2
   ];
   guiTools = with pkgs; [
     solaar

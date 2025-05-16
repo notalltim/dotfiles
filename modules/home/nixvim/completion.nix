@@ -1,7 +1,8 @@
 { config, lib, ... }:
 let
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf mkDefault;
+  inherit (lib) mkIf mkDefault mkOption;
+  inherit (lib.types) path nullOr;
   inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.completion;
 in
@@ -9,9 +10,21 @@ in
   options = {
     baseline.nixvim.completion = {
       enable = mkEnableOption "Enable baseline completion configuiration";
+      codeium = {
+        apikey = mkOption {
+          type = nullOr path;
+          default = null;
+          description = "Codeium api key";
+        };
+      };
     };
   };
   config = mkIf cfg.enable {
+    age.secrets.codeium-apikey = mkIf (cfg.codeium.apikey != null) {
+      rekeyFile = cfg.codeium.apikey;
+      path = "${config.xdg.cacheHome}/nvim/codeium/config.json";
+    };
+
     programs.nixvim = {
       keymaps = [
         {
