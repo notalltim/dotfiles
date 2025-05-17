@@ -38,6 +38,7 @@ in
     };
 
     programs.nixvim = mkIf cfg.enable {
+      nixpkgs.useGlobalPackages = true;
       enable = true;
       defaultEditor = true;
       extraConfigLuaPre = ''

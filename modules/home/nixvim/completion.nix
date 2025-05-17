@@ -70,7 +70,7 @@ in
       ];
       plugins = {
         luasnip.enable = mkDefault true;
-        codeium-nvim = {
+        windsurf-nvim = {
           enable = mkDefault true;
           settings = {
             enable_chat = mkDefault true;

@@ -8,7 +8,7 @@ let
   inherit (lib.strings) concatMapStringsSep;
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf mkDefault;
-  inherit (pkgs.lib) gpuWrapCheck;
+  gpuWrapCheck = config.lib.nixGL.wrap;
   font_features =
     types:
     concatMapStringsSep "\n" (
@@ -25,28 +25,19 @@ in
     };
   };
   config = mkIf terminal.enable {
-    assertions = [
-      {
-        assertion = builtins.hasAttr "gpu" config.baseline;
-        message = "Kitty requires the `baseline.gpu` module to be imported";
-      }
-      {
-        assertion = config.baseline.gpu.enable or false;
-        message = "Kitty requires the `baseline.gpu` module to be enabled";
-      }
+
+    home.packages = with pkgs.nerd-fonts; [
+      caskaydia-mono
+      iosevka
     ];
+
     programs.kitty = {
       enable = mkDefault true;
       shellIntegration.enableFishIntegration = mkDefault true;
       font = {
         name = "CaskaydiaCove Nerd Font";
         # Only pull in the CaskaydiaCove nerd font + Fall back REVISIT: Why need fall back?
-        package = pkgs.nerdfonts.override {
-          fonts = [
-            "CascadiaCode"
-            "Iosevka"
-          ];
-        };
+        package = pkgs.nerd-fonts.caskaydia-cove;
       };
       settings = {
         enable_audio_bell = false;

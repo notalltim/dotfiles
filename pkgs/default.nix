@@ -17,6 +17,7 @@
         overlays = [
           config.flake.overlays.default
         ];
+        config.allowUnfree = true;
       };
     };
 }

@@ -7,7 +7,6 @@
     services = import ./home/services;
     packages = import ./home/packages.nix;
     home-manager = import ./home/home-manager.nix;
-    gpu = import ./home/gpu;
     nix = import ./home/nix.nix;
     nixpkgs = import ./home/nixpkgs;
     nixvimUpstream = inputs.nixvim.homeManagerModules.nixvim;

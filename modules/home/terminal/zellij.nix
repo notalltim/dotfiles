@@ -9,6 +9,7 @@ in
     enableFishIntegration = true;
     settings = {
       theme = "nightfox";
+      show_startup_tips = false;
       themes = {
         nightfox = {
           bg = "#192330";

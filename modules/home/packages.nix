@@ -35,7 +35,6 @@ let
       "miri"
       "rust-docs"
     ])
-    cargo-information
     cargo-audit
     cargo-license
     cargo-feature

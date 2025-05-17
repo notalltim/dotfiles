@@ -22,90 +22,89 @@ in
 
   config = mkIf cfg.enable {
     programs.nixvim = {
-      plugins.dap =
-        let
-          base = {
-            command = "${getExe' pkgs.gdb "gdb"}";
-            args = [
-              "-i"
-              "dap"
-            ];
-          };
-
-          exes = {
-            launch_excecutable = {
-              name = "Launch executable";
-              request = "launch";
-              enrichConfig = ''
-                function(config, on_config)
-                  local final_config = vim.deepcopy(config)
-                  local program = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-                  final_config.program = program
-                  on_config(final_config)
-                end
-              '';
-              options = { };
+      plugins = {
+        dap-python.enable = true;
+        dap-ui.enable = true;
+        dap-virtual-text.enable = true;
+        dap =
+          let
+            base = {
+              command = "${getExe' pkgs.gdb "gdb"}";
+              args = [
+                "-i"
+                "dap"
+              ];
             };
 
-            attach = {
-              name = "Attach to process";
-              request = "attach";
-              enrichConfig = ''
-                function(config, on_config)
-                  local final_config = vim.deepcopy(config)
-                  local pid = coroutine.resume(require('dap.utils').pick_process({}))
-                  final_config.pid = pid
-                  on_config(final_config)
-                end
-              '';
-              options = { };
-            };
-          };
+            exes = {
+              launch_excecutable = {
+                name = "Launch executable";
+                request = "launch";
+                enrichConfig = ''
+                  function(config, on_config)
+                    local final_config = vim.deepcopy(config)
+                    local program = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    final_config.program = program
+                    on_config(final_config)
+                  end
+                '';
+                options = { };
+              };
 
-          executables = cfgs: mapAttrs (_: cfg: { inherit (cfg) enrichConfig options; } // base) cfgs;
-          configurations =
-            cfgs:
-            mapAttrsToList (type: cfg: {
-              inherit type;
-              inherit (cfg) name request;
-            }) cfgs;
-        in
-        {
-          enable = true;
-          adapters = {
-            executables = executables exes;
-          };
-          configurations = {
-            c = configurations exes;
-            h = configurations exes;
-            cpp = configurations exes;
-            hpp = configurations exes;
-          };
-          signs = {
-            dapBreakpoint = {
-              text = "●";
-              texthl = "DapBreakpoint";
+              attach = {
+                name = "Attach to process";
+                request = "attach";
+                enrichConfig = ''
+                  function(config, on_config)
+                    local final_config = vim.deepcopy(config)
+                    local pid = coroutine.resume(require('dap.utils').pick_process({}))
+                    final_config.pid = pid
+                    on_config(final_config)
+                  end
+                '';
+                options = { };
+              };
             };
-            dapBreakpointCondition = {
-              text = "●⃠";
-              texthl = "DapBreakpointCondition";
-            };
-            dapLogPoint = {
-              text = "◆";
-              texthl = "DapLogPoint";
-            };
-            dapBreakpointRejected = {
-              text = "⨂";
-              texthl = "DapBreakpointRejected";
-            };
-          };
-          extensions = {
-            dap-python.enable = true;
-            dap-ui.enable = true;
-            dap-virtual-text.enable = true;
-          };
-        };
 
+            executables = cfgs: mapAttrs (_: cfg: { inherit (cfg) enrichConfig options; } // base) cfgs;
+            configurations =
+              cfgs:
+              mapAttrsToList (type: cfg: {
+                inherit type;
+                inherit (cfg) name request;
+              }) cfgs;
+          in
+          {
+            enable = true;
+            adapters = {
+              executables = executables exes;
+            };
+            configurations = {
+              c = configurations exes;
+              h = configurations exes;
+              cpp = configurations exes;
+              hpp = configurations exes;
+            };
+            signs = {
+              dapBreakpoint = {
+                text = "●";
+                texthl = "DapBreakpoint";
+              };
+              dapBreakpointCondition = {
+                text = "●⃠";
+                texthl = "DapBreakpointCondition";
+              };
+              dapLogPoint = {
+                text = "◆";
+                texthl = "DapLogPoint";
+              };
+              dapBreakpointRejected = {
+                text = "⨂";
+                texthl = "DapBreakpointRejected";
+              };
+            };
+          };
+      };
       plugins.which-key.settings.spec = mkIf nixvim.plugins.which-key.enable [
         {
           __unkeyed-1 = "<leader>d";

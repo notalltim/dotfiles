@@ -2,10 +2,11 @@
   pkgs,
   nonNixos ? false,
   hostPubkey,
+  config,
   ...
 }:
 let
-  inherit (pkgs.lib) gpuWrapCheck;
+  gpuWrapCheck = config.lib.nixGL.wrap;
 in
 {
   home = rec {
@@ -27,7 +28,7 @@ in
       audacity
       mprime
       openrgb-with-all-plugins
-      (python3Full.withPackages (
+      (python3.withPackages (
         pkgs: with pkgs; [
           numpy
           scipy
@@ -55,15 +56,14 @@ in
     kitty.enableKeybind = true;
     packages.enable = true;
     home-manager.enable = true;
-    gpu = {
-      enable = true;
-      enableVulkan = true;
-    };
     nix.enable = true; # TODO: this does not cover the case I want it does not control the nix version
     nixpkgs.enable = true;
     tools.enable = true;
     terminal.enable = true;
-    non-nixos.enable = nonNixos;
+    non-nixos = {
+      enable = nonNixos;
+      gpu.enableVulkan = true;
+    };
     secrets = {
       enable = true;
       inherit hostPubkey;

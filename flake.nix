@@ -2,16 +2,12 @@
   description = "Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # TODO: Remove this when the flake-module is availible on stable
-    home-manager-unstable = {
-      url = "github:nix-community/home-manager";
-      flake = false;
-    };
+
     nixgl = {
       url = "github:guibou/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,9 +17,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.11";
+      url = "github:nix-community/nixvim/main";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
 
     flake-parts = {
@@ -69,7 +64,7 @@
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = with inputs; [
-        (import "${home-manager-unstable}/flake-module.nix")
+        home-manager.flakeModules.default
         treefmt-nix.flakeModule
         agenix-rekey.flakeModule
         (import ./modules)
