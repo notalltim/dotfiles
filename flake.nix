@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -17,7 +17,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim = {
-      url = "github:nix-community/nixvim/main";
+      url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -47,14 +47,8 @@
       };
     };
 
-    # Input sources for internal packages
-    gcc-python-pretty-printers = {
-      url = "github:gcc-mirror/gcc?ref=releases/gcc-13.3.0&shallow=1";
-      flake = false;
-    };
-
     age-secret-nvim = {
-      url = "git+file:///home/tgallion/age-secret.nvim";
+      url = "github:notalltim/age-secret.nvim/fix/output-stderr-dev-null";
       flake = false;
     };
 

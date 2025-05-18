@@ -1,15 +1,14 @@
-{ src, stdenvNoCC }:
-stdenvNoCC.mkDerivation {
-  name = "gcc-pretty-printers";
-  version = "13.3";
-  inherit src;
+{ stdenv }:
+stdenv.mkDerivation {
+  pname = "gcc-pretty-printers";
+  inherit (stdenv.cc.cc) src version;
   dontConfigure = true;
   dontBuild = true;
   dontPatch = true;
   installPhase = ''
     runHook preInstall
     mkdir -p $out/python
-    cp -r $src/libstdc++-v3/python $out
+    cp -r libstdc++-v3/python $out
     runHook postInstall
   '';
 }

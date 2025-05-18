@@ -5,15 +5,16 @@
       "locked": {
         "lastModified": 1746998863,
         "narHash": "sha256-fBKChPNmfdDmY9aYz77Buf69Obw3PXlZtnmjzTQ2aVU=",
-        "ref": "refs/heads/fix/output-stderr-dev-null",
+        "owner": "notalltim",
+        "repo": "age-secret.nvim",
         "rev": "37c4201286d53527c2578b247d7fb02562eccbd0",
-        "revCount": 15,
-        "type": "git",
-        "url": "file:///home/tgallion/age-secret.nvim"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/tgallion/age-secret.nvim"
+        "owner": "notalltim",
+        "ref": "fix/output-stderr-dev-null",
+        "repo": "age-secret.nvim",
+        "type": "github"
       }
     },
     "agenix": {
@@ -28,11 +29,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1745630506,
-        "narHash": "sha256-bHCFgGeu8XjWlVuaWzi3QONjDW3coZDqSHvnd4l7xus=",
+        "lastModified": 1747575206,
+        "narHash": "sha256-NwmAFuDUO/PFcgaGGr4j3ozG9Pe5hZ/ogitWhY+D81k=",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "96e078c646b711aee04b82ba01aefbff87004ded",
+        "rev": "4835b1dc898959d8547a871ef484930675cb47f1",
         "type": "github"
       },
       "original": {
@@ -222,23 +223,6 @@
         "type": "github"
       }
     },
-    "gcc-python-pretty-printers": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1716276744,
-        "narHash": "sha256-MHDkRKt2SVLPSOOJOteC3XBgm6+ivtnN7TUKV5hkj4g=",
-        "owner": "gcc-mirror",
-        "repo": "gcc",
-        "rev": "b71f1de6e9cf7181a288c0f39f9b1ef6580cf5c8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gcc-mirror",
-        "ref": "releases/gcc-13.3.0",
-        "repo": "gcc",
-        "type": "github"
-      }
-    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -268,16 +252,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1747439237,
-        "narHash": "sha256-5rCGrnkglKKj4cav1U3HC+SIUNJh08pqOK4spQv9RjA=",
+        "lastModified": 1747556831,
+        "narHash": "sha256-Qb84nbYFFk0DzFeqVoHltS2RodAYY5/HZQKE8WnBDsc=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "ae755329092c87369b9e9a1510a8cf1ce2b1c708",
+        "rev": "d0bbd221482c2713cccb80220f3c9d16a6e20a33",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "master",
+        "ref": "release-25.05",
         "repo": "home-manager",
         "type": "github"
       }
@@ -372,16 +356,16 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1747449013,
-        "narHash": "sha256-GJn1RYCdCOhd4lMfGtrn2u+k6h2XnWFHpkyzlj+/pPw=",
+        "lastModified": 1747592862,
+        "narHash": "sha256-XsDbrzQmpWZ1HS2WtmsiK6Gp0GK1WOkq6l0o9Ssqi6M=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "61c44d7a7fdb3d9ab1c36fdb6f16bffca01cb87d",
+        "rev": "6ef96cb478bfe4388472746f2b356467e83b7a88",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "main",
+        "ref": "nixos-25.05",
         "repo": "nixvim",
         "type": "github"
       }
@@ -439,7 +423,6 @@
         "agenix-rekey": "agenix-rekey",
         "fenix": "fenix",
         "flake-parts": "flake-parts",
-        "gcc-python-pretty-printers": "gcc-python-pretty-printers",
         "home-manager": "home-manager",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs",
