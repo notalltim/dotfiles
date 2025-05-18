@@ -3,4 +3,5 @@ inputs: final: _prev: {
     src = inputs.age-secret-nvim;
     inherit (final.vimUtils) buildVimPlugin;
   };
+  gcc-pretty-printers = final.callPackage ../pkgs/gcc-pretty-printers.nix { };
 }
