@@ -12,19 +12,39 @@ let
     optionalAttrs
     versionAtLeast
     mkForce
+    mkOption
     ;
   inherit (lib.versions) majorMinor;
+  inherit (lib.types) path nullOr;
   cfg = config.baseline.nix;
 in
 {
   options.baseline.nix = {
     enable = mkEnableOption "nix install configuration";
     package = mkPackageOption pkgs "nix" { };
+    accessTokensPath = mkOption {
+      type = nullOr path;
+      default = null;
+    };
+    netrcPath = mkOption {
+      type = nullOr path;
+      default = null;
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     systemd.user.sessionVariables.NIX_PATH = mkForce "";
+    age.secrets = {
+      nix-access-tokens = mkIf (cfg.accessTokensPath != null) {
+        rekeyFile = cfg.accessTokensPath;
+        path = "${config.xdg.cacheHome}/nix/access-tokens.conf";
+      };
+      netrc = mkIf (cfg.netrcPath != null) {
+        rekeyFile = cfg.netrcPath;
+        path = "${config.xdg.configHome}/nix/netrc";
+      };
+    };
     nix = {
       keepOldNixPath = false;
       package = cfg.package;
@@ -35,16 +55,22 @@ in
         flake = self;
       };
 
+      extraOptions = mkIf (cfg.accessTokensPath != null) ''
+        !include ${config.age.secrets.nix-access-tokens.path};
+      '';
+
       settings =
         {
           auto-optimise-store = true;
-          bash-prompt-prefix = "(nix:$name)\\040";
           experimental-features = [
             "nix-command"
             "flakes"
           ];
           # Make nix-shell work see default.nix at the root
           nix-path = [ "nixpkgs=${self.outPath}" ];
+          netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
+          substituters = [ "https://cache.nixos.org" ];
+          trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
         }
         // optionalAttrs (versionAtLeast (majorMinor cfg.package.version) "2.20") {
           upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";

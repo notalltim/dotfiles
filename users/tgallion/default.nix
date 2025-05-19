@@ -56,7 +56,10 @@ in
     kitty.enableKeybind = true;
     packages.enable = true;
     home-manager.enable = true;
-    nix.enable = true; # TODO: this does not cover the case I want it does not control the nix version
+    nix = {
+      enable = true;
+      accessTokensPath = ./secrets/access-tokens.age;
+    }; # TODO: this does not cover the case I want it does not control the nix version
     nixpkgs.enable = true;
     tools.enable = true;
     terminal.enable = true;
