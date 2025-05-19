@@ -7,6 +7,7 @@ in
   programs.oh-my-posh = mkIf cfg.enable {
     enable = true;
     enableFishIntegration = true;
+    enableBashIntegration = true;
     useTheme = "pure";
   };
 }

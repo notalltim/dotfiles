@@ -11,12 +11,16 @@ let
     mkIf
     optionalAttrs
     versionAtLeast
+    versionAtMost
     mkForce
     mkOption
+    optional
     ;
   inherit (lib.versions) majorMinor;
   inherit (lib.types) path nullOr;
   cfg = config.baseline.nix;
+  nixVerAtLeast = versionAtLeast (majorMinor cfg.package.version);
+  nixVerAtMost = versionAtMost (majorMinor cfg.package.version);
 in
 {
   options.baseline.nix = {
@@ -65,14 +69,14 @@ in
           experimental-features = [
             "nix-command"
             "flakes"
-          ];
+          ] ++ optional (nixVerAtMost "2.18") "repl-flakes";
           # Make nix-shell work see default.nix at the root
           nix-path = [ "nixpkgs=${self.outPath}" ];
           netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
           substituters = [ "https://cache.nixos.org" ];
           trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
         }
-        // optionalAttrs (versionAtLeast (majorMinor cfg.package.version) "2.20") {
+        // optionalAttrs (nixVerAtLeast "2.20") {
           upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
           always-allow-substitutes = true;
         };
