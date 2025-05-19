@@ -57,13 +57,14 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = !gpu.nvidia.enable || (cfg.gpu.driverVersion != null && gpu.driverHash != null);
+        assertion =
+          !gpu.nvidia.enable || (gpu.nvidia.driverVersion != null && gpu.nvidia.driverHash != null);
         message = ''
           nvidia driver is enabled but the nvidia driver version (${
-            if cfg.nvidia.driverVersion == null then "null" else cfg.nvidia.driverVersion
+            if gpu.nvidia.driverVersion == null then "null" else gpu.nvidia.driverVersion
           })
           and hash (${
-            if cfg.nvidia.driverHash == null then "null" else cfg.nvidia.driverHash
+            if gpu.nvidia.driverHash == null then "null" else gpu.nvidia.driverHash
           }) must both be null or both be non-null.
         '';
       }
