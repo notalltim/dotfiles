@@ -11,7 +11,7 @@ let
     mkIf
     optionalAttrs
     versionAtLeast
-    versionAtMost
+    versionOlder
     mkForce
     mkOption
     optional
@@ -20,7 +20,7 @@ let
   inherit (lib.types) path nullOr;
   cfg = config.baseline.nix;
   nixVerAtLeast = versionAtLeast (majorMinor cfg.package.version);
-  nixVerAtMost = versionAtMost (majorMinor cfg.package.version);
+  nixVerAtMost = versionOlder (majorMinor cfg.package.version);
 in
 {
   options.baseline.nix = {
@@ -69,7 +69,7 @@ in
           experimental-features = [
             "nix-command"
             "flakes"
-          ] ++ optional (nixVerAtMost "2.18") "repl-flakes";
+          ] ++ optional (nixVerAtMost "2.19") "repl-flakes";
           # Make nix-shell work see default.nix at the root
           nix-path = [ "nixpkgs=${self.outPath}" ];
           netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
