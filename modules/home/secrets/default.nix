@@ -66,6 +66,7 @@ in
         # Keys that will be tried for unlock
         masterIdentities = [
           ./pub/yubikey-3314879-piv.pub
+          (cfg.defaultIdentity)
         ];
 
         # Keys that will also be used for encryption but not for decryption
