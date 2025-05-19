@@ -69,7 +69,7 @@ in
           experimental-features = [
             "nix-command"
             "flakes"
-          ] ++ optional (nixVerAtMost "2.19") "repl-flakes";
+          ] ++ optional (nixVerAtMost "2.19") "repl-flake";
           # Make nix-shell work see default.nix at the root
           nix-path = [ "nixpkgs=${self.outPath}" ];
           netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
