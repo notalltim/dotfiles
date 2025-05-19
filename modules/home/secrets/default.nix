@@ -65,7 +65,6 @@ in
         inherit (cfg) hostPubkey;
         # Keys that will be tried for unlock
         masterIdentities = [
-          ./pub/yubikey-3314879-piv.pub
           (cfg.defaultIdentity)
         ];
 
