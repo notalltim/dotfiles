@@ -21,6 +21,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
     };
@@ -65,6 +70,7 @@
         (import ./users)
         (import ./overlays)
         (import ./pkgs)
+        (import ./hosts)
       ];
 
       systems = [
