@@ -17,11 +17,17 @@
     initialPassword = "test";
   };
   boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+    systemd-boot = {
+      enable = true;
+      xbootldrMountPoint = "/boot";
+    };
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/efi";
+    };
     timeout = 3;
   };
-
+  disko.devices.disk.disk0.imageSize = "10G";
   boot.initrd = {
     systemd.enable = true;
   };
