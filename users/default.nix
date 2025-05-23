@@ -14,6 +14,7 @@
         modules = (builtins.attrValues config.flake.homeModules) ++ [ ./tgallion ];
         extraSpecialArgs = {
           hostPubkey = ../hosts/aurora/id_ed25519.pub;
+          hostSecrets = ../hosts/aurora/secrets;
           nonNixos = true;
           inherit self;
         };

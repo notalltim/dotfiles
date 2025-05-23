@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ./hardware.nix
@@ -10,6 +10,10 @@
       };
     }
   ];
+  environment.systemPackages = [
+    # For debugging and troubleshooting Secure Boot.
+    pkgs.sbctl
+  ];
 
   users.users.tgallion = {
     isNormalUser = true;
@@ -18,8 +22,8 @@
   };
   boot.loader = {
     systemd-boot = {
-      enable = true;
-      xbootldrMountPoint = "/boot";
+      enable = lib.mkForce false;
+      # xbootldrMountPoint = "/boot";
     };
     efi = {
       canTouchEfiVariables = true;
@@ -31,5 +35,10 @@
   boot.initrd = {
     systemd.enable = true;
   };
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
   system.stateVersion = "25.05";
+  age.rekey.storageMode = "derivation";
 }

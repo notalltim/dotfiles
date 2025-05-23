@@ -15,24 +15,36 @@
         content = {
           type = "gpt";
           partitions = {
+            # ESP = {
+            #   priority = 1;
+            #   name = "ESP";
+            #   size = "512M";
+            #   type = "EF00";
+            #   content = {
+            #     type = "filesystem";
+            #     format = "vfat";
+            #     mountpoint = "/efi";
+            #     mountOptions = [ "defaults" ];
+            #   };
+            # };
+            # boot = {
+            #   priority = 2;
+            #   name = "boot";
+            #   size = "512M";
+            #   # XBOOTLDR GUID
+            #   type = "BC13C2FF-59E6-4262-A352-B275FD6F7172";
+            #   content = {
+            #     type = "filesystem";
+            #     format = "vfat";
+            #     mountpoint = "/boot";
+            #     mountOptions = [ "defaults" ];
+            #   };
+            # };
             ESP = {
               priority = 1;
               name = "ESP";
               size = "512M";
               type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/efi";
-                mountOptions = [ "defaults" ];
-              };
-            };
-            boot = {
-              priority = 2;
-              name = "boot";
-              size = "512M";
-              # XBOOTLDR GUID
-              type = "BC13C2FF-59E6-4262-A352-B275FD6F7172";
               content = {
                 type = "filesystem";
                 format = "vfat";

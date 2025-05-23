@@ -39,7 +39,7 @@ in
   };
   programs.fish.functions = {
     sudos = {
-      body = ''command sudo env "PATH=\$PATH" $argv'';
+      body = ''command sudo env "PATH=$PATH" $argv'';
       wraps = "sudo";
     };
   };
@@ -76,6 +76,7 @@ in
       pubkey = ./id_ed25519.pub;
       privkey = ./secrets/ssh-key-home.age;
     };
+    secureboot.enable = true;
   };
 
   programs.git = {

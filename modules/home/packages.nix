@@ -10,7 +10,10 @@ let
   inherit (builtins) hasAttr;
   nixTools = with pkgs; [
     cachix
-    qemu
+    qemu_full
+    sbctl
+    efitools
+    efivar
     # lorri
   ];
   developerTools = with pkgs; [

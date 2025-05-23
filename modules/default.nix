@@ -16,9 +16,14 @@
       ssh = import ./home/ssh.nix;
       agenix = inputs.agenix.homeManagerModules.default;
       agenix-rekey = inputs.agenix-rekey.homeManagerModules.default;
+      secureboot = ./nixos/secureboot.nix;
     };
     nixosModules = {
       disko = inputs.disko.nixosModules.default;
+      lanzaboote = inputs.lanzaboote.nixosModules.lanzaboote;
+      agenix = inputs.agenix.nixosModules.default;
+      agenix-rekey = inputs.agenix-rekey.nixosModules.default;
+      secureboot = ./nixos/secureboot.nix;
     };
   };
 }
