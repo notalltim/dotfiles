@@ -34,11 +34,7 @@ in
     programs.kitty = {
       enable = mkDefault true;
       shellIntegration.enableFishIntegration = mkDefault true;
-      font = {
-        name = "CaskaydiaCove Nerd Font";
-        # Only pull in the CaskaydiaCove nerd font + Fall back REVISIT: Why need fall back?
-        package = pkgs.nerd-fonts.caskaydia-cove;
-      };
+
       settings = {
         enable_audio_bell = false;
         disable_ligatures = "cursor";
@@ -46,7 +42,6 @@ in
       # Support kitty on non nixos system
       package = gpuWrapCheck pkgs.kitty;
 
-      themeFile = "Nightfox";
       extraConfig = font_features [
         "Regular"
         "Bold"
@@ -68,7 +63,7 @@ in
     '';
     # This is needed for kitty to find the font
     fonts.fontconfig.enable = true;
-
+    #
     # xdg.desktopEntries.kitty = {
     #   name = "Kitty";
     #   type = "Application";
@@ -103,7 +98,7 @@ in
     #     "x-scheme-handler/kitty"
     #   ];
     # };
-    #
+
     # home.activation = {
     #   linkDesktopApplications = {
     #     after = [

@@ -24,6 +24,10 @@ in
       ssh = import ./home/ssh.nix;
       agenix = inputs.agenix.homeManagerModules.default;
       agenix-rekey = inputs.agenix-rekey.homeManagerModules.default;
+      firefox = ./home/firefox.nix;
+      stylixUpstream = inputs.stylix.homeModules.stylix;
+      stylix = ./home/stylix.nix;
+      spicetifyUpstream = inputs.spicetify-nix.homeManagerModules.spicetify;
     } // shared;
     nixosModules = {
       disko = inputs.disko.nixosModules.default;

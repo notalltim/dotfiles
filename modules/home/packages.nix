@@ -61,7 +61,7 @@ let
   guiTools = with pkgs; [
     solaar
     openvpn3
-    spotify
+    # spotify
     inkscape
     gimp
     vlc
@@ -85,5 +85,6 @@ in
       }
     ];
     home.packages = nixTools ++ developerTools ++ unixTools ++ guiTools;
+    programs.spicetify.enable = true;
   };
 }

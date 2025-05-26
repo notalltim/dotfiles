@@ -26,6 +26,7 @@ in
       bitwarden
       audacity
       mprime
+      nvtopPackages.amd
       openrgb-with-all-plugins
       (python3.withPackages (
         pkgs: with pkgs; [
@@ -70,6 +71,10 @@ in
       pubkey = ./id_ed25519.pub;
       privkey = ./secrets/ssh-key-home.age;
     };
+    firefox = {
+      enable = true;
+    };
+    stylix.enable = true;
   };
 
   services.gpg-agent.enable = true;
