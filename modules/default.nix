@@ -5,6 +5,7 @@ let
       secrets = ./shared/secrets;
       userspec = ./shared/userspec.nix;
       hostspec = ./shared/hostspec.nix;
+      stylix = ./shared/stylix.nix;
     }
   );
 in
@@ -34,6 +35,7 @@ in
       home-manager = inputs.home-manager.nixosModules.home-manager;
       agenix = inputs.agenix.nixosModules.default;
       agenix-rekey = inputs.agenix-rekey.nixosModules.default;
+      stylixUpstream = inputs.stylix.nixosModules.stylix;
       secrets = ./nixos/secrets.nix;
     } // shared;
   };

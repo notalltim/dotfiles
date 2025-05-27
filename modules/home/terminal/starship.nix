@@ -37,7 +37,16 @@ in
       };
       status.disabled = false;
       sudo.disabled = false;
-      battery.threshold = 20;
+      battery.display = [
+        {
+          threshold = 10;
+          style = "bold red";
+        }
+        {
+          threshold = 30;
+          style = "bold yellow";
+        }
+      ];
     };
   };
 }
