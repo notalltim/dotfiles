@@ -34,11 +34,7 @@ in
     programs.kitty = {
       enable = mkDefault true;
       shellIntegration.enableFishIntegration = mkDefault true;
-      font = {
-        name = "CaskaydiaCove Nerd Font";
-        # Only pull in the CaskaydiaCove nerd font + Fall back REVISIT: Why need fall back?
-        package = pkgs.nerd-fonts.caskaydia-cove;
-      };
+
       settings = {
         enable_audio_bell = false;
         disable_ligatures = "cursor";
@@ -46,7 +42,6 @@ in
       # Support kitty on non nixos system
       package = gpuWrapCheck pkgs.kitty;
 
-      themeFile = "Nightfox";
       extraConfig = font_features [
         "Regular"
         "Bold"
@@ -69,55 +64,6 @@ in
     # This is needed for kitty to find the font
     fonts.fontconfig.enable = true;
 
-    # xdg.desktopEntries.kitty = {
-    #   name = "Kitty";
-    #   type = "Application";
-    #   genericName = "Terminal emulator";
-    #   comment = "Fast, feature-rich, GPU based terminal";
-    #   exec = "${cfg.package}/bin/kitty";
-    #   icon = "${cfg.package}/share/icons/hicolor/256x256/apps/kitty.png";
-    #   categories = [
-    #     "System"
-    #     "TerminalEmulator"
-    #   ];
-    # };
-    #
-    # xdg.desktopEntries.kitty-open = {
-    #   name = "Kitty URL Launcher";
-    #   type = "Application";
-    #   genericName = "Terminal emulator";
-    #   comment = "Open URLs with kitty";
-    #   exec = "${cfg.package}/bin/kitty +open %U";
-    #   icon = "${cfg.package}/share/icons/hicolor/256x256/apps/kitty.png";
-    #   categories = [
-    #     "System"
-    #     "TerminalEmulator"
-    #   ];
-    #   noDisplay = true;
-    #   mimeType = [
-    #     "image/*"
-    #     "application/x-sh"
-    #     "application/x-shellscript"
-    #     "inode/directory"
-    #     "text/*"
-    #     "x-scheme-handler/kitty"
-    #   ];
-    # };
-    #
-    # home.activation = {
-    #   linkDesktopApplications = {
-    #     after = [
-    #       "writeBoundary"
-    #       "createXdgUserDirectories"
-    #     ];
-    #     before = [ ];
-    #     data = ''
-    #       rm -rf ${config.xdg.dataHome}/"applications/home-manager"
-    #       mkdir -p ${config.xdg.dataHome}/"applications/home-manager"
-    #       cp -Lr ${config.home.homeDirectory}/.nix-profile/share/applications/kitty* ${config.xdg.dataHome}/"applications/home-manager/"
-    #     '';
-    #   };
-    # };
     # Launch kitty with key command
     dconf.settings = mkIf baseline.enableKeybind {
       "org/gnome/desktop/applications/terminal" = {

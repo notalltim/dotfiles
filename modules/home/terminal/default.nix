@@ -7,7 +7,7 @@ in
     ./fish.nix
     ./kitty.nix
     ./zellij.nix
-    ./oh-my-posh.nix
+    ./starship.nix
   ];
   options = {
     baseline.terminal.enable = mkEnableOption "Enable baseline terminal / shell configuration";

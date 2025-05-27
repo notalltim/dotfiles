@@ -18,8 +18,7 @@ in
 
   config = mkIf cfg.enable {
     programs.nixvim = {
-      colorscheme = "nightfox";
-      extraPlugins = [ pkgs.vimPlugins.nightfox-nvim ];
+      colorschemes.nightfox.enable = true;
 
       extraConfigLuaPre = ''
         vim.cmd("set expandtab")

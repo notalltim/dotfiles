@@ -22,12 +22,19 @@ let
           ./${host}
           inputs.nixos-hardware.nixosModules.dell-xps-15-9570
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${user} = import ../users/${user};
-            home-manager.sharedModules = builtins.attrValues flake.homeModules ++ [ ./${host}/hostspec.nix ];
-            home-manager.extraSpecialArgs = {
-              inherit self;
+            stylix.homeManagerIntegration = {
+              autoImport = false;
+              followSystem = false;
+            };
+            home-manager = {
+              backupFileExtension = "bak";
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${user} = import ../users/${user};
+              sharedModules = builtins.attrValues flake.homeModules ++ [ ./${host}/hostspec.nix ];
+              extraSpecialArgs = {
+                inherit self;
+              };
             };
           }
         ];

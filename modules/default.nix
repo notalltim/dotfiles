@@ -5,6 +5,7 @@ let
       secrets = ./shared/secrets;
       userspec = ./shared/userspec.nix;
       hostspec = ./shared/hostspec.nix;
+      stylix = ./shared/stylix.nix;
     }
   );
 in
@@ -24,12 +25,17 @@ in
       ssh = import ./home/ssh.nix;
       agenix = inputs.agenix.homeManagerModules.default;
       agenix-rekey = inputs.agenix-rekey.homeManagerModules.default;
+      firefox = ./home/firefox.nix;
+      stylixUpstream = inputs.stylix.homeModules.stylix;
+      stylix = ./home/stylix.nix;
+      spicetifyUpstream = inputs.spicetify-nix.homeManagerModules.spicetify;
     } // shared;
     nixosModules = {
       disko = inputs.disko.nixosModules.default;
       home-manager = inputs.home-manager.nixosModules.home-manager;
       agenix = inputs.agenix.nixosModules.default;
       agenix-rekey = inputs.agenix-rekey.nixosModules.default;
+      stylixUpstream = inputs.stylix.nixosModules.stylix;
       secrets = ./nixos/secrets.nix;
     } // shared;
   };
