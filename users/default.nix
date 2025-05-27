@@ -3,22 +3,36 @@
   withSystem,
   config,
   self,
+  lib,
   ...
 }:
-{
-  flake = {
-    homeConfigurations.${"tgallion@aurora"} = withSystem "x86_64-linux" (
+let
+  inherit (lib) cartesianProduct foldl';
+  mkHome = user: host: {
+    "${user}@${host}" = withSystem "x86_64-linux" (
       { pkgs, ... }:
       inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = (builtins.attrValues config.flake.homeModules) ++ [ ./tgallion ];
+        modules =
+          (builtins.attrValues config.flake.homeModules)
+          ++ [ ../hosts/${host}/hostspec.nix ]
+          ++ [ ./${user} ];
         extraSpecialArgs = {
-          hostPubkey = ../hosts/aurora/id_ed25519.pub;
-          nonNixos = true;
           inherit self;
         };
       }
     );
+  };
+  mkHomes =
+    hosts: users:
+    (foldl' (acc: el: acc // (mkHome el.user el.host))) { } (cartesianProduct {
+      user = users;
+      host = hosts;
+    });
+in
+{
+  flake = {
+    homeConfigurations = mkHomes [ "corona" ] [ "tgallion" ];
   };
   perSystem =
     { ... }:

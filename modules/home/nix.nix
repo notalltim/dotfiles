@@ -14,13 +14,29 @@ let
     versionOlder
     mkForce
     mkOption
+    mkDefault
     optional
     ;
   inherit (lib.versions) majorMinor;
   inherit (lib.types) path nullOr;
+  inherit (lib.fileset) toSource unions;
   cfg = config.baseline.nix;
   nixVerAtLeast = versionAtLeast (majorMinor cfg.package.version);
   nixVerAtMost = versionOlder (majorMinor cfg.package.version);
+  # Make the build more reproducible perhaps there is a better way
+  filterdSource = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../default.nix
+      ../../flake.nix
+      ../../flake.lock
+      ../../overlays
+      ../../pkgs
+      ../../modules/default.nix
+      ../../hosts/default.nix
+      ../../users/default.nix
+    ];
+  };
 in
 {
   options.baseline.nix = {
@@ -51,12 +67,12 @@ in
     };
     nix = {
       keepOldNixPath = false;
-      package = cfg.package;
+      package = mkDefault cfg.package;
 
       # Make nixpkgs# use the nixpkgs used to eval
       registry.nixpkgs = {
         exact = true;
-        flake = self;
+        flake = filterdSource;
       };
 
       extraOptions = mkIf (cfg.accessTokensPath != null) ''

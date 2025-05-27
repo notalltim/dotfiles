@@ -1,22 +1,21 @@
 {
   pkgs,
-  nonNixos ? false,
-  hostPubkey,
   config,
   ...
 }:
 let
+  inherit (config.baseline) userspec;
   gpuWrapCheck = config.lib.nixGL.wrap;
 in
 {
-  home = rec {
+  imports = [
+    ./userspec.nix
+  ];
+  home = {
     stateVersion = "24.11";
-    homeDirectory = "/home/${username}";
-    username = "tgallion";
+    homeDirectory = "/home/${userspec.username}";
+    username = userspec.username;
     enableDebugInfo = true;
-    shellAliases = {
-      reload-home-manager-config = "home-manager switch --flake ${builtins.toString ./.}";
-    };
 
     packages = with pkgs; [
       (gpuWrapCheck kicad)
@@ -60,16 +59,11 @@ in
       enable = true;
       accessTokensPath = ./secrets/access-tokens.age;
     }; # TODO: this does not cover the case I want it does not control the nix version
-    nixpkgs.enable = true;
     tools.enable = true;
     terminal.enable = true;
     non-nixos = {
-      enable = nonNixos;
+      enable = config.baseline.hostspec.platform != "nixos";
       gpu.enableVulkan = true;
-    };
-    secrets = {
-      enable = true;
-      inherit hostPubkey;
     };
     ssh = {
       enable = true;
@@ -78,11 +72,13 @@ in
     };
   };
 
+  services.gpg-agent.enable = true;
+  programs.gpg.enable = true;
   programs.git = {
     signing = {
       key = "5A2DAA31F5457F29";
     };
     userEmail = "timbama@gmail.com";
-    userName = "Timothy Gallion";
+    userName = userspec.fullName;
   };
 }

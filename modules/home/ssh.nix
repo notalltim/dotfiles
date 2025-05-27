@@ -15,7 +15,7 @@ in
     };
   };
   config = mkIf cfg.enable {
-    age.secrets.ssh-key = mkIf config.baseline.secrets.enable {
+    age.secrets.ssh-key = {
       rekeyFile = cfg.privkey;
       path = "${config.home.homeDirectory}/.ssh/id_${config.home.username}";
       mode = "600";

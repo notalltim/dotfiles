@@ -25,6 +25,7 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -51,7 +52,6 @@
         treefmt-nix.follows = "treefmt-nix";
       };
     };
-
     age-secret-nvim = {
       url = "github:notalltim/age-secret.nvim/fix/output-stderr-dev-null";
       flake = false;
