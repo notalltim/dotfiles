@@ -4,16 +4,13 @@
 {
   config,
   lib,
-  pkgs,
-  modulesPath,
   ...
 }:
-
-{
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
-
+let
+  inherit (lib) mkIf;
+  host = config.baseline.host.name;
+in
+(mkIf (host == "corona") {
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
@@ -42,6 +39,39 @@
   };
 
   swapDevices = [ ];
+  services.xserver.videoDrivers = lib.mkDefault [
+    "modesetting" # example for Intel iGPU; use "amdgpu" here instead if your iGPU is AMD
+  ];
+  # Hardware compatibility
+  # Enable touchpad support (enabled default in most desktopManager).
+  services.libinput.enable = true;
+  hardware.keyboard.qmk.enable = true;
+  services.hardware.bolt.enable = true;
+  services.fprintd.enable = true;
+  hardware.bluetooth.enable = true;
+  hardware.graphics.enable = true;
+
+  hardware.nvidia = {
+
+    # Modesetting is required.
+    modesetting.enable = true;
+
+    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+    # Enable this if you have graphical corruption issues or application crashes after waking
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
+    # of just the bare essentials.
+    powerManagement.enable = false;
+
+    # Fine-grained power management. Turns off GPU when not in use.
+    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+    powerManagement.finegrained = false;
+
+    # Enable the Nvidia settings menu,
+    # accessible via `nvidia-settings`.
+    nvidiaSettings = true;
+    prime.offload.enable = true;
+    primeBatterySaverSpecialisation = true;
+  };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -51,5 +81,6 @@
   # networking.interfaces.wlp59s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-}
+})

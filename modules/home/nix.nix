@@ -12,7 +12,6 @@ let
     optionalAttrs
     versionAtLeast
     versionOlder
-    mkForce
     mkOption
     mkDefault
     optional
@@ -54,7 +53,6 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    systemd.user.sessionVariables.NIX_PATH = mkForce "";
     age.secrets = {
       nix-access-tokens = mkIf (cfg.accessTokensPath != null) {
         rekeyFile = cfg.accessTokensPath;

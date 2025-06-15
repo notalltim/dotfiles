@@ -4,4 +4,5 @@ inputs: final: _prev: {
     inherit (final.vimUtils) buildVimPlugin;
   };
   gcc-pretty-printers = final.callPackage ../pkgs/gcc-pretty-printers.nix { };
+  ulauncher-uwsm = final.callPackage ../pkgs/ulauncher-uwsm.nix { };
 }

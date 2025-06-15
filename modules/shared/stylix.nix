@@ -5,11 +5,10 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkIf;
   cfg = config.baseline.stylix;
 in
 {
-  options.baseline.stylix.enable = mkEnableOption "Enable baseline style";
   config = mkIf cfg.enable {
     stylix = {
       enable = true;
@@ -19,21 +18,27 @@ in
         hash = "sha256-qhkXsZHZCMJP40347QajOfIsaskYl+zCVGAeUWkoEig=";
       };
 
+      cursor = {
+        name = "Adwaita";
+        package = pkgs.adwaita-icon-theme;
+        size = 24;
+      };
+
       polarity = "dark";
       fonts = {
         serif = {
           package = pkgs.nerd-fonts.caskaydia-cove;
-          name = "CaskaydiaCoveNerdFontPropo";
+          name = "CaskaydiaCove Nerd Font Propo";
         };
 
         sansSerif = {
           package = pkgs.nerd-fonts.caskaydia-cove;
-          name = "CaskaydiaCoveNerdFontPropo";
+          name = "CaskaydiaCove Nerd Font Propo";
         };
 
         monospace = {
           package = pkgs.nerd-fonts.caskaydia-cove;
-          name = "CaskaydiaCoveNerdFontMono";
+          name = "CaskaydiaCove Nerd Font Mono";
         };
 
         emoji = {

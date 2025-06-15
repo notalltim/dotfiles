@@ -1,21 +1,25 @@
 {
   config,
+  lib,
   ...
 }:
 let
-  primaryUser = config.baseline.userspec.username;
+  inherit (lib) attrNames;
+  inherit (config.baseline) host;
 in
 {
+
+  # users.groups.secrets.members = attrNames host.users;
   # Avoid issue where the nix build user owns the secrets
   age.rekey = {
-    inherit (config.baseline.secrets) hostPubkey;
-    cacheDir = "/tmp/agenix-rekey/${config.networking.hostName}";
+    inherit (host) hostPubkey;
+    cacheDir = "/tmp/agenix-rekey/${host.hostname}";
   };
   systemd.tmpfiles.rules = [
-    "D ${config.age.rekey.cacheDir} 755 ${primaryUser} ${primaryUser} - -"
+    "D ${config.age.rekey.cacheDir} 775 root wheel - -"
   ];
   # Required to set sandbox paths
-  nix.settings.trusted-users = [ "${primaryUser}" ];
+  nix.settings.trusted-users = attrNames host.users;
 
   # Smart card (yubi key PIV)
   services.pcscd.enable = true;

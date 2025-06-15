@@ -11,6 +11,7 @@ let
   nixTools = with pkgs; [
     cachix
     qemu
+    comma-with-db
     # lorri
   ];
   developerTools = with pkgs; [
@@ -84,7 +85,15 @@ in
           or `overlays.default` notalltim's flake in the `nixpkgs.overlays` option'';
       }
     ];
-    home.packages = nixTools ++ developerTools ++ unixTools ++ guiTools;
-    programs.spicetify.enable = true;
+    home = {
+      packages = nixTools ++ developerTools ++ unixTools ++ guiTools;
+      file."${config.xdg.cacheHome}/nix-index/files".source = pkgs.nix-index-database;
+    };
+    programs.nix-index = {
+      enable = true;
+      package = pkgs.nix-index-with-db;
+      enableFishIntegration = true;
+      enableBashIntegration = true;
+    };
   };
 }

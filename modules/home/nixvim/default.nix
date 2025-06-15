@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf optional;
   cfg = config.baseline.nixvim;
 in
 {
@@ -27,6 +27,7 @@ in
     };
   };
   config = {
+    home.packages = optional (cfg.enableWayland) pkgs.wl-clipboard-rs;
     baseline.nixvim = mkIf cfg.enableAll {
       enable = true;
       lsp.enable = true;
@@ -41,6 +42,8 @@ in
       nixpkgs.useGlobalPackages = true;
       enable = true;
       defaultEditor = true;
+      performance.byteCompileLua.enable = true;
+
       extraConfigLuaPre = ''
         -- Global undo files
         vim.cmd("set undodir=~/.nvim/undodir")

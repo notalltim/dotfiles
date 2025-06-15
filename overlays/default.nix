@@ -8,6 +8,7 @@ let
     agenix = inputs.agenix.overlays.default;
     agenix-rekey = inputs.agenix-rekey.overlays.default;
     nur = inputs.nur.overlays.default;
+    nix-index-database = inputs.nix-index-database.overlays.nix-index;
     packages = import ./packages.nix inputs;
     # nix = self.inputs.nix.overlays.default;
     packageOverrides = import ./overrides.nix;

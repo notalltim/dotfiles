@@ -76,6 +76,8 @@ in
 
           formatting = {
             # alejandra.enable = true;
+            treefmt.enable = true;
+            biome.enable = true;
             nixfmt = {
               enable = true;
               package = pkgs.nixfmt-rfc-style;
@@ -91,6 +93,7 @@ in
             mdformat.enable = true;
             tidy.enable = true;
             yamlfmt.enable = true;
+            buf.enable = true;
           };
           hover.printenv.enable = true;
         };

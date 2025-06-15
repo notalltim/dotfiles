@@ -11,7 +11,6 @@ let
     mkEnableOption
     mkIf
     mkOption
-    unique
     listToAttrs
     nameValuePair
     ;
