@@ -74,7 +74,7 @@ in
       };
 
       extraOptions = mkIf (cfg.accessTokensPath != null) ''
-        !include ${config.age.secrets.nix-access-tokens.path};
+        !include ${config.age.secrets.nix-access-tokens.path}
       '';
 
       settings =
