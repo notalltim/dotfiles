@@ -18,7 +18,7 @@ in
       cacheDir = "/tmp/agenix-rekey/${host.hostname}";
     };
     secrets.hostKey = {
-      rekeyFile = builtins.path { path = host.hostPath + "/${host.hostname}.age"; };
+      rekeyFile = host.hostPath + "/${host.hostname}.age";
       generator = {
         script = "hostkey";
         tags = [ "bootstrap-${host.hostname}" ];

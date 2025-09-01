@@ -33,7 +33,7 @@ let
           '';
         };
         hostPath = mkOption {
-          apply = mkPathReproducible;
+          # apply = mkPathReproducible;
           type = path;
           description = ''
             root path where the host definition is  
