@@ -98,4 +98,8 @@ in
     userEmail = "timbama@gmail.com";
     userName = tgallion.fullName;
   };
+
+  programs.obs-studio = {
+    enable = true;
+  };
 })

@@ -92,14 +92,13 @@ in
         else
           pkgs.nixgl;
       vulkan.enable = gpu.enableVulkan;
-      installScripts =
-        [
-          "mesa"
-        ]
-        ++ optionals (gpu.nvidia.enable) [
-          "nvidia"
-          "nvidiaPrime"
-        ];
+      installScripts = [
+        "mesa"
+      ]
+      ++ optionals (gpu.nvidia.enable) [
+        "nvidia"
+        "nvidiaPrime"
+      ];
       prime = mkIf (gpu.nvidia.enable) {
         nvidiaProvider = "Nvidia-G0";
         installScript = "nvidia";

@@ -12,6 +12,7 @@ in
   # users.groups.secrets.members = attrNames host.users;
   # Avoid issue where the nix build user owns the secrets
   age = {
+    identityPaths = [ "/etc/ssh/ssh_${host.hostname}_ed25519_key" ];
     rekey = {
       inherit (host) hostPubkey;
       cacheDir = "/tmp/agenix-rekey/${host.hostname}";

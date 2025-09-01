@@ -42,7 +42,7 @@ in
       nixpkgs.useGlobalPackages = true;
       enable = true;
       defaultEditor = true;
-      # performance.byteCompileLua.enable = true;
+      performance.byteCompileLua.enable = true;
 
       extraConfigLuaPre = ''
         -- Global undo files

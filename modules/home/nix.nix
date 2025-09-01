@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  self,
+  baselineLib,
   ...
 }:
 let
@@ -19,6 +19,8 @@ let
   inherit (lib.versions) majorMinor;
   inherit (lib.types) path nullOr;
   inherit (lib.fileset) toSource unions;
+  inherit (baselineLib) mkPathReproducible;
+
   cfg = config.baseline.nix;
   nixVerAtLeast = versionAtLeast (majorMinor cfg.package.version);
   nixVerAtMost = versionOlder (majorMinor cfg.package.version);
@@ -43,10 +45,12 @@ in
     package = mkPackageOption pkgs "nix" { };
     accessTokensPath = mkOption {
       type = nullOr path;
+      apply = path: if path != null then mkPathReproducible path else null;
       default = null;
     };
     netrcPath = mkOption {
       type = nullOr path;
+      apply = path: if path != null then mkPathReproducible path else null;
       default = null;
     };
   };

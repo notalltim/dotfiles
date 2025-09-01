@@ -4,4 +4,10 @@ _final: prev: {
       mainProgram = "blueberry";
     };
   });
+
+  vimPlugins = prev.vimPlugins // {
+    windsurf-nvim = prev.vimPlugins.windsurf-nvim.overrideAttrs (oldAttrs: {
+      patches = (oldAttrs.patches or [ ]) ++ [ ../pkgs/json-encode-crash.patch ];
+    });
+  };
 }

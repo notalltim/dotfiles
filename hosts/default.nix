@@ -53,18 +53,17 @@ let
     } hosts;
 in
 {
-  flake =
-    {
-      nixosConfigurations =
-        (mkNixOSHost "corona" [
-          ./corona/hardware.nix
-        ])
-        // (mkNixOSHost "piezo" [ ./piezo ]);
+  flake = {
+    nixosConfigurations =
+      (mkNixOSHost "corona" [
+        ./corona/hardware.nix
+      ])
+      // (mkNixOSHost "piezo" [ ./piezo ]);
 
-      homeManagerConfigurations = mkHomeManagerHost "tgallion" "corona";
-    }
-    // moduleOutputs [
-      "corona"
-      "aurora"
-    ];
+    homeConfigurations = mkHomeManagerHost "tgallion" "corona";
+  }
+  // moduleOutputs [
+    "corona"
+    "aurora"
+  ];
 }

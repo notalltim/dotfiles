@@ -18,6 +18,7 @@ in
       adw-gtk3
     ];
     stylix = {
+      overlays.enable = false;
       targets = {
         firefox.profileNames = [ config.baseline.firefox.profile ];
         nixvim.enable = false;

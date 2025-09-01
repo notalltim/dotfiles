@@ -11,7 +11,6 @@ let
     removeSuffix
     mkEnableOption
     head
-    escapeShellArg
     ;
   cfg = config.baseline.secrets;
 in
@@ -26,6 +25,7 @@ in
       agenix-rekey
       age-plugin-fido2-hmac
       age-plugin-yubikey
+      pinentry-qt
     ];
 
     services.yubikey-touch-detector = {

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  self,
   ...
 }:
 let
@@ -16,7 +15,6 @@ let
     filterAttrs
     mapAttrs
     elem
-    hasPrefix
     any
     ;
   inherit (lib.types)
