@@ -6,7 +6,13 @@
 }:
 let
   inherit (config.baseline) host user;
-  inherit (lib) mkIf removeSuffix mkEnableOption;
+  inherit (lib)
+    mkIf
+    removeSuffix
+    mkEnableOption
+    head
+    escapeShellArg
+    ;
   cfg = config.baseline.secrets;
 in
 {
@@ -31,13 +37,17 @@ in
       extraPlugins = [
         pkgs.agenix-secret-nvim
       ];
-      extraConfigLua = ''
-        require('age_secret').setup({
-            recipient = "${removeSuffix "\n" host.hostPubkey}", -- Replace with your AGE recipient
-            identity = "${removeSuffix "\n" cfg.defaultIdentity}", -- Replace with the path to your AGE secret key
-            tool = "rage"
-        });
-      '';
+      extraConfigLua =
+        let
+          masterIdentity = head config.age.rekey.masterIdentities;
+        in
+        ''
+          require('age_secret').setup({
+              recipient = "${removeSuffix "\n" masterIdentity.pubkey}", -- Replace with your AGE recipient
+              identity = "${removeSuffix "\n" masterIdentity.identity}", -- Replace with the path to your AGE secret key
+              tool = "rage"
+          });
+        '';
     };
 
     age = {
@@ -48,6 +58,13 @@ in
         hostPubkey = user.userPubkey;
         # This is needed because the default uses UID which is not know to home-manager
         cacheDir = "/tmp/agenix-rekey.${config.home.username}";
+      };
+      secrets.userKey = {
+        rekeyFile = host.hostPath + "/${user.username}.age";
+        generator = {
+          script = "hostkey";
+          tags = [ "bootstrap-${host.hostname}" ];
+        };
       };
     };
     # Needed to allow derivation storageMode

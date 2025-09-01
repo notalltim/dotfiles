@@ -1,9 +1,15 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  baselineLib,
+  ...
+}:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf mkDefault mkOption;
   inherit (lib.types) path nullOr;
   inherit (config.lib.nixvim) mkRaw;
+  inherit (baselineLib) mkPathReproducible;
   cfg = config.baseline.nixvim.completion;
 in
 {
@@ -13,6 +19,7 @@ in
       codeium = {
         apikey = mkOption {
           type = nullOr path;
+          apply = path: if path != null then mkPathReproducible path else null;
           default = null;
           description = "Codeium api key";
         };

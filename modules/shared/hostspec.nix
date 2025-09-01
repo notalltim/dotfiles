@@ -2,15 +2,11 @@
   lib,
   options,
   config,
+  baselineLib,
   ...
 }:
 let
-  inherit (lib)
-    mkOption
-    mkMerge
-    map
-    attrNames
-    ;
+  inherit (lib) mkOption;
   inherit (lib.types)
     str
     enum
@@ -20,6 +16,7 @@ let
     path
     listOf
     ;
+  inherit (baselineLib) mkPathReproducible;
   hostType = submodule (
     { name, ... }:
     {
@@ -35,6 +32,13 @@ let
             hostname of the host is used for networking
           '';
         };
+        hostPath = mkOption {
+          apply = mkPathReproducible;
+          type = path;
+          description = ''
+            root path where the host definition is  
+          '';
+        };
         platform = mkOption {
           type = enum [
             "nixos"
@@ -43,6 +47,7 @@ let
         };
         desktopEnvironment = mkOption {
           type = enum [
+            "headless"
             "gnome"
             "hyprland"
           ];
@@ -54,7 +59,8 @@ let
 
         defaultIdentity = mkOption {
           type = path;
-          default = ./identities/yubikey-3314879-piv.pub;
+          apply = mkPathReproducible;
+          default = ./secrets/identities/yubikey-3314879-piv.pub;
         };
 
         users = mkOption {

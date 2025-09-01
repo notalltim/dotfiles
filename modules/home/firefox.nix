@@ -9,6 +9,7 @@ let
   inherit (lib)
     mkMerge
     mkEnableOption
+    mkDefault
     mkIf
     mkOption
     listToAttrs
@@ -31,7 +32,7 @@ in
     {
       programs.firefox = {
         enable = true;
-        package = config.lib.nixGL.wrap pkgs.firefox;
+        package = mkDefault (config.lib.nixGL.wrap pkgs.firefox);
       };
     }
     {

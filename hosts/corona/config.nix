@@ -5,6 +5,7 @@
   pkgs,
   config,
   lib,
+  GPUOffloadApp,
   ...
 }:
 let
@@ -18,7 +19,21 @@ in
       baseline = {
         audio.enable = true;
         stylix.enable = true;
+        secureboot = {
+          enable = true;
+          factorySignatures = {
+            dell-KEK = {
+              file = ./secureboot/factory/dell-KEK.esl;
+              type = "KEK";
+            };
+            dell-db = {
+              file = ./secureboot/factory/dell-db.esl;
+              type = "db";
+            };
+          };
+        };
         homeCommon = {
+          programs.firefox.package = (GPUOffloadApp pkgs.firefox "firefox");
           services.kanshi = {
             enable = true;
             settings = [
@@ -44,7 +59,7 @@ in
                       status = "enable";
                       scale = 1.0;
                       position = "1920,0";
-                      mode = "2560x1440@143.86Hz";
+                      mode = "--custom 2560x1440@143.86Hz";
                     }
                     {
                       criteria = "Sceptre Tech Inc T27 Unknown";
@@ -64,7 +79,6 @@ in
           };
         };
       };
-
       # Bootloader.
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;

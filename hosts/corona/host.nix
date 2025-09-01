@@ -1,7 +1,3 @@
-{ lib, ... }:
-let
-  inherit (lib) mkForce;
-in
 {
   baseline = {
     hostNames = [ "corona" ];
@@ -10,13 +6,8 @@ in
       users.tgallion.userPubkey = ./id_corona_tgallion.pub;
       hostPubkey = ./ssh_host_ed25519_key.pub;
       desktopEnvironment = "hyprland";
+      hostPath = ./.;
     };
-    # monitors.xps15-internal = {
-    #   manufacturer = "Sharp Corporation";
-    #   height = 1080;
-    #   width = 1920;
-    #   refreshRate = 60;
-    # };
   };
 
 }

@@ -6,7 +6,24 @@
   ...
 }:
 let
-  inherit (lib) mkDefault;
+  inherit (lib) mkDefault hiPrio;
+  patchDesktop =
+    pkg: appName: from: to:
+    hiPrio (
+      pkgs.runCommand "$patched-desktop-entry-for-${appName}" { } ''
+        ${pkgs.coreutils}/bin/mkdir -p $out/share/applications
+        ${pkgs.gnused}/bin/sed 's#${from}#${to}#g' < ${pkg}/share/applications/${appName}.desktop > $out/share/applications/${appName}.desktop
+      ''
+    )
+    // {
+      override = args: (patchDesktop (pkg.override args) appName from to);
+    };
+  GPUOffloadApp =
+    pkg: desktopName:
+    if config.hardware.nvidia.prime.offload.enable then
+      patchDesktop pkg desktopName "^Exec=" "Exec=nvidia-offload "
+    else
+      pkg;
   hostspec = config.baseline.hosts.${host};
 in
 {
@@ -40,7 +57,8 @@ in
     git
   ];
   security.polkit.enable = true;
-
+  services.fwupd.enable = true;
+  _module.args.GPUOffloadApp = GPUOffloadApp;
   # Set the default shell to use on the system.
   # this should be overriden all hosts
   system.stateVersion = mkDefault "25.05";

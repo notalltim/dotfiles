@@ -77,23 +77,23 @@ in
         !include ${config.age.secrets.nix-access-tokens.path}
       '';
 
-      settings =
-        {
-          auto-optimise-store = true;
-          experimental-features = [
-            "nix-command"
-            "flakes"
-          ] ++ optional (nixVerAtMost "2.19") "repl-flake";
-          # Make nix-shell work see default.nix at the root
-          nix-path = [ "nixpkgs=${self.outPath}" ];
-          netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
-          substituters = [ "https://cache.nixos.org" ];
-          trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
-        }
-        // optionalAttrs (nixVerAtLeast "2.20") {
-          upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
-          always-allow-substitutes = true;
-        };
+      settings = {
+        auto-optimise-store = true;
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ]
+        ++ optional (nixVerAtMost "2.19") "repl-flake";
+        # Make nix-shell work see default.nix at the root
+        nix-path = [ "nixpkgs=${filterdSource}" ];
+        netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
+        substituters = [ "https://cache.nixos.org" ];
+        trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
+      }
+      // optionalAttrs (nixVerAtLeast "2.20") {
+        upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
+        always-allow-substitutes = true;
+      };
     };
   };
 }

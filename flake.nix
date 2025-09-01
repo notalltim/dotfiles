@@ -8,7 +8,6 @@
       url = "github:nix-community/NUR";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        treefmt-nix.follows = "treefmt-nix";
         flake-parts.follows = "flake-parts";
       };
     };
@@ -22,7 +21,6 @@
       url = "github:nix-community/stylix/release-25.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
         flake-parts.follows = "flake-parts";
         nur.follows = "nur";
       };

@@ -11,9 +11,18 @@ in
 
   # users.groups.secrets.members = attrNames host.users;
   # Avoid issue where the nix build user owns the secrets
-  age.rekey = {
-    inherit (host) hostPubkey;
-    cacheDir = "/tmp/agenix-rekey/${host.hostname}";
+  age = {
+    rekey = {
+      inherit (host) hostPubkey;
+      cacheDir = "/tmp/agenix-rekey/${host.hostname}";
+    };
+    secrets.hostKey = {
+      rekeyFile = builtins.path { path = host.hostPath + "/${host.hostname}.age"; };
+      generator = {
+        script = "hostkey";
+        tags = [ "bootstrap-${host.hostname}" ];
+      };
+    };
   };
   systemd.tmpfiles.rules = [
     "D ${config.age.rekey.cacheDir} 775 root wheel - -"

@@ -1,16 +1,24 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  baselineLib,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption mkEnableOption;
   inherit (lib.types) path;
+  inherit (baselineLib) mkPathReproducible;
   cfg = config.baseline.ssh;
 in
 {
   options.baseline.ssh = {
     enable = mkEnableOption "Enable ssh handling";
     pubkey = mkOption {
+      apply = mkPathReproducible;
       type = path;
     };
     privkey = mkOption {
+      apply = mkPathReproducible;
       type = path;
     };
   };

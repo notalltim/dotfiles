@@ -45,14 +45,22 @@ let
     homeModules.${host} = ./${host}/host.nix;
     nixosModules.${host} = ./${host};
   };
-  moduleOutputs = hosts: foldl' (acc: host: recursiveUpdate acc (moduleOutput host)) { } hosts;
+  moduleOutputs =
+    hosts:
+    foldl' (acc: host: recursiveUpdate acc (moduleOutput host)) {
+      nixosModules.piezo = ./piezo/host.nix;
+      homeModules.piezo = ./piezo/host.nix;
+    } hosts;
 in
 {
   flake =
     {
-      nixosConfigurations = mkNixOSHost "corona" [
-        inputs.nixos-hardware.nixosModules.dell-xps-15-9570-nvidia
-      ];
+      nixosConfigurations =
+        (mkNixOSHost "corona" [
+          ./corona/hardware.nix
+        ])
+        // (mkNixOSHost "piezo" [ ./piezo ]);
+
       homeManagerConfigurations = mkHomeManagerHost "tgallion" "corona";
     }
     // moduleOutputs [

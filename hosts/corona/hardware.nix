@@ -4,13 +4,11 @@
 {
   config,
   lib,
+  self,
   ...
 }:
-let
-  inherit (lib) mkIf;
-  host = config.baseline.host.name;
-in
-(mkIf (host == "corona") {
+{
+  imports = [ self.inputs.nixos-hardware.nixosModules.dell-xps-15-9570-nvidia ];
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
@@ -69,7 +67,6 @@ in
     # Enable the Nvidia settings menu,
     # accessible via `nvidia-settings`.
     nvidiaSettings = true;
-    prime.offload.enable = true;
     primeBatterySaverSpecialisation = true;
   };
 
@@ -83,4 +80,4 @@ in
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.enableRedistributableFirmware = lib.mkDefault true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-})
+}

@@ -3,16 +3,25 @@
   config,
   pkgs,
   options,
+  baselineLib,
   ...
 }:
 let
   inherit (lib)
     mkOption
+    escapeShellArg
+    removeSuffix
     ;
   inherit (lib.types)
     nullOr
     path
     ;
+  inherit (baselineLib) mkPathReproducible;
+  target =
+    let
+      isNixosConfiguration = config ? networking.hostName;
+    in
+    if isNixosConfiguration then config.networking.hostName else config.home.username;
   cfg = config.baseline.secrets;
 in
 {
@@ -30,6 +39,7 @@ in
     };
     defaultIdentity = mkOption {
       type = path;
+      apply = mkPathReproducible;
       default = ./identities/yubikey-3314879-piv.pub;
     };
   };
@@ -39,15 +49,20 @@ in
       rekey = {
         # Keys that will be tried for unlock
         masterIdentities = [
-          (cfg.defaultIdentity)
+          {
+            identity = mkPathReproducible ./identities/yubikey-3314879-piv.pub;
+            pubkey = "age1yubikey1q0yy5s8ysq2za2hkm588dzwhur3a0t5d095salcp6n7ttg9a48af6fu4hxt";
+          }
         ];
 
         # Keys that will also be used for encryption but not for decryption
         # for backup keys
         extraEncryptionPubkeys = [
-          # public key of ./pub/yubikey-3314879-hmac.pub
+          # public key of ./identities/yubikey-3314879-piv.pub
+          "age1yubikey1q0yy5s8ysq2za2hkm588dzwhur3a0t5d095salcp6n7ttg9a48af6fu4hxt"
+          # public key of ./identities/yubikey-3314879-hmac.pub
           "age1tztn7rsjt6r3x2jpr0qmjnrd4jdtqu4lw7e6sdhdr8zx6fdze49q873qdm"
-          # public key of ./pub/yubikey-30665035-piv.pub
+          # public key of ./identities/yubikey-30665035-piv.pub
           "age1yubikey1qwa56syvllfur4astym20v52qwgw47akehcjvrvgyycxx44t9szdu3d9vl8"
         ];
 
@@ -59,8 +74,23 @@ in
           age-plugin-fido2-hmac
           age-plugin-yubikey
         ];
-
       };
+
+      generators.hostkey =
+        {
+          lib,
+          file,
+          pkgs,
+          name,
+          ...
+        }:
+        ''
+          privkey=$( (exec 3>&1; ${pkgs.openssh}/bin/ssh-keygen -q -t ed25519 -N "" -C ${escapeShellArg "${target}:${name}"}  -f /proc/self/fd/3 <<<y >/dev/null 2>&1; true) )
+            # Derive public key from private key
+            echo "$privkey" | (exec 3<&0; ssh-keygen -f /proc/self/fd/3 -y) >${escapeShellArg (removeSuffix ".age" file)}.pub
+            # Only output private key for this secret
+            echo "$privkey"
+        '';
     };
     nix.settings.extra-sandbox-paths = [ "${config.age.rekey.cacheDir}" ];
   };

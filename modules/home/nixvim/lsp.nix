@@ -92,8 +92,12 @@ in
             stylua.enable = true;
             mdformat.enable = true;
             tidy.enable = true;
-            yamlfmt.enable = true;
-            buf.enable = true;
+            yamlfmt = {
+              enable = true;
+              settings = {
+                formatter.trim_trailing_whitespace = true;
+              };
+            };
           };
           hover.printenv.enable = true;
         };

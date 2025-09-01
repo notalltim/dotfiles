@@ -6,6 +6,7 @@ let
       userspec = ./shared/userspec.nix;
       hostspec = ./shared/hostspec.nix;
       stylix = ./shared/stylix.nix;
+      lib = ./shared/lib.nix;
     }
   );
   homeUpstream = (
@@ -63,6 +64,7 @@ in
         spotify = ./nixos/spotify.nix;
         passthru = ./shared/passthru.nix;
         hyprland = ./nixos/hyprland.nix;
+        secureboot = ./nixos/secureboot.nix;
       }
       // shared
       // nixosUpstream;
