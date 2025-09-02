@@ -15,6 +15,7 @@ let
   inherit (lib.types)
     nullOr
     path
+    str
     ;
   inherit (baselineLib) mkPathReproducible;
   target =
@@ -42,6 +43,10 @@ in
       apply = mkPathReproducible;
       default = ./identities/yubikey-3314879-piv.pub;
     };
+    defaultIdentityPubkey = mkOption {
+      type = str;
+      default = "age1yubikey1q0yy5s8ysq2za2hkm588dzwhur3a0t5d095salcp6n7ttg9a48af6fu4hxt";
+    };
   };
 
   config = {
@@ -50,8 +55,8 @@ in
         # Keys that will be tried for unlock
         masterIdentities = [
           {
-            identity = mkPathReproducible ./identities/yubikey-3314879-piv.pub;
-            pubkey = "age1yubikey1q0yy5s8ysq2za2hkm588dzwhur3a0t5d095salcp6n7ttg9a48af6fu4hxt";
+            identity = cfg.defaultIdentity;
+            pubkey = cfg.defaultIdentityPubkey;
           }
         ];
 
