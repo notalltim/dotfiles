@@ -44,6 +44,7 @@ in
           {
             extensions = {
               packages = with addons; [ bitwarden ];
+              force = true;
             };
 
             settings = {

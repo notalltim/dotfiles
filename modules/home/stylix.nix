@@ -20,14 +20,17 @@ in
     stylix = {
       overlays.enable = false;
       targets = {
-        firefox.profileNames = [ config.baseline.firefox.profile ];
+        firefox = {
+          profileNames = [ config.baseline.firefox.profile ];
+          colorTheme.enable = true;
+        };
         nixvim.enable = false;
         waybar.font = "sansSerif";
         kde.enable = config.baseline.host.desktopEnvironment != "gnome";
       };
       iconTheme = {
         enable = true;
-        package = pkgs.adwaita-icon-theme;
+        package = pkgs.morewaita-icon-theme;
         dark = "Adwaita";
       };
       fonts.sizes = {

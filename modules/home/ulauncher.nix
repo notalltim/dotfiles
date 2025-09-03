@@ -35,7 +35,25 @@ in
         Restart = "on-failure";
       };
     };
+
     home.file = with config.lib.stylix.colors; {
+      ".config/ulauncher/settings.json" = {
+        text = ''
+          {
+          "blacklisted-desktop-dirs": "/usr/share/locale:/usr/share/app-install:/usr/share/kservices5:/usr/share/fk5:/usr/share/kservicetypes5:/usr/share/applications/screensavers:/usr/share/kde4:/usr/share/mimelnk",
+          "clear-previous-query": true,
+          "disable-desktop-filters": false,
+          "grab-mouse-pointer": false,
+          "hotkey-show-app": "<Primary>space",
+          "render-on-screen": "mouse-pointer-monitor",
+          "show-indicator-icon": true,
+          "show-recent-apps": "0",
+          "terminal-command": "",
+          "theme-name": "stylix-theme"
+          }
+        '';
+      };
+
       ".config/ulauncher/user-themes/theme/colours.css" = {
         text = with config.lib.stylix.colors; ''
           @define-color background #${base00-hex};
