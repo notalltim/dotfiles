@@ -79,7 +79,7 @@
       };
     };
     age-secret-nvim = {
-      url = "github:notalltim/age-secret.nvim/fix/output-stderr-dev-null";
+      url = "github:notalltim/age-secret.nvim/develop";
       flake = false;
     };
 

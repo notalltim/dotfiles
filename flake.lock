@@ -3,16 +3,16 @@
     "age-secret-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1746998863,
-        "narHash": "sha256-fBKChPNmfdDmY9aYz77Buf69Obw3PXlZtnmjzTQ2aVU=",
+        "lastModified": 1762125843,
+        "narHash": "sha256-AXLvDu7xq/JRXplIJNYrYo32gvhvUdSz6YfsfaMZrZA=",
         "owner": "notalltim",
         "repo": "age-secret.nvim",
-        "rev": "37c4201286d53527c2578b247d7fb02562eccbd0",
+        "rev": "e861eb337021addba6d601997aef3adc3579e283",
         "type": "github"
       },
       "original": {
         "owner": "notalltim",
-        "ref": "fix/output-stderr-dev-null",
+        "ref": "develop",
         "repo": "age-secret.nvim",
         "type": "github"
       }
