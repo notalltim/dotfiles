@@ -28,20 +28,11 @@ in
       audacity
       mprime
       kanshi
-      hyprland
       read-edid
       edid-decode
       shikane
       pciutils
-      spotifyd
       glib
-      (python3.withPackages (
-        pkgs: with pkgs; [
-          numpy
-          scipy
-          matplotlib
-        ]
-      ))
     ];
   };
   programs.fish.functions = {
