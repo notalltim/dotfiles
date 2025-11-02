@@ -2,8 +2,8 @@
   baseline.hosts.piezo = {
     platform = "nixos";
     desktopEnvironment = "headless";
-    users.tgallion.userPubkey = ../corona/id_corona_tgallion.pub;
-    hostPubkey = ../corona/ssh_host_ed25519_key.pub;
+    users.tgallion.userPubkey = ../piezo/tgallion.pub;
+    hostPubkey = ../piezo/piezo.pub;
     hostPath = ./.;
   };
 }

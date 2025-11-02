@@ -112,9 +112,25 @@ in
       keymaps = [
         {
           key = "<leader>fF";
-          action = mkRaw "function() require('telescope').find_files({ hidden = true, no_ignore = true }) end";
+          action = mkRaw "function() require('telescope.builtin').find_files({ hidden = true, no_ignore = true }) end";
           options = {
             desc = "Find all files";
+            silent = true;
+          };
+        }
+        {
+          key = "<leader>fT";
+          action = mkRaw "function() require('telescope.builtin').live_grep({ hidden = true, additional_args = function() return { '--no-ignore' } end, }) end";
+          options = {
+            desc = "Find all strings";
+            silent = true;
+          };
+        }
+        {
+          key = "<leader>fD";
+          action = "<cmd>TodoTelescope<cr>";
+          options = {
+            desc = "Search TODOs in project";
             silent = true;
           };
         }

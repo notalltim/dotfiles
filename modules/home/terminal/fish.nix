@@ -16,6 +16,7 @@ in
       body = ''NCURSES_NO_UTF8_ACS=1 nvtop'';
       wraps = "nvtop";
     };
+
     plugins = [
       {
         name = "bass";

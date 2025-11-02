@@ -27,7 +27,6 @@ in
       bitwarden
       audacity
       mprime
-      openrgb-with-all-plugins
       kanshi
       hyprland
       read-edid

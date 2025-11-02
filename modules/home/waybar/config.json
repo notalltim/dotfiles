@@ -70,12 +70,12 @@
 		"format": "{icon} ",
 		"format-tooltip": "{} Notification(s)",
 		"format-icons": {
-			"dnd-inhibited-none": " ",
-			"dnd-inhibited-notification": " ",
+			"dnd-inhibited-none": "",
+			"dnd-inhibited-notification": "",
 			"dnd-none": "󰂛",
-			"dnd-notification": " ",
+			"dnd-notification": "",
 			"inhibited-none": "",
-			"inhibited-notification": " ",
+			"inhibited-notification": "",
 			"none": "",
 			"notification": "󱅫"
 		},
@@ -120,17 +120,17 @@
 	},
 	"network": {
 		"format": "{ifname}",
-		"format-wifi": "   {signalStrength}%",
+		"format-wifi": " {signalStrength}%",
 		"format-ethernet": "󰈁 {ipaddr}",
 		"format-disconnected": "Not connected",
 		"tooltip-format": "󰈂 {ifname} via {gwaddri}",
-		"tooltip-format-wifi": "   {essid} ({signalStrength}%)",
+		"tooltip-format-wifi": " {essid} ({signalStrength}%)",
 		"tooltip-format-ethernet": "  {ifname} ({ipaddr}/{cidr})",
 		"tooltip-format-disconnected": "Disconnected",
 		"max-length": 50
 	},
 	"pulseaudio": {
-		"format": "{icon}  {volume}%",
+		"format": "{icon} {volume}%",
 		"format-bluetooth": "{volume}% {icon} {format_source}",
 		"format-bluetooth-muted": " {icon} {format_source}",
 		"format-muted": " {format_source}",

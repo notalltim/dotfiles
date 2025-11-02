@@ -143,8 +143,7 @@ in
                         }
                         {
                           name = "release";
-                          # TODO: this should be 25.05 but it is not up yet
-                          value = "master";
+                          value = "release-25.05";
                         }
                       ];
                     }
@@ -181,6 +180,23 @@ in
                     "@ng"
                     "@noogle"
                   ];
+                };
+
+                nixvim = {
+                  name = "Nixvim";
+                  urls = [ { template = "https://nix-community.github.io/nixvim/?search={searchTerms}"; } ];
+
+                  icon = (
+                    builtins.fetchurl {
+                      url = "https://raw.githubusercontent.com/nix-community/nixvim/main/assets/nixvim_logo.svg";
+                      sha256 = "sha256:1dck8mj5x7f39hy3g0pcmzbhgjs6hdzba5abmkr8c2j6ihcp17va";
+                    }
+                  );
+                  definedAliases = [
+                    "@nv"
+                    "@nixvim"
+                  ];
+
                 };
 
                 bing.metaData.hidden = true;

@@ -22,12 +22,6 @@ in
     programs.nixvim = {
       extraPlugins = [
         pkgs.vimPlugins.nvim-web-devicons
-        {
-          plugin = pkgs.vimPlugins.git-conflict-nvim;
-          config = ''
-            :lua require('git-conflict').setup()
-          '';
-        }
       ];
 
       plugins.git-conflict = {

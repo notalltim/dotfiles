@@ -75,7 +75,6 @@ in
           };
 
           formatting = {
-            # alejandra.enable = true;
             treefmt.enable = true;
             biome.enable = true;
             nixfmt = {

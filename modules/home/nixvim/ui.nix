@@ -17,6 +17,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = with pkgs; [
+      ripgrep # Used by todo-comments
+    ];
+
     programs.nixvim = {
       colorschemes.nightfox.enable = true;
 
@@ -62,8 +66,17 @@ in
         # Make brackets readable
         rainbow-delimiters.enable = mkDefault true;
 
-        # Make TODO: highlighting work
-        todo-comments.enable = mkDefault true;
+        # Highligt todos etc.
+        todo-comments = {
+          enable = mkDefault true;
+          settings = {
+            highlight.pattern = [
+              ".*<(KEYWORDS)s*:"
+              ".*<(KEYWORDS)s*\\(.*\\)s*:"
+            ];
+            search.pattern = config.lib.nixvim.mkRaw "[[\\b(KEYWORDS)\\b(?:\\s*\\([^)]+\\)|\\s+@[^\\s:]+)?\\s*:]]";
+          };
+        };
 
         # File viewer
         neo-tree.enable = mkDefault true;

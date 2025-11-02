@@ -26,6 +26,7 @@ in
             core = {
               editor = mkIf nixvimEnabled "nvim";
               autocrlf = mkDefault "input";
+              fsmonitor = mkDefault true;
             };
             color = {
               ui = mkDefault "auto";
