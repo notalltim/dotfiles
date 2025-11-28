@@ -1,3 +1,6 @@
 {
-  imports = [ ./host.nix ];
+  imports = [
+    ./host.nix
+    ./config.nix
+  ];
 }

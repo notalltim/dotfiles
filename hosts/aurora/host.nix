@@ -1,9 +1,11 @@
 {
   baseline = {
+    hostNames = [ "aurora" ];
     hosts.aurora = {
-      platform = "hm";
-      users.tgallion.userPubkey = ./id_ed25519.pub;
-      desktopEnvironment = "gnome";
+      platform = "nixos";
+      users.tgallion.userPubkey = ./tgallion.pub;
+      hostPubkey = ./aurora.pub;
+      desktopEnvironment = "hyprland";
       hostPath = ./.;
     };
   };
