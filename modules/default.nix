@@ -15,7 +15,7 @@ let
       stylix = inputs.stylix.homeModules.stylix;
       nixvim = inputs.nixvim.homeManagerModules.nixvim;
       agenix = inputs.agenix.homeManagerModules.default;
-      agenix-rekey = inputs.agenix-rekey.homeManagerModules.default;
+      agenix-rekey = import "${inputs.agenix-rekey}/modules/agenix-rekey.nix" inputs.nixpkgs;
     }
   );
   nixosUpstream = (
