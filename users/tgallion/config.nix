@@ -47,7 +47,7 @@ in
 
   age.secrets.cachix-authtoken = {
     intermediary = true;
-
+    rekeyFile = ./secrets/cachix-authtoken.age;
   };
 
   # Common config expressed as basic modules
@@ -64,7 +64,13 @@ in
       enable = true;
       accessTokensPath = ./secrets/access-tokens.age;
       netrcPath = ./secrets/netrc.age;
-      nixDaemoGroup = "wheel";
+      netrc = [
+        {
+          url = "hyprland.cachix.org";
+          pubkey = "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=";
+          secret = config.age.secrets.cachix-authtoken;
+        }
+      ];
     }; # TODO: this does not cover the case I want it does not control the nix version
     tools.enable = true;
     terminal.enable = true;

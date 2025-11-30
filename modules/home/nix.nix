@@ -17,6 +17,7 @@ let
     mkDefault
     optional
     escapeShellArg
+    optionalString
     ;
   inherit (lib.versions) majorMinor;
   inherit (lib.types)
@@ -25,6 +26,7 @@ let
     str
     listOf
     submodule
+    bool
     ;
   inherit (lib.fileset) toSource unions;
   inherit (baselineLib) mkPathReproducible;
@@ -51,10 +53,6 @@ in
   options.baseline.nix = {
     enable = mkEnableOption "nix install configuration";
     package = mkPackageOption pkgs "nix" { };
-    nixDaemoGroup = mkOption {
-      type = nullOr str;
-      default = null;
-    };
     accessTokensPath = mkOption {
       type = nullOr path;
       apply = path: if path != null then mkPathReproducible path else null;
@@ -64,6 +62,10 @@ in
       type = nullOr path;
       # apply = path: if path != null then mkPathReproducible path else null;
       default = null;
+    };
+    enableBuildTimeFetchers = mkOption {
+      type = bool;
+      default = false;
     };
     netrc = mkOption {
       type = listOf (submodule {
@@ -80,7 +82,7 @@ in
             default = null;
           };
           secret = mkOption {
-            type = options.age.secrets.nestedTypes.elemType;
+            type = options.age.secrets.type.nestedTypes.elemType;
           };
         };
       });
@@ -98,10 +100,10 @@ in
     };
 
     # Support build time fetchers
-    home.activation = mkIf (cfg.nixDaemoGroup != null) {
+    home.activation = mkIf (cfg.enableBuildTimeFetchers) {
       chownHome = (
         builtins.concatStringsSep "\n" (
-          builtins.map (path: "chown ${config.home.username}:${cfg.nixDaemoGroup} ${path}") [
+          builtins.map (path: "chown ${config.home.username}:root ${path}") [
             "${config.home.homeDirectory}"
             "${config.home.homeDirectory}/.config"
             "${config.home.homeDirectory}/.config/nix "
@@ -110,21 +112,24 @@ in
       );
     };
 
+    baseline.userModule = _: { extraGroups = optional (cfg.netrc != [ ]) "root"; };
+
     age.secrets.netrc = mkIf (cfg.netrc != [ ]) {
       rekeyFile = cfg.netrcPath;
       path = "${config.xdg.configHome}/nix/netrc";
       # Support build time fetchers
-      symlink = false;
-      mode = "0644";
-      group = cfg.nixDaemoGroup;
+      symlink = !cfg.enableBuildTimeFetchers;
+      mode = optionalString (cfg.enableBuildTimeFetchers) "0644";
+      group = optionalString (cfg.enableBuildTimeFetchers) "root";
       generator = {
         dependencies = (builtins.map (val: val.secret) cfg.netrc);
+        tags = [ "netrc" ];
         script =
-          { ... }:
+          { decrypt, ... }:
           builtins.concatStringsSep "\n" (
             builtins.map (
               key:
-              "printf 'machine ${key.url} login ${key.user} password $(decrypt ${escapeShellArg key.secret.file})'"
+              "printf 'machine ${key.url} login ${key.user} password %s\n' $(${decrypt} ${escapeShellArg key.secret.rekeyFile})"
             ) cfg.netrc
           );
       };
