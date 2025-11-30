@@ -3,6 +3,7 @@
   lib,
   pkgs,
   baselineLib,
+  options,
   ...
 }:
 let
@@ -15,9 +16,18 @@ let
     mkOption
     mkDefault
     optional
+    escapeShellArg
+    optionalString
     ;
   inherit (lib.versions) majorMinor;
-  inherit (lib.types) path nullOr str;
+  inherit (lib.types)
+    path
+    nullOr
+    str
+    listOf
+    submodule
+    bool
+    ;
   inherit (lib.fileset) toSource unions;
   inherit (baselineLib) mkPathReproducible;
 
@@ -43,10 +53,6 @@ in
   options.baseline.nix = {
     enable = mkEnableOption "nix install configuration";
     package = mkPackageOption pkgs "nix" { };
-    nixDaemoGroup = mkOption {
-      type = nullOr str;
-      default = null;
-    };
     accessTokensPath = mkOption {
       type = nullOr path;
       apply = path: if path != null then mkPathReproducible path else null;
@@ -54,8 +60,33 @@ in
     };
     netrcPath = mkOption {
       type = nullOr path;
-      apply = path: if path != null then mkPathReproducible path else null;
+      # apply = path: if path != null then mkPathReproducible path else null;
       default = null;
+    };
+    enableBuildTimeFetchers = mkOption {
+      type = bool;
+      default = false;
+    };
+    netrc = mkOption {
+      type = listOf (submodule {
+        options = {
+          url = mkOption {
+            type = str;
+          };
+          user = mkOption {
+            type = str;
+            default = config.home.username;
+          };
+          pubkey = mkOption {
+            type = nullOr str;
+            default = null;
+          };
+          secret = mkOption {
+            type = options.age.secrets.type.nestedTypes.elemType;
+          };
+        };
+      });
+      default = [ ];
     };
   };
 
@@ -66,21 +97,13 @@ in
         rekeyFile = cfg.accessTokensPath;
         path = "${config.xdg.cacheHome}/nix/access-tokens.conf";
       };
-      netrc = mkIf (cfg.netrcPath != null) {
-        rekeyFile = cfg.netrcPath;
-        path = "${config.xdg.configHome}/nix/netrc";
-        # Support build time fetchers
-        symlink = false;
-        mode = "0644";
-        group = cfg.nixDaemoGroup;
-      };
     };
 
     # Support build time fetchers
-    home.activation = mkIf (cfg.nixDaemoGroup != null) {
+    home.activation = mkIf (cfg.enableBuildTimeFetchers) {
       chownHome = (
         builtins.concatStringsSep "\n" (
-          builtins.map (path: "chown ${config.home.username}:${cfg.nixDaemoGroup} ${path}") [
+          builtins.map (path: "chown ${config.home.username}:root ${path}") [
             "${config.home.homeDirectory}"
             "${config.home.homeDirectory}/.config"
             "${config.home.homeDirectory}/.config/nix "
@@ -88,6 +111,30 @@ in
         )
       );
     };
+
+    baseline.userModule = _: { extraGroups = optional (cfg.netrc != [ ]) "root"; };
+
+    age.secrets.netrc = mkIf (cfg.netrc != [ ]) {
+      rekeyFile = cfg.netrcPath;
+      path = "${config.xdg.configHome}/nix/netrc";
+      # Support build time fetchers
+      symlink = !cfg.enableBuildTimeFetchers;
+      mode = optionalString (cfg.enableBuildTimeFetchers) "0644";
+      group = optionalString (cfg.enableBuildTimeFetchers) "root";
+      generator = {
+        dependencies = (builtins.map (val: val.secret) cfg.netrc);
+        tags = [ "netrc" ];
+        script =
+          { decrypt, ... }:
+          builtins.concatStringsSep "\n" (
+            builtins.map (
+              key:
+              "printf 'machine ${key.url} login ${key.user} password %s\n' $(${decrypt} ${escapeShellArg key.secret.rekeyFile})"
+            ) cfg.netrc
+          );
+      };
+    };
+
     nix = {
       keepOldNixPath = false;
       package = mkDefault cfg.package;
@@ -102,23 +149,33 @@ in
         !include ${config.age.secrets.nix-access-tokens.path}
       '';
 
-      settings = {
-        auto-optimise-store = true;
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ]
-        ++ optional (nixVerAtMost "2.19") "repl-flake";
-        # Make nix-shell work see default.nix at the root
-        nix-path = [ "nixpkgs=${filterdSource}" ];
-        netrc-file = mkIf (cfg.netrcPath != null) config.age.secrets.netrc.path;
-        substituters = [ "https://cache.nixos.org" ];
-        trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
-      }
-      // optionalAttrs (nixVerAtLeast "2.20") {
-        upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
-        always-allow-substitutes = true;
-      };
+      settings =
+        let
+          filterdCaches = (builtins.filter (val: val.pubkey != null) cfg.netrc);
+        in
+        {
+          auto-optimise-store = true;
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ]
+          ++ optional (nixVerAtMost "2.19") "repl-flake";
+          # Make nix-shell work see default.nix at the root
+          nix-path = [ "nixpkgs=${filterdSource}" ];
+          netrc-file = mkIf (cfg.netrc != [ ]) config.age.secrets.netrc.path;
+          substituters = [
+            "https://cache.nixos.org"
+          ]
+          ++ (builtins.map (val: "https://${val.url}") filterdCaches);
+          trusted-public-keys = [
+            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          ]
+          ++ (builtins.map (val: val.pubkey) filterdCaches);
+        }
+        // optionalAttrs (nixVerAtLeast "2.20") {
+          upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
+          always-allow-substitutes = true;
+        };
     };
   };
 }
