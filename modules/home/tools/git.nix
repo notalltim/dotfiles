@@ -11,9 +11,18 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    home.file."${config.xdg.configHome}/git/allowed_signers".text = ''
+      ${config.programs.git.userEmail} ${builtins.readFile config.baseline.ssh.pubkey}
+    '';
     programs.git = {
       enable = mkDefault true;
       lfs.enable = mkDefault true;
+      signing = {
+        signByDefault = true;
+        format = "ssh";
+        key = "${config.home.homeDirectory}/.ssh/id_${config.home.username}.pub";
+      };
 
       includes = [
         {
@@ -29,6 +38,7 @@ in
             push = {
               autoSetupRemote = mkDefault true;
             };
+            gpg.ssh.allowedSignersFile = "${config.xdg.configHome}/git/allowed_signers";
           };
         }
       ];

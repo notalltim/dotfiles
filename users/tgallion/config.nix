@@ -83,11 +83,6 @@ in
   services.gpg-agent.enable = true;
   programs.gpg.enable = true;
   programs.git = {
-    signing = {
-      signByDefault = true;
-      format = "ssh";
-      key = "${config.home.homeDirectory}/.ssh/id_${config.home.username}.pub";
-    };
     userEmail = "timbama@gmail.com";
     userName = tgallion.fullName;
   };
