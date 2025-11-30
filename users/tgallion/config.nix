@@ -45,6 +45,11 @@ in
   # For gdb debugging
   services.nixseparatedebuginfod.enable = true;
 
+  age.secrets.cachix-authtoken = {
+    intermediary = true;
+
+  };
+
   # Common config expressed as basic modules
   baseline = {
     nixvim = {
@@ -58,6 +63,7 @@ in
     nix = {
       enable = true;
       accessTokensPath = ./secrets/access-tokens.age;
+      netrcPath = ./secrets/netrc.age;
       nixDaemoGroup = "wheel";
     }; # TODO: this does not cover the case I want it does not control the nix version
     tools.enable = true;
