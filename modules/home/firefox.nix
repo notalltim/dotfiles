@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  options,
   ...
 }:
 let
@@ -38,9 +37,9 @@ in
     {
       programs.firefox.profiles = (
         perProfile
-          ([
+          [
             cfg.profile
-          ])
+          ]
           {
             extensions = {
               packages = with addons; [ bitwarden ];

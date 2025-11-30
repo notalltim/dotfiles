@@ -58,6 +58,7 @@ in
     nix = {
       enable = true;
       accessTokensPath = ./secrets/access-tokens.age;
+      nixDaemoGroup = "wheel";
     }; # TODO: this does not cover the case I want it does not control the nix version
     tools.enable = true;
     terminal.enable = true;
@@ -83,7 +84,9 @@ in
   programs.gpg.enable = true;
   programs.git = {
     signing = {
-      key = "5A2DAA31F5457F29";
+      signByDefault = true;
+      format = "ssh";
+      key = "${config.home.homeDirectory}/.ssh/id_${config.home.username}.pub";
     };
     userEmail = "timbama@gmail.com";
     userName = tgallion.fullName;

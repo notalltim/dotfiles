@@ -49,6 +49,7 @@ in
       waybar = ./home/waybar;
       wlogout = ./home/wlogout;
       spotify = ./home/spotify.nix;
+      agenix-chown = ./home/agenix-chown.nix;
     }
     // shared
     // homeUpstream;
@@ -63,6 +64,7 @@ in
       passthru = ./shared/passthru.nix;
       hyprland = ./nixos/hyprland.nix;
       secureboot = ./nixos/secureboot.nix;
+      fingerprint = ./nixos/fingerprint.nix;
     }
     // shared
     // nixosUpstream;

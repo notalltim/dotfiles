@@ -9,7 +9,6 @@
 let
   inherit (lib)
     mkEnableOption
-    mkPackageOption
     mkIf
     mkOption
     mkMerge
@@ -28,7 +27,6 @@ in
   imports = [
     ./hypridle.nix
     ./hyprlock.nix
-    # ./hyprpaper.nix
     ./hyprpolkitagent.nix
   ];
 

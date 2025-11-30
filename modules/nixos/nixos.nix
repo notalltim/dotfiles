@@ -30,7 +30,7 @@ in
   baseline.host = hostspec;
   networking.hostName = hostspec.hostname; # Define your hostname.
   # Set your time zone.
-  time.timeZone = "America/New_York";
+  time.timeZone = mkDefault "America/New_York";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -53,6 +53,8 @@ in
       "flakes"
     ];
   };
+  users.users.root.extraGroups = [ "wheel" ];
+
   environment.systemPackages = with pkgs; [
     git
   ];

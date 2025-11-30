@@ -59,7 +59,7 @@ in
         ./corona/hardware.nix
       ])
       // (mkNixOSHost "piezo" [ ./piezo ])
-      // (mkNixOSHost "aurora" [ ]);
+      // (mkNixOSHost "aurora" [ ./aurora/hardware.nix ]);
 
     homeConfigurations = mkHomeManagerHost "tgallion" "corona";
   }

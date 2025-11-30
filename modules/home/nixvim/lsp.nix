@@ -7,6 +7,7 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf;
+  inherit (lib.attrsets) mapAttrsToList;
   cfg = config.baseline.nixvim.lsp;
   nixvim = config.programs.nixvim;
 in
@@ -42,9 +43,11 @@ in
       };
 
       # Add to dictionary ltex
+      #HACK: Enabled to suppress warnings should be removed
+      plugins.lsp.enable = true;
       plugins.ltex-extra.enable = true;
-
       plugins.lsp-format.enable = true;
+
       plugins.none-ls = {
         enable = true;
         enableLspFormat = false;
@@ -97,6 +100,7 @@ in
                 formatter.trim_trailing_whitespace = true;
               };
             };
+            nix_flake_fmt.enable = true;
           };
           hover.printenv.enable = true;
         };
@@ -159,48 +163,60 @@ in
         }
       ];
 
-      plugins.lsp = {
-        enable = true;
-
-        keymaps = {
-          diagnostic = {
-            "[d" = "goto_prev";
-            "d]" = "goto_next";
-            "<leader>lq" = "setloclist";
-            "<space>ll" = "open_float";
-          };
-
-          lspBuf = {
-            K = "hover";
-            "<leader>le" = "references";
-            "<leader>ld" = "declaration";
-            "<leader>lD" = "definition";
-            "<leader>li" = "implementation";
-            "<leader>lt" = "type_definition";
-            "<leader>la" = "code_action";
-            "<leader>lf" = "signature_help";
-            "<leader>lr" = "rename";
-          };
+      lsp = {
+        inlayHints = {
+          enable = true;
         };
+
+        keymaps =
+          let
+            actions =
+              mapAttrsToList
+                (key: action: {
+                  inherit key;
+                  action = config.lib.nixvim.mkRaw "vim.diagnostic.${action}";
+                })
+                {
+                  "[d" = "goto_prev";
+                  "d]" = "goto_next";
+                  "<leader>lq" = "setloclist";
+                  "<leader>ll" = "open_float";
+                };
+
+            lspBufActions = mapAttrsToList (key: lspBufAction: { inherit key lspBufAction; }) {
+              K = "hover";
+              "<leader>le" = "references";
+              "<leader>ld" = "declaration";
+              "<leader>lD" = "definition";
+              "<leader>li" = "implementation";
+              "<leader>lt" = "type_definition";
+              "<leader>la" = "code_action";
+              "<leader>lf" = "signature_help";
+              "<leader>lr" = "rename";
+            };
+          in
+          lspBufActions ++ actions;
 
         servers = {
           clangd = {
             enable = true;
             # Add tpp files to the lsp list and remove proto
-            filetypes = [
-              "c"
-              "cpp"
-              "objc"
-              "objcpp"
-              "cuda"
-              "tpp"
-            ];
-            onAttach.function = ''
-              if client == "clangd" then
-                  require("clangd_extensions.inlay_hints").setup_autocmd()
-                  require("clangd_extensions.inlay_hints").set_inlay_hints()
-              end
-            '';
+            config = {
+              filetypes = [
+                "c"
+                "cpp"
+                "objc"
+                "objcpp"
+                "cuda"
+                "tpp"
+              ];
+              on_attach = ''
+                if client == "clangd" then
+                    require("clangd_extensions.inlay_hints").setup_autocmd()
+                    require("clangd_extensions.inlay_hints").set_inlay_hints()
+                end
+              '';
+            };
           };
           lua_ls.enable = true;
           pyright.enable = true;
@@ -213,57 +229,54 @@ in
           # Add the cpp for comment grammar/spelling
           ltex = {
             enable = true;
-            filetypes = [
-              "bib"
-              "gitcommit"
-              "markdown"
-              "org"
-              "plaintex"
-              "rst"
-              "rnoweb"
-              "tex"
-              "pandoc"
-              "quatro"
-              "rmd"
-              "context"
-              "html"
-              "xhtml"
-              "mail"
-              "text"
-              "rust"
-            ];
-            settings.enabled = [
-              "bibtex"
-              "context"
-              "context.tex"
-              "html"
-              "latex"
-              "markdown"
-              "org"
-              "restructuredtext"
-              "rsweave"
-              "c"
-              "cpp"
-              "objc"
-              "objcpp"
-              "cuda"
-              "tpp"
-              "rust"
-            ];
+            config = {
+              filetypes = [
+                "bib"
+                "gitcommit"
+                "markdown"
+                "org"
+                "plaintex"
+                "rst"
+                "rnoweb"
+                "tex"
+                "pandoc"
+                "quatro"
+                "rmd"
+                "context"
+                "html"
+                "xhtml"
+                "mail"
+                "text"
+                "rust"
+              ];
+              settings.enabled = [
+                "bibtex"
+                "context"
+                "context.tex"
+                "html"
+                "latex"
+                "markdown"
+                "org"
+                "restructuredtext"
+                "rsweave"
+                "c"
+                "cpp"
+                "objc"
+                "objcpp"
+                "cuda"
+                "tpp"
+                "rust"
+              ];
+            };
           };
           lemminx.enable = true;
           yamlls.enable = true;
           dockerls.enable = true;
           docker_compose_language_service.enable = true;
-          rust_analyzer = {
-            enable = true;
-            cargoPackage = pkgs.cargo;
-            rustcPackage = pkgs.rustc;
-            installRustc = false;
-            installCargo = false;
-          };
+          rust_analyzer.enable = true;
           nil_ls.enable = true;
           texlab.enable = true;
+          nixd.enable = true;
         };
       };
     };

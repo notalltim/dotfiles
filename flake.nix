@@ -109,7 +109,10 @@
           ...
         }:
         {
-          treefmt.programs.nixfmt.enable = true;
+          treefmt.programs = {
+            nixf-diagnose.enable = true;
+            nixfmt.enable = true;
+          };
         };
     };
 }

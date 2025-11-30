@@ -17,7 +17,7 @@ let
     optional
     ;
   inherit (lib.versions) majorMinor;
-  inherit (lib.types) path nullOr;
+  inherit (lib.types) path nullOr str;
   inherit (lib.fileset) toSource unions;
   inherit (baselineLib) mkPathReproducible;
 
@@ -43,6 +43,10 @@ in
   options.baseline.nix = {
     enable = mkEnableOption "nix install configuration";
     package = mkPackageOption pkgs "nix" { };
+    nixDaemoGroup = mkOption {
+      type = nullOr str;
+      default = null;
+    };
     accessTokensPath = mkOption {
       type = nullOr path;
       apply = path: if path != null then mkPathReproducible path else null;
@@ -65,7 +69,24 @@ in
       netrc = mkIf (cfg.netrcPath != null) {
         rekeyFile = cfg.netrcPath;
         path = "${config.xdg.configHome}/nix/netrc";
+        # Support build time fetchers
+        symlink = false;
+        mode = "0644";
+        group = cfg.nixDaemoGroup;
       };
+    };
+
+    # Support build time fetchers
+    home.activation = mkIf (cfg.nixDaemoGroup != null) {
+      chownHome = (
+        builtins.concatStringsSep "\n" (
+          builtins.map (path: "chown ${config.home.username}:${cfg.nixDaemoGroup} ${path}") [
+            "${config.home.homeDirectory}"
+            "${config.home.homeDirectory}/.config"
+            "${config.home.homeDirectory}/.config/nix "
+          ]
+        )
+      );
     };
     nix = {
       keepOldNixPath = false;

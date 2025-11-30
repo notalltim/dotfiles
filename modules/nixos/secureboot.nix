@@ -256,7 +256,6 @@ in
                 pkgs,
                 decrypt,
                 deps,
-                name,
                 ...
               }:
               authScript {

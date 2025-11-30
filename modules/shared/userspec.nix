@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption attrNames mkMerge;
+  inherit (lib) mkOption attrNames;
   inherit (lib.types)
     str
     submodule
@@ -14,7 +14,6 @@ let
     path
     listOf
     deferredModule
-    raw
     ;
   # User specific host agnostic options
   userComponent =
@@ -61,13 +60,13 @@ let
       };
     };
   # User settings that do not depend on the host
-  userType = submodule (userComponent);
+  userType = submodule userComponent;
 
   # All user settings even ones that depend on the host
-  userHostType = submodule ([
+  userHostType = submodule [
     userComponent
     hostComponent
-  ]);
+  ];
 
 in
 {

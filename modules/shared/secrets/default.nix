@@ -83,7 +83,6 @@ in
 
       generators.hostkey =
         {
-          lib,
           file,
           pkgs,
           name,

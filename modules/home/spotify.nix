@@ -1,9 +1,6 @@
 {
   config,
   lib,
-  pkgs,
-  wrapHyprCommand,
-  options,
   ...
 }:
 let

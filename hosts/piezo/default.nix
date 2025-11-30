@@ -1,8 +1,8 @@
-{ lib, ... }:
+{ ... }:
 {
   imports = [
     ./hardware.nix
-    (./disk.nix)
+    ./disk.nix
     {
       _module.args = {
         disk = "/dev/vda";
