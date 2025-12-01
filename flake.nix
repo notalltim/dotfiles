@@ -92,6 +92,7 @@
         home-manager.flakeModules.default
         treefmt-nix.flakeModule
         agenix-rekey.flakeModule
+        (import ./config)
         (import ./modules)
         (import ./users)
         (import ./overlays)

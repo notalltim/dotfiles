@@ -45,9 +45,19 @@ in
   # For gdb debugging
   services.nixseparatedebuginfod.enable = true;
 
-  age.secrets.cachix-authtoken = {
-    intermediary = true;
-    rekeyFile = ./secrets/cachix-authtoken.age;
+  age.secrets = {
+    cachix-authtoken = {
+      intermediary = true;
+      rekeyFile = ./secrets/cachix-authtoken.age;
+    };
+    github-token = {
+      intermediary = true;
+      rekeyFile = ./secrets/github-token.age;
+    };
+    gitlab-token = {
+      intermediary = true;
+      rekeyFile = ./secrets/gitlab-token.age;
+    };
   };
 
   # Common config expressed as basic modules
@@ -60,18 +70,7 @@ in
     kitty.enableKeybind = true;
     packages.enable = true;
     home-manager.enable = true;
-    nix = {
-      enable = true;
-      accessTokensPath = ./secrets/access-tokens.age;
-      netrcPath = ./secrets/netrc.age;
-      netrc = [
-        {
-          url = "hyprland.cachix.org";
-          pubkey = "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=";
-          secret = config.age.secrets.cachix-authtoken;
-        }
-      ];
-    }; # TODO: this does not cover the case I want it does not control the nix version
+    nix.enable = true; # TODO: this does not cover the case I want it does not control the nix version
     tools.enable = true;
     terminal.enable = true;
     non-nixos = {
@@ -101,5 +100,31 @@ in
 
   programs.obs-studio = {
     enable = true;
+  };
+  nix = {
+    access-tokens = {
+      file = ./secrets/access-tokens.age;
+      tokens = [
+        {
+          url = "github.com";
+          secret = config.age.secrets.github-token;
+        }
+        {
+          url = "gitlab.com";
+          tokenType = "PAT";
+          secret = config.age.secrets.gitlab-token;
+        }
+      ];
+    };
+    netrc = {
+      file = ./secrets/netrc.age;
+      logins = [
+        {
+          url = "hyprland.cachix.org";
+          pubkey = "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=";
+          secret = config.age.secrets.cachix-authtoken;
+        }
+      ];
+    };
   };
 })
