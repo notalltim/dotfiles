@@ -34,6 +34,9 @@ in
       home.activation.chownSecrets = lib.hm.dag.entryAfter [ "reloadSystemd" ] (
         builtins.concatStringsSep "\n" (
           builtins.map (secret: ''
+            if [ !  -f ${secret.path} ]; then
+              systemctl --user restart agenix.service
+            fi
             echo "Chowning ${secret.path} with ${owner}:${secret.group}..."
             chown ${owner}:${secret.group} ${secret.path}
           '') chownSecrets

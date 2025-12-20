@@ -176,8 +176,8 @@ in
         path = "${config.xdg.configHome}/nix/netrc";
         # Support build time fetchers
         symlink = !cfg.enableBuildTimeFetchers;
-        mode = optionalString cfg.enableBuildTimeFetchers "0644";
-        group = optionalString cfg.enableBuildTimeFetchers "root";
+        mode = mkIf cfg.enableBuildTimeFetchers "0644";
+        group = mkIf cfg.enableBuildTimeFetchers "root";
         generator = {
           dependencies = (builtins.map (val: val.secret) cfg.netrc.logins);
           tags = [
