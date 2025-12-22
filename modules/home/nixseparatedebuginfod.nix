@@ -28,6 +28,9 @@ in
     home.sessionVariables = {
       DEBUGINFOD_URLS = "http://${url}";
     };
+    # Required by valgrind
+    home.packages = [ (lib.getBin pkgs.elfutils) ];
+    programs.gdb.extraConfig = "set debuginfod enabled on";
     systemd.user.services.nixseperatedebuginfod = {
       Unit = {
         Description = "Download and provide separate debuginfo via the nix store";

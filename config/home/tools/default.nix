@@ -9,13 +9,13 @@ in
     ./direnv.nix
     ./eza.nix
     ./git.nix
-    ./gdb.nix
+    ./debugging.nix
   ];
   options = {
     baseline.tools.enable = mkEnableOption "Enable baseline set of tools";
   };
   config = mkIf cfg.enable {
     baseline.git.enable = mkDefault true;
-    baseline.gdb.enable = mkDefault true;
+    baseline.debugging.enable = mkDefault true;
   };
 }

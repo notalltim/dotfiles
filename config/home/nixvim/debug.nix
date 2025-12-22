@@ -43,7 +43,7 @@ in
                 enrichConfig = ''
                   function(config, on_config)
                     local final_config = vim.deepcopy(config)
-                    local program = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    local program = require('dap.utils').pick_file({ executables = true })
                     final_config.program = program
                     on_config(final_config)
                   end
@@ -57,7 +57,7 @@ in
                 enrichConfig = ''
                   function(config, on_config)
                     local final_config = vim.deepcopy(config)
-                    local pid = coroutine.resume(require('dap.utils').pick_process({}))
+                    local pid = require('dap.utils').pick_process({})
                     final_config.pid = pid
                     on_config(final_config)
                   end
@@ -91,7 +91,7 @@ in
                 texthl = "DapBreakpoint";
               };
               dapBreakpointCondition = {
-                text = "●⃠";
+                text = "⊜";
                 texthl = "DapBreakpointCondition";
               };
               dapLogPoint = {
