@@ -33,6 +33,7 @@ in
       shikane
       pciutils
       glib
+      avahi
     ];
   };
   programs.fish.functions = {
@@ -96,6 +97,15 @@ in
   programs.git = {
     userEmail = "timbama@gmail.com";
     userName = tgallion.fullName;
+  };
+
+  services.auto-gc-roots = {
+    automatic = true;
+    flakes = {
+      "self" = {
+        url = "path:${config.baseline.nix.flakeSource}";
+      };
+    };
   };
 
   programs.obs-studio = {

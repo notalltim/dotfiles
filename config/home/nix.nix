@@ -13,39 +13,34 @@ let
     versionOlder
     mkDefault
     optional
+    mkOption
+    types
     ;
+  inherit (types) pathInStore nullOr;
   inherit (lib.versions) majorMinor;
 
-  inherit (lib.fileset) toSource unions;
-
   cfg = config.baseline.nix;
+
   nixVerAtLeast = versionAtLeast (majorMinor config.nix.package.version);
   nixVerAtMost = versionOlder (majorMinor config.nix.package.version);
-  # Make the build more reproducible perhaps there is a better way
-  filterdSource = toSource {
-    root = ../..;
-    fileset = unions [
-      ../../default.nix
-      ../../flake.nix
-      ../../flake.lock
-      ../../overlays
-      ../../pkgs
-      ../../config/default.nix
-      ../../modules/default.nix
-      ../../hosts/default.nix
-      ../../users/default.nix
-    ];
-  };
 in
 {
   options.baseline.nix = {
     enable = mkEnableOption "Enable my basic nix configuration";
+    flakeSource = mkOption {
+      type = nullOr pathInStore;
+      default = null;
+    };
   };
 
   config = mkIf cfg.enable {
 
     # Install the correct nix interpreter version
-    home.packages = [ config.nix.package ];
+    home.packages = with pkgs; [
+      config.nix.package
+      nix-diff
+      nix-du
+    ];
 
     # My speific stuff for build time fetchers
     baseline.userModule = _: { extraGroups = optional config.nix.enableBuildTimeFetchers "root"; };
@@ -62,9 +57,9 @@ in
       package = mkDefault pkgs.nix;
 
       # Make nixpkgs# use the nixpkgs used to eval
-      registry.nixpkgs = {
+      registry.nixpkgs = mkIf (cfg.flakeSource != null) {
         exact = true;
-        flake = filterdSource;
+        flake = cfg.flakeSource;
       };
       keepOldNixPath = false;
 
@@ -78,7 +73,7 @@ in
         ]
         ++ optional (nixVerAtMost "2.19") "repl-flake";
         # Make nix-shell work see default.nix at the root
-        nix-path = [ "nixpkgs=${filterdSource}" ];
+        nix-path = mkIf (cfg.flakeSource != null) [ "nixpkgs=${cfg.flakeSource}" ];
       }
       // optionalAttrs (nixVerAtLeast "2.20") {
         upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";

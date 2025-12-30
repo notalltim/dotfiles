@@ -7,7 +7,23 @@
   ...
 }:
 let
-  inherit (lib) foldl' recursiveUpdate;
+  inherit (lib) foldl' recursiveUpdate fileset;
+  inherit (fileset) toSource unions;
+  # Make the build more reproducible perhaps there is a better way
+  flakeSource = toSource {
+    root = ../.;
+    fileset = unions [
+      ../default.nix
+      ../flake.nix
+      ../flake.lock
+      ../overlays
+      ../pkgs
+      ../config/default.nix
+      ../modules/default.nix
+      ../hosts/default.nix
+      ../users/default.nix
+    ];
+  };
 
   flake = config.flake;
 
@@ -17,7 +33,7 @@ let
       inputs.nixpkgs.lib.nixosSystem {
         inherit system pkgs;
         modules = builtins.attrValues flake.nixosModules ++ extraModules;
-        specialArgs = { inherit self host; };
+        specialArgs = { inherit self host flakeSource; };
       }
     );
   };
@@ -26,17 +42,14 @@ let
       { pkgs, ... }:
       inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = (builtins.attrValues config.flake.homeModules) ++ [
-          (
-            { config, ... }:
-            {
-              baseline.host = config.baseline.hosts.${host};
-              baseline.user = config.baseline.host.users.${user};
-            }
-          )
-        ];
+        modules = (builtins.attrValues config.flake.homeModules);
         extraSpecialArgs = {
-          inherit self;
+          inherit
+            self
+            host
+            user
+            flakeSource
+            ;
         };
       }
     );

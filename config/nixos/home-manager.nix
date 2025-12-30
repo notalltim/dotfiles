@@ -3,6 +3,8 @@
   lib,
   config,
   pkgs,
+  flakeSource ? null,
+  host,
   ...
 }:
 let
@@ -26,14 +28,17 @@ in
     useUserPackages = true;
     sharedModules = attrValues self.homeModules ++ [
       baseline.homeCommon
-      { baseline.host = config.baseline.host; }
+      {
+        baseline.host = config.baseline.host;
+        baseline.nix.flakeSource = flakeSource;
+      }
     ];
     extraSpecialArgs = {
-      inherit self;
+      inherit self host flakeSource;
     };
     users = genAttrs (attrNames baseline.host.users) (
       name: _: {
-        baseline.user = baseline.host.users.${name};
+        _module.args.user = name;
       }
     );
   };

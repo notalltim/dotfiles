@@ -6,6 +6,7 @@
       nixseparatedebuginfod = ./home/nixseparatedebuginfod.nix;
       yubi-touch-detector = ./home/yubi-touch-detector.nix;
       gdb = ./home/gdb;
+      auto-gc-roots = ./home/auto-gc-roots;
     };
 
     nixosModules = {
