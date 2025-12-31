@@ -4,8 +4,8 @@
 }:
 {
   flake = {
-    nixosModules.tgallion = ./tgallion/user.nix;
-    homeModules.tgallion = ./tgallion;
+    nixosModules.user-tgallion = ./tgallion/user.nix;
+    homeModules.user-tgallion = ./tgallion;
   };
   perSystem =
     { ... }:

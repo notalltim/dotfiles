@@ -66,10 +66,6 @@ in
         packages =
           with pkgs;
           [
-            # Media and brightness controls
-            brightnessctl
-            playerctl
-
             # Include xterm so there is always a non-gpu accelerated terminal avaibaselinele
             xterm
 

@@ -60,6 +60,11 @@ in
                     {
                       name = "nixpkgs-manual";
                       url = "https://nixos.org/manual/nixpkgs/stable/";
+
+                    }
+                    {
+                      name = "nixos-manual";
+                      url = "https://nixos.org/manual/nixos/stable/";
                       tags = [
                         "docs"
                         "nix"

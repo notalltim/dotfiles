@@ -18,7 +18,9 @@ in
       # Modules
       baseline = {
         audio.enable = true;
+        displays.enable = true;
         stylix.enable = true;
+        networking.enable = true;
         secureboot = {
           enable = true;
           factorySignatures = {
@@ -82,9 +84,6 @@ in
       # Bootloader.
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
-      # boot.kernelPackages = pkgs.linuxPackages_latest;
-      # Enable networking
-      networking.networkmanager.enable = true;
 
       # Automatically update the timezone based on location
       services.automatic-timezoned.enable = true;

@@ -55,14 +55,14 @@ let
     );
   };
   moduleOutput = host: {
-    homeModules.${host} = ./${host}/host.nix;
-    nixosModules.${host} = ./${host};
+    homeModules."host-${host}" = ./${host}/host.nix;
+    nixosModules."host-${host}" = ./${host};
   };
   moduleOutputs =
     hosts:
     foldl' (acc: host: recursiveUpdate acc (moduleOutput host)) {
-      nixosModules.piezo = ./piezo/host.nix;
-      homeModules.piezo = ./piezo/host.nix;
+      nixosModules.host-piezo = ./piezo/host.nix;
+      homeModules.host-piezo = ./piezo/host.nix;
     } hosts;
 in
 {

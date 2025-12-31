@@ -15,13 +15,12 @@ in
       baseline = {
         audio.enable = true;
         stylix.enable = true;
+        displays.enable = true;
+        networking.enable = true;
       };
       # Bootloader.
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
-
-      # Enable networking
-      networking.networkmanager.enable = true;
 
       # Configure keymap in X11
       services.xserver.xkb = {

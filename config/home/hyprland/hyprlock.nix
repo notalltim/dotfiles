@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkIf getExe;
   cfg = config.baseline.hyprpolkitagent;
 in
 {
@@ -13,7 +13,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    baseline.apps.lock.package = config.programs.hyprlock.package;
+    baseline.apps.lock = {
+      package = config.programs.hyprlock.package;
+      command = "pgrep hyprlock || ${getExe config.programs.hyprlock.package}";
+    };
 
     programs.hyprlock = {
       enable = true;
@@ -53,13 +56,11 @@ in
               halign = "right";
               valign = "top";
             }
-
             {
               monitor = "";
               text = "$TIME"; # ref. https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/#variable-substitution
               font_size = 90;
               font_family = "Mono";
-
               position = "-30, 0";
               halign = "right";
               valign = "top";

@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -10,6 +11,10 @@ in
 {
   options.baseline.audio.enable = mkEnableOption "Enable baseline audio configuration";
   config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      playerctl
+    ];
+
     # Enable sound with pipewire.
     security.rtkit.enable = true;
     services.pipewire = {

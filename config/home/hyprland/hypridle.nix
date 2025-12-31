@@ -51,12 +51,13 @@ in
           after_sleep_cmd = "hyprctl dispatch dpms on";
           ignore_dbus_inhibit = false;
           lock_cmd = cfg.lockCommand;
+          before_sleep_cmd = "loginctl lock-session";
         };
 
         listener =
           (optional (cfg.lockTimeout != null) {
             timeout = cfg.lockTimeout;
-            on-timeout = cfg.lockCommand;
+            on-timeout = "loginctl lock-session";
           })
           ++ (optional (cfg.monitorTimeout != null) {
             timeout = cfg.monitorTimeout;
