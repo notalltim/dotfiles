@@ -94,9 +94,9 @@ in
         # Make nix-shell work see default.nix at the root
         nix-path = mkIf (cfg.flakeSource != null) [ "nixpkgs=${cfg.flakeSource}" ];
         # Min free space on disk before nix tries to garbage collect
-        min-free = "5G";
+        min-free = 5368709120; # 5GiB
         # Max to free in the above garbage collection
-        max-free = "15G";
+        max-free = 16106127360; # 15GiB
         # Supress error I do not care about
         warn-dirty = false;
         # More output from builds
