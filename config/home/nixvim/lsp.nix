@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf versionAtLeast;
   inherit (lib.attrsets) mapAttrsToList;
   cfg = config.baseline.nixvim.lsp;
   nixvim = config.programs.nixvim;
@@ -100,7 +100,7 @@ in
                 formatter.trim_trailing_whitespace = true;
               };
             };
-            nix_flake_fmt.enable = true;
+            nix_flake_fmt.enable = mkIf (versionAtLeast "2.29" config.nix.package.version) true;
           };
           hover.printenv.enable = true;
         };

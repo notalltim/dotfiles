@@ -10,4 +10,7 @@ _final: prev: {
       patches = (oldAttrs.patches or [ ]) ++ [ ../pkgs/json-encode-crash.patch ];
     });
   };
+  hello-cpp = prev.hello-cpp.overrideAttrs (old: {
+    separateDebugInfo = true;
+  });
 }

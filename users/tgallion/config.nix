@@ -24,7 +24,7 @@ in
       jellyfin-media-player
       discord
       radeontop
-      bitwarden
+      bitwarden-desktop
       audacity
       mprime
       kanshi
@@ -42,9 +42,6 @@ in
       wraps = "sudo";
     };
   };
-
-  # For gdb debugging
-  services.nixseparatedebuginfod.enable = true;
 
   age.secrets = {
     cachix-authtoken = {
@@ -69,7 +66,6 @@ in
       enableWayland = true;
     };
     kitty.enableKeybind = true;
-    packages.enable = true;
     home-manager.enable = true;
     nix.enable = true; # TODO: this does not cover the case I want it does not control the nix version
     tools.enable = true;
@@ -94,9 +90,10 @@ in
 
   services.gpg-agent.enable = true;
   programs.gpg.enable = true;
-  programs.git = {
-    userEmail = "timbama@gmail.com";
-    userName = tgallion.fullName;
+
+  programs.git.settings.user = {
+    email = "timbama@gmail.com";
+    name = tgallion.fullName;
   };
 
   services.auto-gc-roots = {
@@ -111,6 +108,9 @@ in
   programs.obs-studio = {
     enable = true;
   };
+  # nixseparatedebuginfod2 seems far more limited at the moment since
+  # cachix does not support index-debug-info
+  services.nixseparatedebuginfod.package = pkgs.nixseparatedebuginfod;
   nix = {
     access-tokens = {
       file = ./secrets/access-tokens.age;
@@ -125,6 +125,10 @@ in
           secret = config.age.secrets.gitlab-token;
         }
       ];
+    };
+    settings = {
+      substituters = [ "https://nix-community.cachix.org" ];
+      trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
     };
     netrc = {
       file = ./secrets/netrc.age;

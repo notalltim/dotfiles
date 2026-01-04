@@ -13,7 +13,7 @@ let
     lib.attrsets.concatMapAttrs (name: value: { "upstream-${name}" = value; }) {
       spicetify = inputs.spicetify-nix.homeManagerModules.spicetify;
       stylix = inputs.stylix.homeModules.stylix;
-      nixvim = inputs.nixvim.homeManagerModules.nixvim;
+      nixvim = (inputs.nixvim.homeModules or inputs.nixvim.homeManagerModules).nixvim;
       agenix = inputs.agenix.homeManagerModules.default;
       agenix-rekey = import "${inputs.agenix-rekey}/modules/agenix-rekey.nix" inputs.nixpkgs;
     }
@@ -35,7 +35,6 @@ in
         nixvim = ./home/nixvim;
         terminal = ./home/terminal;
         tool = ./home/tools;
-        packages = ./home/packages.nix;
         home-manager = ./home/home-manager.nix;
         nix = ./home/nix.nix;
         non-nixos = ./home/non-nixos.nix;
@@ -49,6 +48,7 @@ in
         waybar = ./home/waybar;
         wlogout = ./home/wlogout;
         spotify = ./home/spotify.nix;
+        "25-05-compat" = ./home/25-05-compat.nix;
       })
       // shared
       // homeUpstream;
@@ -65,6 +65,7 @@ in
         hyprland = ./nixos/hyprland.nix;
         secureboot = ./nixos/secureboot.nix;
         displays = ./nixos/displays.nix;
+        "25-05-compat" = ./nixos/25-05-compat.nix;
       })
       // shared
       // nixosUpstream;

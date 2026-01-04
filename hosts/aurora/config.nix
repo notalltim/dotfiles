@@ -35,6 +35,7 @@ in
       # Install firefox.
       programs.firefox.enable = true;
       programs.fish.enable = true;
+      programs.zoom-us.enable = true;
 
       # $ nix search wget
       environment.systemPackages = with pkgs; [

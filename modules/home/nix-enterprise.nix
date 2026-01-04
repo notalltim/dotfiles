@@ -162,7 +162,7 @@ in
               chmod 710 ${path}
             '')
             [
-              "${config.home.homeDirectory}"
+              config.home.homeDirectory
               "${config.home.homeDirectory}/.config"
               "${config.home.homeDirectory}/.config/nix "
             ]
@@ -214,7 +214,7 @@ in
                 secret: meta:
                 "printf '${meta.url}=${
                   optionalString (meta.tokenType != null) (meta.tokenType + ":")
-                }%s ' $(${decrypt} ${escapeShellArg meta.secret.rekeyFile})"
+                }%s ' $(${decrypt} ${escapeShellArg secret.file})"
               ) deps cfg.access-tokens.tokens
             ));
         };
@@ -232,14 +232,8 @@ in
         in
         {
           netrc-file = mkIf cfg.netrc.enabled config.age.secrets.netrc.path;
-          substituters = [
-            "https://cache.nixos.org"
-          ]
-          ++ (builtins.map (val: "https://${val.url}") filterdCaches);
-          trusted-public-keys = [
-            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          ]
-          ++ (builtins.map (val: val.pubkey) filterdCaches);
+          substituters = (builtins.map (val: "https://${val.url}") filterdCaches);
+          trusted-public-keys = (builtins.map (val: val.pubkey) filterdCaches);
         };
     };
   };

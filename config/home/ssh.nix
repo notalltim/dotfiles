@@ -18,7 +18,6 @@ in
       type = path;
     };
     privkey = mkOption {
-      apply = mkPathReproducible;
       type = path;
     };
   };
@@ -34,10 +33,11 @@ in
     # systemd.user.tmpfiles.rules = [ "d %h/.ssh 700 - - - -" ];
     programs.ssh = {
       enable = true;
-      forwardAgent = true;
-      addKeysToAgent = "yes";
+      enableDefaultConfig = false;
       matchBlocks = {
         "*" = {
+          forwardAgent = true;
+          addKeysToAgent = "yes";
           identityFile = [
             config.age.secrets.ssh-key.path
           ];

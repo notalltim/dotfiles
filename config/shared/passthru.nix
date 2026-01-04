@@ -34,7 +34,6 @@ let
     "tools"
     "nixvim"
     "firefox"
-    "packages"
     "ulauncher"
     "waybar"
     "spotify"

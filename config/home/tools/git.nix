@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib) mkIf mkDefault;
@@ -12,9 +17,15 @@ in
 
   config = mkIf cfg.enable {
 
-    home.file."${config.xdg.configHome}/git/allowed_signers".text = ''
-      ${config.programs.git.userEmail} ${builtins.readFile config.baseline.ssh.pubkey}
-    '';
+    home = {
+      packages = with pkgs; [
+        git-filter-repo
+        lazygit
+        rs-git-fsmonitor
+      ];
+      file."${config.xdg.configHome}/git/allowed_signers".text =
+        ''${config.programs.git.settings.user.email} ${builtins.readFile config.baseline.ssh.pubkey}     '';
+    };
     programs.git = {
       enable = mkDefault true;
       lfs.enable = mkDefault true;

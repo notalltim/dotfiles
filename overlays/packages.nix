@@ -4,4 +4,6 @@ inputs: final: _prev: {
     inherit (final.vimUtils) buildVimPlugin;
   };
   ulauncher-uwsm = final.callPackage ../pkgs/ulauncher-uwsm.nix { };
+  # This was removed upstream and replaced with a less capable version...
+  nixseparatedebuginfod = final.callPackage ../pkgs/nixseparatedebuginfod.nix { };
 }

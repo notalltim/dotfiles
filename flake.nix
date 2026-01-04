@@ -2,8 +2,30 @@
   description = "Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    # Manage user level configuration
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Unified styling
+    stylix = {
+      url = "github:nix-community/stylix/release-25.11";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        nur.follows = "nur";
+      };
+    };
+    # Nix driven neovim config
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
+    # End of the deps that require using the same release of nixpkgs
 
+    # Lots of stuff but firefox addons for now
     nur = {
       url = "github:nix-community/NUR";
       inputs = {
@@ -11,58 +33,46 @@
         flake-parts.follows = "flake-parts";
       };
     };
-
-    home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    stylix = {
-      url = "github:nix-community/stylix/release-25.05";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-        nur.follows = "nur";
-      };
-    };
+    # Styling for spofity
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    # Non-nixos GPU support
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     fenix = {
       url = "github:nix-community/fenix/monthly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Index of nixpkgs
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    # Declarativce disk partitioning
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Hardware specific modules
     nixos-hardware.url = "github:NixOS/nixos-hardware";
-
+    # Configure flakes throug modules
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    # Formatters
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
     };
-
+    # Secrets
     agenix = {
       url = "github:ryantm/agenix";
       inputs = {
@@ -87,33 +97,36 @@
 
   outputs =
     inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = with inputs; [
-        home-manager.flakeModules.default
-        treefmt-nix.flakeModule
-        agenix-rekey.flakeModule
-        (import ./config)
-        (import ./modules)
-        (import ./users)
-        (import ./overlays)
-        (import ./pkgs)
-        (import ./hosts)
-      ];
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      { inputs, ... }:
+      {
+        imports = with inputs; [
+          home-manager.flakeModules.default
+          treefmt-nix.flakeModule
+          agenix-rekey.flakeModule
+          (import ./config)
+          (import ./modules)
+          (import ./users)
+          (import ./overlays)
+          (import ./pkgs)
+          (import ./hosts)
+        ];
 
-      systems = [
-        # systems for which you want to build the `perSystem` attributes
-        "x86_64-linux"
-        # ...
-      ];
-      perSystem =
-        {
-          ...
-        }:
-        {
-          treefmt.programs = {
-            nixf-diagnose.enable = true;
-            nixfmt.enable = true;
+        systems = [
+          # systems for which you want to build the `perSystem` attributes
+          "x86_64-linux"
+          # ...
+        ];
+        perSystem =
+          {
+            ...
+          }:
+          {
+            treefmt.programs = {
+              nixf-diagnose.enable = true;
+              nixfmt.enable = true;
+            };
           };
-        };
-    };
+      }
+    );
 }

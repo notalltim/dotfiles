@@ -36,11 +36,30 @@ in
   config = mkIf cfg.enable {
 
     # Install the correct nix interpreter version
-    home.packages = with pkgs; [
-      config.nix.package
-      nix-diff
-      nix-du
-    ];
+    home = {
+      packages = with pkgs; [
+        config.nix.package
+        nix-diff
+        nix-du
+        nil
+        nixfmt-rfc-style
+        nix-tree
+        cachix
+        qemu
+        comma-with-db
+        nix-melt
+        nix-output-monitor
+      ];
+      file."${config.xdg.cacheHome}/nix-index/files".source = pkgs.nix-index-database;
+
+    };
+
+    programs.nix-index = {
+      enable = true;
+      package = pkgs.nix-index-with-db;
+      enableFishIntegration = true;
+      enableBashIntegration = true;
+    };
 
     # My speific stuff for build time fetchers
     baseline.userModule = _: { extraGroups = optional config.nix.enableBuildTimeFetchers "root"; };
@@ -48,7 +67,7 @@ in
     nix = {
       gc = {
         automatic = true;
-        frequency = "weekly";
+        dates = "daily";
         persistent = true;
         options = "--delete-older-than 28d";
       };
@@ -74,6 +93,23 @@ in
         ++ optional (nixVerAtMost "2.19") "repl-flake";
         # Make nix-shell work see default.nix at the root
         nix-path = mkIf (cfg.flakeSource != null) [ "nixpkgs=${cfg.flakeSource}" ];
+        # Min free space on disk before nix tries to garbage collect
+        min-free = "5G";
+        # Max to free in the above garbage collection
+        max-free = "15G";
+        # Supress error I do not care about
+        warn-dirty = false;
+        # More output from builds
+        log-lines = 25;
+        # If binary is not availible build it local
+        fallback = true;
+        connect-timeout = 5;
+        substituters = [
+          "https://cache.nixos.org"
+        ];
+        trusted-public-keys = [
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        ];
       }
       // optionalAttrs (nixVerAtLeast "2.20") {
         upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";

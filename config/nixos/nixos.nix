@@ -7,6 +7,7 @@
 }:
 let
   inherit (lib) mkDefault hiPrio;
+  inherit (lib.trivial) release;
   patchDesktop =
     pkg: appName: from: to:
     hiPrio (
@@ -55,6 +56,14 @@ in
   };
   users.users.root.extraGroups = [ "wheel" ];
 
+  nix.gc = {
+    automatic = true;
+    persistent = true;
+    options = "--delete-older-than 14d";
+    dates = "weekly";
+    randomizedDelaySec = "1h";
+  };
+
   environment.systemPackages = with pkgs; [
     git
   ];
@@ -63,5 +72,5 @@ in
   _module.args.GPUOffloadApp = GPUOffloadApp;
   # Set the default shell to use on the system.
   # this should be overriden all hosts
-  system.stateVersion = mkDefault "25.05";
+  system.stateVersion = mkDefault release;
 }

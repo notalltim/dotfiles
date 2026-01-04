@@ -15,6 +15,8 @@ let
     nameValuePair
     ;
   inherit (lib.types) str;
+  inherit (lib.trivial) release;
+  inherit (lib.versions) majorMinor;
   cfg = config.baseline.firefox;
   addons = pkgs.nur.repos.rycee.firefox-addons;
   perProfile = names: attrs: listToAttrs (map (name: nameValuePair name attrs) names);
@@ -86,7 +88,7 @@ in
                       params = [
                         {
                           name = "channel";
-                          value = "25.05";
+                          value = "${release}";
                         }
                         {
                           name = "type";
@@ -114,7 +116,7 @@ in
                       params = [
                         {
                           name = "channel";
-                          value = "25.05";
+                          value = "${release}";
                         }
                         {
                           name = "type";
@@ -135,6 +137,27 @@ in
                   ];
                 };
 
+                nix-manual = {
+                  name = "Nix Manual";
+                  urls = [
+                    {
+                      template = "https://nix.dev/manual/nix/${majorMinor config.nix.package.version}";
+                      params = [
+                        {
+                          name = "search";
+                          value = "{searchTerms}";
+                        }
+                      ];
+                    }
+                  ];
+
+                  icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                  definedAliases = [
+                    "@nm"
+                    "@nix-manual"
+                  ];
+                };
+
                 home-manager = {
                   name = "Home Manager";
                   urls = [
@@ -147,7 +170,7 @@ in
                         }
                         {
                           name = "release";
-                          value = "release-25.05";
+                          value = "release-${release}";
                         }
                       ];
                     }
@@ -188,7 +211,9 @@ in
 
                 nixvim = {
                   name = "Nixvim";
-                  urls = [ { template = "https://nix-community.github.io/nixvim/?search={searchTerms}"; } ];
+                  urls = [
+                    { template = "https://nix-community.github.io/nixvim/${release}/?search={searchTerms}"; }
+                  ];
 
                   icon = (
                     builtins.fetchurl {
