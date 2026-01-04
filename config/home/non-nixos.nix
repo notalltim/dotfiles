@@ -99,9 +99,9 @@ in
         "nvidia"
         "nvidiaPrime"
       ];
-      prime = mkIf (gpu.nvidia.enable) {
-        nvidiaProvider = "Nvidia-G0";
-        installScript = "nvidia";
+      prime = {
+        installScript = if gpu.nvidia.enable then "nvidia" else "mesa";
+        nvidiaProvider = "NVIDIA-G0";
       };
     };
   };
