@@ -80,28 +80,29 @@ in
       startServices = true;
       systemctlPath = "/usr/bin/systemctl";
     };
-    targets.genericLinux.enable = true;
-
-    nixGL = {
-      packages =
-        if gpu.nvidia.enable then
-          pkgs.nixgl.override {
-            nvidiaVersion = gpu.nvidia.driverVersion;
-            nvidiaHash = gpu.nvidia.driverHash;
-          }
-        else
-          pkgs.nixgl;
-      vulkan.enable = gpu.enableVulkan;
-      installScripts = [
-        "mesa"
-      ]
-      ++ optionals (gpu.nvidia.enable) [
-        "nvidia"
-        "nvidiaPrime"
-      ];
-      prime = {
-        installScript = if gpu.nvidia.enable then "nvidia" else "mesa";
-        nvidiaProvider = "NVIDIA-G0";
+    targets.genericLinux = {
+      enable = true;
+      nixGL = {
+        packages =
+          if gpu.nvidia.enable then
+            pkgs.nixgl.override {
+              nvidiaVersion = gpu.nvidia.driverVersion;
+              nvidiaHash = gpu.nvidia.driverHash;
+            }
+          else
+            pkgs.nixgl;
+        vulkan.enable = gpu.enableVulkan;
+        installScripts = [
+          "mesa"
+        ]
+        ++ optionals (gpu.nvidia.enable) [
+          "nvidia"
+          "nvidiaPrime"
+        ];
+        prime = {
+          installScript = if gpu.nvidia.enable then "nvidia" else "mesa";
+          nvidiaProvider = "NVIDIA-G0";
+        };
       };
     };
   };
