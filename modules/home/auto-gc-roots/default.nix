@@ -112,7 +112,8 @@ let
           + ''
             # Clean up the old version of the profile
             echo "Removing old flake inputs and outputs"
-            nix profile remove --all --profile ${profile} || true
+            # shellcheck disable=SC2046
+            nix profile remove  --profile ${profile} $(jq .elements[].storePaths.[] ${profile}/manifest.json --raw-output) || true
             echo "Installling to profile:"
             cat "$TMPFILE"
             # Add new paths
