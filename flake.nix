@@ -119,12 +119,16 @@
         ];
         perSystem =
           {
+            pkgs,
             ...
           }:
           {
             treefmt.programs = {
               nixf-diagnose.enable = true;
               nixfmt.enable = true;
+            };
+            devShells.default = pkgs.mkShell {
+              inputsFrom = [ pkgs.hello ];
             };
           };
       }

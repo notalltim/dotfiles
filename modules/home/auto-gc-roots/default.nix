@@ -118,6 +118,7 @@ let
             cat "$TMPFILE"
             # Add new paths
             nix profile install --stdin --profile ${profile} < "$TMPFILE" 2>&1 | grep -v -e "not including"
+            exit 0
           ''
       );
   };
