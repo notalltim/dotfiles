@@ -81,14 +81,13 @@ let
                   ) [ ] flake.outputs;
                 in
 
-                "echo \"Building outputs ${builtins.concatStringsSep " " outputs} of ${flake.name} from ${flake.url} (rev: $FLAKE_REV) \"  \n"
-                + "# Build the set of outputs and link them to the correct location\n# shellcheck disable=SC2129
-\nnix build --no-link --json \\\n\t\t\t"
-                + (concatMapStringsSep " \\\n\t\t\t" (output: "${flake.url}#${output}") outputs)
-                + ''
-                  \
-                  | nix-build ${flakeDerivationsExpression} --no-out-link \
-                                                            --arg-from-stdin nixBuildOutput \
+                ''
+                  echo "Building outputs ${builtins.concatStringsSep " " outputs} of ${flake.name} from ${flake.url} (rev: $FLAKE_REV)"
+                  # Build the set of outputs and link them to the correct location\n# shellcheck disable=SC2129
+                  nix-build ${flakeDerivationsExpression} --no-out-link \
+                                                            --argstr nixBuildOutput "$(nix build --no-link --json ${
+                                                              concatMapStringsSep " " (output: "${flake.url}#${output}") outputs
+                                                            })" \
                                                             --argstr name "${flake.name}-output-closure" \
                                                             --arg nixpkgs ${pkgs.path} >> "$TMPFILE"
                 ''

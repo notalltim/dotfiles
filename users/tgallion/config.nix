@@ -101,6 +101,14 @@ in
     flakes = {
       "self" = {
         url = "path:${config.baseline.nix.flakeSource}";
+        outputs = [
+          "hello"
+          {
+            path = "hello-cpp";
+            keepBuildDependencies = true;
+            additionalOutputs = [ "debug" ];
+          }
+        ];
       };
     };
   };
