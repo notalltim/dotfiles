@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf getExe;
   cfg = config.baseline.terminal;
 in
 {
@@ -13,8 +13,17 @@ in
   programs.fish = mkIf cfg.enable {
     enable = true;
     functions = {
-      body = "NCURSES_NO_UTF8_ACS=1 nvtop";
-      wraps = "nvtop";
+      nvtop = {
+        body = "NCURSES_NO_UTF8_ACS=1 command nvtop";
+        wraps = "nvtop";
+      };
+      nixpy = {
+        body = "command nix develop --expr \"let pkgs = import <nixpkgs> {}; in pkgs.mkShell { packages = [ (pkgs.python3.withPackages (ps: with ps; [$argv]))];}\" --impure";
+        wraps = "nix";
+      };
+      init-py-shell = {
+        body = "echo \"let pkgs = import <nixpkgs> {}; in pkgs.mkShell { packages = [ (pkgs.python3.withPackages (ps: with ps; [$argv]))];}\" | ${getExe pkgs.nixfmt}  > shell.nix";
+      };
     };
 
     plugins = [
