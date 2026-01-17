@@ -17,9 +17,7 @@ in
       apply = mkPathReproducible;
       type = path;
     };
-    privkey = mkOption {
-      type = path;
-    };
+    privkey = mkOption { type = path; };
   };
   config = mkIf cfg.enable {
     age.secrets.ssh-key = {
@@ -38,9 +36,7 @@ in
         "*" = {
           forwardAgent = true;
           addKeysToAgent = "yes";
-          identityFile = [
-            config.age.secrets.ssh-key.path
-          ];
+          identityFile = [ config.age.secrets.ssh-key.path ];
         };
       };
     };

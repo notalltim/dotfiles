@@ -1,7 +1,4 @@
-{
-  self,
-  ...
-}:
+{ self, ... }:
 {
   flake = {
     nixosModules.user-tgallion = ./tgallion/user.nix;

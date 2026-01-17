@@ -18,9 +18,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      pkgs.valgrind
-    ];
+    home.packages = [ pkgs.valgrind ];
     programs.gdb = {
       enable = true;
       pretty-printers.selected = [

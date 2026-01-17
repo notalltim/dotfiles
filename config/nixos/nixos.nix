@@ -64,9 +64,7 @@ in
     randomizedDelaySec = "1h";
   };
 
-  environment.systemPackages = with pkgs; [
-    git
-  ];
+  environment.systemPackages = with pkgs; [ git ];
   security.polkit.enable = true;
   services.fwupd.enable = true;
   _module.args.GPUOffloadApp = GPUOffloadApp;

@@ -7,16 +7,8 @@
   ...
 }:
 let
-  inherit (lib)
-    mkOption
-    escapeShellArg
-    removeSuffix
-    ;
-  inherit (lib.types)
-    nullOr
-    path
-    str
-    ;
+  inherit (lib) mkOption escapeShellArg removeSuffix;
+  inherit (lib.types) nullOr path str;
   inherit (baselineLib) mkPathReproducible;
   target =
     let

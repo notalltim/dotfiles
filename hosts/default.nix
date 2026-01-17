@@ -68,9 +68,7 @@ in
 {
   flake = {
     nixosConfigurations =
-      (mkNixOSHost "corona" [
-        ./corona/hardware.nix
-      ])
+      (mkNixOSHost "corona" [ ./corona/hardware.nix ])
       // (mkNixOSHost "piezo" [ ./piezo ])
       // (mkNixOSHost "aurora" [ ./aurora/hardware.nix ]);
 

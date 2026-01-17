@@ -31,7 +31,7 @@ in
       enable = mkEnableOption "Enable GDB configuration";
       extraConfig = mkOption {
         type = str;
-        default = '''';
+        default = "";
       };
       pretty-printers = {
         selected = mkOption {
@@ -65,9 +65,7 @@ in
         );
     }
     (mkIf cfg.enable {
-      home.packages = [
-        pkgs.gdb
-      ];
+      home.packages = [ pkgs.gdb ];
       home.file."${config.xdg.configHome}/gdb/gdbinit".text = builtins.concatStringsSep "\n" (
         (unique (
           builtins.map (printer: cfg.pretty-printers.available.${printer}) cfg.pretty-printers.selected

@@ -38,200 +38,196 @@ in
     }
     {
       programs.firefox.profiles = (
-        perProfile
-          [
-            cfg.profile
-          ]
-          {
-            extensions = {
-              packages = with addons; [ bitwarden ];
-              force = true;
-            };
+        perProfile [ cfg.profile ] {
+          extensions = {
+            packages = with addons; [ bitwarden ];
+            force = true;
+          };
 
-            settings = {
-              "extensions.autoDisableScopes" = 0;
-            };
+          settings = {
+            "extensions.autoDisableScopes" = 0;
+          };
 
-            bookmarks = {
-              force = true;
-              settings = [
-                {
-                  toolbar = true;
-                  name = "toolbar";
-                  bookmarks = [
-                    {
-                      name = "nixpkgs-manual";
-                      url = "https://nixos.org/manual/nixpkgs/stable/";
+          bookmarks = {
+            force = true;
+            settings = [
+              {
+                toolbar = true;
+                name = "toolbar";
+                bookmarks = [
+                  {
+                    name = "nixpkgs-manual";
+                    url = "https://nixos.org/manual/nixpkgs/stable/";
 
-                    }
-                    {
-                      name = "nixos-manual";
-                      url = "https://nixos.org/manual/nixos/stable/";
-                      tags = [
-                        "docs"
-                        "nix"
-                      ];
-                    }
-                  ];
-                }
-              ];
-            };
+                  }
+                  {
+                    name = "nixos-manual";
+                    url = "https://nixos.org/manual/nixos/stable/";
+                    tags = [
+                      "docs"
+                      "nix"
+                    ];
+                  }
+                ];
+              }
+            ];
+          };
 
-            search = {
-              force = true;
-              engines = {
-                nix-packages = {
-                  name = "Nix Packages";
-                  urls = [
-                    {
-                      template = "https://search.nixos.org/packages";
-                      params = [
-                        {
-                          name = "channel";
-                          value = "${release}";
-                        }
-                        {
-                          name = "type";
-                          value = "packages";
-                        }
-                        {
-                          name = "query";
-                          value = "{searchTerms}";
-                        }
-                      ];
-                    }
-                  ];
+          search = {
+            force = true;
+            engines = {
+              nix-packages = {
+                name = "Nix Packages";
+                urls = [
+                  {
+                    template = "https://search.nixos.org/packages";
+                    params = [
+                      {
+                        name = "channel";
+                        value = "${release}";
+                      }
+                      {
+                        name = "type";
+                        value = "packages";
+                      }
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
 
-                  icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                  definedAliases = [
-                    "@np"
-                    "@nixpkgs"
-                  ];
-                };
-                nixos-options = {
-                  name = "NixOS Options";
-                  urls = [
-                    {
-                      template = "https://search.nixos.org/options";
-                      params = [
-                        {
-                          name = "channel";
-                          value = "${release}";
-                        }
-                        {
-                          name = "type";
-                          value = "options";
-                        }
-                        {
-                          name = "query";
-                          value = "{searchTerms}";
-                        }
-                      ];
-                    }
-                  ];
-
-                  icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                  definedAliases = [
-                    "@no"
-                    "@nixos"
-                  ];
-                };
-
-                nix-manual = {
-                  name = "Nix Manual";
-                  urls = [
-                    {
-                      template = "https://nix.dev/manual/nix/${majorMinor config.nix.package.version}";
-                      params = [
-                        {
-                          name = "search";
-                          value = "{searchTerms}";
-                        }
-                      ];
-                    }
-                  ];
-
-                  icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                  definedAliases = [
-                    "@nm"
-                    "@nix-manual"
-                  ];
-                };
-
-                home-manager = {
-                  name = "Home Manager";
-                  urls = [
-                    {
-                      template = "https://home-manager-options.extranix.com";
-                      params = [
-                        {
-                          name = "query";
-                          value = "{searchTerms}";
-                        }
-                        {
-                          name = "release";
-                          value = "release-${release}";
-                        }
-                      ];
-                    }
-                  ];
-                  icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                  definedAliases = [
-                    "@hm"
-                    "@home-manager"
-                  ];
-                };
-
-                nixos-wiki = {
-                  name = "NixOS Wiki";
-                  urls = [ { template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; } ];
-                  iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
-                  definedAliases = [ "@nw" ];
-                };
-
-                github = {
-                  name = "Github";
-                  urls = [ { template = "https://github.com/search?q={searchTerms}"; } ];
-                  iconMapObj."32" = "https://github.com/favicon.ico";
-                  definedAliases = [
-                    "@gh"
-                    "@github"
-                  ];
-                };
-
-                noogle = {
-                  name = "Noogle";
-                  urls = [ { template = "https://noogle.dev/q?q={searchTerms}&term={searchTerms}"; } ];
-                  iconMapObj."256" = "https://noogle.dev/favicon.ico";
-                  definedAliases = [
-                    "@ng"
-                    "@noogle"
-                  ];
-                };
-
-                nixvim = {
-                  name = "Nixvim";
-                  urls = [
-                    { template = "https://nix-community.github.io/nixvim/${release}/?search={searchTerms}"; }
-                  ];
-
-                  icon = (
-                    builtins.fetchurl {
-                      url = "https://raw.githubusercontent.com/nix-community/nixvim/main/assets/nixvim_logo.svg";
-                      sha256 = "sha256:1dck8mj5x7f39hy3g0pcmzbhgjs6hdzba5abmkr8c2j6ihcp17va";
-                    }
-                  );
-                  definedAliases = [
-                    "@nv"
-                    "@nixvim"
-                  ];
-
-                };
-
-                bing.metaData.hidden = true;
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                definedAliases = [
+                  "@np"
+                  "@nixpkgs"
+                ];
               };
+              nixos-options = {
+                name = "NixOS Options";
+                urls = [
+                  {
+                    template = "https://search.nixos.org/options";
+                    params = [
+                      {
+                        name = "channel";
+                        value = "${release}";
+                      }
+                      {
+                        name = "type";
+                        value = "options";
+                      }
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                definedAliases = [
+                  "@no"
+                  "@nixos"
+                ];
+              };
+
+              nix-manual = {
+                name = "Nix Manual";
+                urls = [
+                  {
+                    template = "https://nix.dev/manual/nix/${majorMinor config.nix.package.version}";
+                    params = [
+                      {
+                        name = "search";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                definedAliases = [
+                  "@nm"
+                  "@nix-manual"
+                ];
+              };
+
+              home-manager = {
+                name = "Home Manager";
+                urls = [
+                  {
+                    template = "https://home-manager-options.extranix.com";
+                    params = [
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
+                      {
+                        name = "release";
+                        value = "release-${release}";
+                      }
+                    ];
+                  }
+                ];
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                definedAliases = [
+                  "@hm"
+                  "@home-manager"
+                ];
+              };
+
+              nixos-wiki = {
+                name = "NixOS Wiki";
+                urls = [ { template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; } ];
+                iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
+                definedAliases = [ "@nw" ];
+              };
+
+              github = {
+                name = "Github";
+                urls = [ { template = "https://github.com/search?q={searchTerms}"; } ];
+                iconMapObj."32" = "https://github.com/favicon.ico";
+                definedAliases = [
+                  "@gh"
+                  "@github"
+                ];
+              };
+
+              noogle = {
+                name = "Noogle";
+                urls = [ { template = "https://noogle.dev/q?q={searchTerms}&term={searchTerms}"; } ];
+                iconMapObj."256" = "https://noogle.dev/favicon.ico";
+                definedAliases = [
+                  "@ng"
+                  "@noogle"
+                ];
+              };
+
+              nixvim = {
+                name = "Nixvim";
+                urls = [
+                  { template = "https://nix-community.github.io/nixvim/${release}/?search={searchTerms}"; }
+                ];
+
+                icon = (
+                  builtins.fetchurl {
+                    url = "https://raw.githubusercontent.com/nix-community/nixvim/main/assets/nixvim_logo.svg";
+                    sha256 = "sha256:1dck8mj5x7f39hy3g0pcmzbhgjs6hdzba5abmkr8c2j6ihcp17va";
+                  }
+                );
+                definedAliases = [
+                  "@nv"
+                  "@nixvim"
+                ];
+
+              };
+
+              bing.metaData.hidden = true;
             };
-          }
+          };
+        }
       );
     }
   ]);

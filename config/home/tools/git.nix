@@ -24,7 +24,7 @@ in
         rs-git-fsmonitor
       ];
       file."${config.xdg.configHome}/git/allowed_signers".text =
-        ''${config.programs.git.settings.user.email} ${builtins.readFile config.baseline.ssh.pubkey}     '';
+        "${config.programs.git.settings.user.email} ${builtins.readFile config.baseline.ssh.pubkey}     ";
     };
     programs.git = {
       enable = mkDefault true;

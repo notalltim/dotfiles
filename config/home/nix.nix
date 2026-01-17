@@ -104,12 +104,8 @@ in
         # If binary is not availible build it local
         fallback = true;
         connect-timeout = 5;
-        substituters = [
-          "https://cache.nixos.org"
-        ];
-        trusted-public-keys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        ];
+        substituters = [ "https://cache.nixos.org" ];
+        trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
       }
       // optionalAttrs (nixVerAtLeast "2.20") {
         upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";

@@ -80,9 +80,7 @@ in
       type = attrsOf hostType;
       default = { };
     };
-    host = mkOption {
-      type = hostType;
-    };
+    host = mkOption { type = hostType; };
     hostNames = mkOption {
       type = listOf str;
       default = [ ];

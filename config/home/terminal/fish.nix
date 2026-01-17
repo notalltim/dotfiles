@@ -13,7 +13,7 @@ in
   programs.fish = mkIf cfg.enable {
     enable = true;
     functions = {
-      body = ''NCURSES_NO_UTF8_ACS=1 nvtop'';
+      body = "NCURSES_NO_UTF8_ACS=1 nvtop";
       wraps = "nvtop";
     };
 

@@ -36,9 +36,7 @@ rustPlatform.buildRustPackage rec {
   nativeBuildInputs = [ pkg-config ];
 
   passthru = {
-    tests = {
-      inherit (nixosTests) nixseparatedebuginfod;
-    };
+    tests = { inherit (nixosTests) nixseparatedebuginfod; };
   };
 
   meta = with lib; {

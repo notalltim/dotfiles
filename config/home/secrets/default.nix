@@ -34,9 +34,7 @@ in
     };
 
     programs.nixvim = mkIf config.baseline.nixvim.enable {
-      extraPlugins = [
-        pkgs.agenix-secret-nvim
-      ];
+      extraPlugins = [ pkgs.agenix-secret-nvim ];
       extraConfigLua =
         let
           masterIdentity = head config.age.rekey.masterIdentities;
@@ -51,9 +49,7 @@ in
     };
 
     age = {
-      identityPaths = [
-        "${config.home.homeDirectory}/.ssh/id_${host.hostname}"
-      ];
+      identityPaths = [ "${config.home.homeDirectory}/.ssh/id_${host.hostname}" ];
       rekey = {
         hostPubkey = user.userPubkey;
         # This is needed because the default uses UID which is not know to home-manager

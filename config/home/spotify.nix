@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.baseline.spotify;

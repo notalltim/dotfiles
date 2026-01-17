@@ -5,11 +5,7 @@
   ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkEnableOption
-    ;
+  inherit (lib) mkIf mkDefault mkEnableOption;
   cfg = config.baseline.networking;
 in
 {

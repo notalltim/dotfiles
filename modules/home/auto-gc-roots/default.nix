@@ -294,9 +294,7 @@ in
                 Before = mkIf cfg.runBeforeGC [ "nix-gc.service" ];
               };
               # Force service to run right before gc
-              Install = mkIf cfg.runBeforeGC {
-                RequiredBy = [ "nix-gc.service" ];
-              };
+              Install = mkIf cfg.runBeforeGC { RequiredBy = [ "nix-gc.service" ]; };
               Service = {
                 Type = "oneshot";
                 ExecStart = "${getExe cfg.script}";
@@ -313,9 +311,7 @@ in
           launchd.agents.nix-gc = {
             enable = true;
             config = {
-              ProgramArguments = [
-                "${getExe cfg.script}"
-              ];
+              ProgramArguments = [ "${getExe cfg.script}" ];
               StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
             };
           };

@@ -1,15 +1,7 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   inherit (lib.options) mkOption;
-  inherit (lib)
-    mkIf
-    concatMapAttrs
-    nameValuePair
-    ;
+  inherit (lib) mkIf concatMapAttrs nameValuePair;
   inherit (lib.types)
     attrsOf
     listOf

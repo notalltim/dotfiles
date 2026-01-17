@@ -275,9 +275,7 @@ in
             rekeyFile = cfg.pkiPath + "/GUID.age";
             generator = {
               script = "GUID";
-              tags = securebootTags ++ [
-                "secureboot-GUID-${hostname}"
-              ];
+              tags = securebootTags ++ [ "secureboot-GUID-${hostname}" ];
             };
           };
 
@@ -285,9 +283,7 @@ in
             rekeyFile = cfg.pkiPath + "/keys/PK/PK.key.age";
             generator = {
               script = "secureboot-key";
-              tags = securebootTags ++ [
-                "secureboot-PK-${hostname}-key"
-              ];
+              tags = securebootTags ++ [ "secureboot-PK-${hostname}-key" ];
             };
           };
 
@@ -306,9 +302,7 @@ in
           secureboot-noPK-auth = {
             rekeyFile = cfg.pkiPath + "/keys/noPK/noPK.auth.age";
             generator = {
-              dependencies = {
-                inherit (config.age.secrets) secureboot-GUID secureboot-PK-key;
-              };
+              dependencies = { inherit (config.age.secrets) secureboot-GUID secureboot-PK-key; };
               script = "noPK";
               tags = securebootTags;
             };
@@ -319,9 +313,7 @@ in
             rekeyFile = cfg.pkiPath + "/keys/KEK/KEK.key.age";
             generator = {
               script = "secureboot-key";
-              tags = securebootTags ++ [
-                "secureboot-KEK-${hostname}-key"
-              ];
+              tags = securebootTags ++ [ "secureboot-KEK-${hostname}-key" ];
             };
           };
 
@@ -341,9 +333,7 @@ in
             rekeyFile = cfg.pkiPath + "/keys/db/db.key.age";
             generator = {
               script = "secureboot-key";
-              tags = securebootTags ++ [
-                "secureboot-db-${hostname}-key"
-              ];
+              tags = securebootTags ++ [ "secureboot-db-${hostname}-key" ];
             };
           };
 

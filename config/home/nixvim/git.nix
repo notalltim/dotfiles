@@ -20,9 +20,7 @@ in
 
   config = mkIf cfg.enable {
     programs.nixvim = {
-      extraPlugins = [
-        pkgs.vimPlugins.nvim-web-devicons
-      ];
+      extraPlugins = [ pkgs.vimPlugins.nvim-web-devicons ];
 
       plugins.git-conflict = {
         enable = true;

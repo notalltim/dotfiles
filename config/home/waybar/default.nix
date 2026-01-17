@@ -1,8 +1,4 @@
-{
-  lib,
-  config,
-  ...
-}:
+{ lib, config, ... }:
 let
   inherit (lib)
     mkEnableOption
@@ -27,9 +23,7 @@ in
 
   config = mkIf cfg.enable {
     baseline = {
-      userModule = _: {
-        extraGroups = [ "input" ];
-      };
+      userModule = _: { extraGroups = [ "input" ]; };
       apps.bar.package = config.programs.waybar.package;
       waybar.settings = mkMerge [
         (with builtins; fromJSON (readFile ./config.json))
@@ -44,9 +38,7 @@ in
     programs = {
       waybar = {
         enable = true;
-        settings = [
-          cfg.settings
-        ];
+        settings = [ cfg.settings ];
       };
     };
 

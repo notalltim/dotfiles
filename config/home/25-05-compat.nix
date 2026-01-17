@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   inherit (lib)
     mkIf
@@ -18,18 +14,14 @@ in
 {
   options = (
     optionalAttrs enabled {
-      nix.gc.dates = mkOption {
-        type = str;
-      };
+      nix.gc.dates = mkOption { type = str; };
 
       programs.git.settings.user = {
         name = mkOption {
           type = str;
 
         };
-        email = mkOption {
-          type = str;
-        };
+        email = mkOption { type = str; };
       };
 
       programs.ssh = {
@@ -41,9 +33,7 @@ in
           type = lib.hm.types.dagOf (
             submodule (_: {
               options = {
-                addKeysToAgent = mkOption {
-                  type = str;
-                };
+                addKeysToAgent = mkOption { type = str; };
               };
             })
           );

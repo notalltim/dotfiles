@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   inherit (lib) mkIf versionOlder mkMerge;
   inherit (lib.trivial) release;
@@ -10,11 +6,7 @@ let
 in
 {
   config = mkMerge [
-    (mkIf enabled {
-      baseline.greetd.package = pkgs.greetd.tuigreet;
-    })
-    (mkIf (!enabled) {
-      baseline.greetd.package = pkgs.tuigreet;
-    })
+    (mkIf enabled { baseline.greetd.package = pkgs.greetd.tuigreet; })
+    (mkIf (!enabled) { baseline.greetd.package = pkgs.tuigreet; })
   ];
 }

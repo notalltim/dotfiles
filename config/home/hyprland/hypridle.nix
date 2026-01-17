@@ -39,9 +39,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      nixos-artwork.wallpapers.dracula
-    ];
+    home.packages = with pkgs; [ nixos-artwork.wallpapers.dracula ];
 
     services.hypridle = {
       enable = true;

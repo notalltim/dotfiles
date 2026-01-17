@@ -1,7 +1,4 @@
-{
-  eigen,
-  stdenvNoCC,
-}:
+{ eigen, stdenvNoCC }:
 let
   inherit (eigen) src version;
   pythonName = "eigen_${builtins.replaceStrings [ "." "-" ] [ "_" "_" ] version}_pretty_printers";

@@ -33,14 +33,8 @@ in
         baseline.nix.flakeSource = flakeSource;
       }
     ];
-    extraSpecialArgs = {
-      inherit self host flakeSource;
-    };
-    users = genAttrs (attrNames baseline.host.users) (
-      name: _: {
-        _module.args.user = name;
-      }
-    );
+    extraSpecialArgs = { inherit self host flakeSource; };
+    users = genAttrs (attrNames baseline.host.users) (name: _: { _module.args.user = name; });
   };
   users.users = mapAttrs (
     _name: user:
@@ -53,9 +47,7 @@ in
       {
         isNormalUser = true;
         description = userspec.user.fullName;
-        extraGroups = [
-          "wheel"
-        ];
+        extraGroups = [ "wheel" ];
         shell = pkgs.fish;
       }
     ]

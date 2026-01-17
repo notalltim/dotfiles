@@ -1,11 +1,7 @@
 { ... }:
 {
   _module.args.baselineLib = {
-    mkPathReproducible =
-      path:
-      builtins.path {
-        inherit path;
-      };
+    mkPathReproducible = path: builtins.path { inherit path; };
 
   };
 }

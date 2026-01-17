@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   inherit (lib) attrNames;
   inherit (config.baseline) host;
@@ -25,9 +21,7 @@ in
       };
     };
   };
-  systemd.tmpfiles.rules = [
-    "D ${config.age.rekey.cacheDir} 775 root wheel - -"
-  ];
+  systemd.tmpfiles.rules = [ "D ${config.age.rekey.cacheDir} 775 root wheel - -" ];
   # Required to set sandbox paths
   nix.settings.trusted-users = attrNames host.users;
 
