@@ -104,12 +104,12 @@
           home-manager.flakeModules.default
           treefmt-nix.flakeModule
           agenix-rekey.flakeModule
-          (import ./config)
-          (import ./modules)
-          (import ./users)
-          (import ./overlays)
-          (import ./pkgs)
-          (import ./hosts)
+          ./config
+          ./modules
+          ./users
+          ./overlays
+          ./pkgs
+          ./hosts
         ];
 
         systems = [
@@ -121,7 +121,10 @@
           { pkgs, ... }:
           {
             treefmt.programs = {
-              nixf-diagnose.enable = true;
+              nixf-diagnose = {
+                enable = true;
+                variableLookup = true;
+              };
               nixfmt = {
                 enable = true;
                 strict = true;
