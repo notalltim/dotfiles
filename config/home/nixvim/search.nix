@@ -33,6 +33,8 @@ in
           ui-select.enable = true;
           undo.enable = true;
           fzf-native.enable = true;
+          live-grep-args.enable = true;
+          manix.enable = true;
           # frecency.enable = true;
         };
         keymaps = {
@@ -51,9 +53,9 @@ in
             };
           };
           "<leader>ft" = {
-            action = "live_grep";
+            action = "live_grep_args";
             options = {
-              desc = "Search recent files";
+              desc = "Search with grep";
               silent = true;
             };
           };
@@ -120,7 +122,7 @@ in
         }
         {
           key = "<leader>fT";
-          action = mkRaw "function() require('telescope.builtin').live_grep({ hidden = true, additional_args = function() return { '--no-ignore' } end, }) end";
+          action = mkRaw "function() require('telescope').extensions.live_grep_args.live_grep_args({ hidden = true, additional_args = function() return { '--no-ignore' } end, }) end";
           options = {
             desc = "Find all strings";
             silent = true;

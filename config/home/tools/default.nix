@@ -64,6 +64,7 @@ in
       gimp
       vlc
       obsidian
+      nickel
     ];
   };
 }

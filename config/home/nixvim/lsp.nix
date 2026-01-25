@@ -277,6 +277,7 @@ in
           nil_ls.enable = true;
           texlab.enable = true;
           nixd.enable = true;
+          nickel_ls.enable = true;
         };
       };
     };
