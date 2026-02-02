@@ -67,7 +67,7 @@ in
     nix = {
       gc = {
         automatic = true;
-        dates = "daily";
+        dates = "monthly";
         persistent = true;
         options = "--delete-older-than 28d";
       };
