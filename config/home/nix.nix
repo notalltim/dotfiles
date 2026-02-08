@@ -69,7 +69,7 @@ in
         automatic = true;
         dates = "monthly";
         persistent = true;
-        options = "--delete-older-than 28d";
+        options = "--delete-older-than 31d";
       };
 
       # Default to the current nix
@@ -103,6 +103,8 @@ in
         log-lines = 25;
         # If binary is not availible build it local
         fallback = true;
+        # Keep the build time dependencies around
+        keep-outputs = true;
         connect-timeout = 5;
         substituters = [ "https://cache.nixos.org" ];
         trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
