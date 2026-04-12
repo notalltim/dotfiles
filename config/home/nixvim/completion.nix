@@ -25,6 +25,8 @@ in
       path = "${config.xdg.cacheHome}/nvim/codeium/config.json";
     };
 
+    baseline.claudecode-nvim.enable = mkDefault true;
+
     programs.nixvim = {
       keymaps = [
         {

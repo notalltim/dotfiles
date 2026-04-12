@@ -17,6 +17,7 @@ in
     ./ui.nix
     ./search.nix
     ./completion.nix
+    ./claudecode-nvim.nix
   ];
   options = {
     baseline.nixvim = {
