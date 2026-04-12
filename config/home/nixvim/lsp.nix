@@ -200,6 +200,7 @@ in
         servers = {
           clangd = {
             enable = true;
+            packageFallback = true;
             # Add tpp files to the lsp list and remove proto
             config = {
               filetypes = [
@@ -210,12 +211,6 @@ in
                 "cuda"
                 "tpp"
               ];
-              on_attach = ''
-                if client == "clangd" then
-                    require("clangd_extensions.inlay_hints").setup_autocmd()
-                    require("clangd_extensions.inlay_hints").set_inlay_hints()
-                end
-              '';
             };
           };
           lua_ls.enable = true;
@@ -273,7 +268,10 @@ in
           yamlls.enable = true;
           dockerls.enable = true;
           docker_compose_language_service.enable = true;
-          rust_analyzer.enable = true;
+          rust_analyzer = {
+            enable = true;
+            packageFallback = true;
+          };
           nil_ls.enable = true;
           texlab.enable = true;
           nixd.enable = true;
