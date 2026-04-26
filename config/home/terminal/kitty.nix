@@ -7,7 +7,7 @@
 let
   inherit (lib.strings) concatMapStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (lib) mkIf mkDefault;
+  inherit (lib) mkIf mkDefault optionalString;
   gpuWrapCheck = config.lib.nixGL.wrap;
   font_features =
     types:
@@ -58,8 +58,8 @@ in
       ];
     };
 
-    programs.fish.interactiveShellInit = ''
-      set -e LD_LIBRARY_PATH VK_LAYER_PATH VK_ICD_FILENAMES LIBGL_DRIVERS_PATH  LIBVA_DRIVERS_PATH __EGL_VENDOR_LIBRARY_FILENAMES
+    programs.fish.interactiveShellInit = optionalString config.baseline.non-nixos.enable ''
+      set -e LD_LIBRARY_PATH VK_LAYER_PATH VK_ICD_FILENAMES LIBGL_DRIVERS_PATH LIBVA_DRIVER_NAME LIBVA_DRIVERS_PATH __GLX_VENDOR_LIBRARY_NAME __EGL_VENDOR_LIBRARY_FILENAMES
     '';
     # This is needed for kitty to find the font
     fonts.fontconfig.enable = true;

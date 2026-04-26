@@ -86,6 +86,7 @@ in
     spotify = {
       enable = true;
     };
+    obs-studio.enable = true;
   };
 
   services.gpg-agent.enable = true;
@@ -113,9 +114,6 @@ in
     };
   };
 
-  programs.obs-studio = {
-    enable = true;
-  };
   # nixseparatedebuginfod2 seems far more limited at the moment since
   # cachix does not support index-debug-info
   services.nixseparatedebuginfod.package = pkgs.nixseparatedebuginfod;

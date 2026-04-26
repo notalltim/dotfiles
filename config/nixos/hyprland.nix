@@ -25,7 +25,7 @@ in
         enable = true;
         common = {
           uwsm = true;
-          nvidia = true;
+          # nvidia = true;
         };
       };
     };

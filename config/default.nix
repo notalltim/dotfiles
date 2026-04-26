@@ -49,6 +49,7 @@ in
         wlogout = ./home/wlogout;
         spotify = ./home/spotify.nix;
         "25-05-compat" = ./home/25-05-compat.nix;
+        obs-studio = ./home/obs-studio.nix;
       })
       // shared
       // homeUpstream;
@@ -66,6 +67,7 @@ in
         secureboot = ./nixos/secureboot.nix;
         displays = ./nixos/displays.nix;
         "25-05-compat" = ./nixos/25-05-compat.nix;
+        obs-studio = ./nixos/obs-studio.nix;
       })
       // shared
       // nixosUpstream;

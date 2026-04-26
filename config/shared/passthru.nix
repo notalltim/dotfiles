@@ -33,6 +33,7 @@ let
     "ulauncher"
     "waybar"
     "spotify"
+    "obs-studio"
   ];
 
 in
