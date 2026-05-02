@@ -15,8 +15,7 @@ in
     programs.adb.enable = true;
     programs.obs-studio = {
       enable = true;
-      package = null;
-
+      package = null; # Installed via home-manager
       enableVirtualCamera = true;
     };
   };
