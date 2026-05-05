@@ -2,3 +2,5 @@
 0f58a14bc646619d66542c3e0e36587261d94cf2
 # nixfmt strict
 337472a9bc38e43c345ca6f5028524ef99547803
+# format +deadnix +statix +nixf-diagnose
+79efc5e4aa1ad940b409b1e8d9f6f5c380c1756c
