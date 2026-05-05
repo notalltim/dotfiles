@@ -10,12 +10,12 @@ let
   inherit (lib) mkIf;
   gpuWrapCheck = config.lib.nixGL.wrap;
 in
-(mkIf (user.name == "tgallion") {
+mkIf (user.name == "tgallion") {
 
   home = {
     stateVersion = "24.11";
     homeDirectory = "/home/${tgallion.username}";
-    username = tgallion.username;
+    inherit (tgallion) username;
     enableDebugInfo = true;
 
     packages = with pkgs; [
@@ -147,4 +147,4 @@ in
       ];
     };
   };
-})
+}

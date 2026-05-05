@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.baseline.non-nixos;
-  gpu = cfg.gpu;
+  inherit (cfg) gpu;
   inherit (lib)
     mkIf
     fakeSha256
@@ -95,7 +95,7 @@ in
         installScripts = [
           "mesa"
         ]
-        ++ optionals (gpu.nvidia.enable) [
+        ++ optionals gpu.nvidia.enable [
           "nvidia"
           "nvidiaPrime"
         ];

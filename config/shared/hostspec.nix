@@ -68,9 +68,7 @@ let
           default = config.baseline.users;
         };
       };
-      config = {
-        users = config.baseline.users;
-      };
+      config = { inherit (config.baseline) users; };
     }
   );
 in

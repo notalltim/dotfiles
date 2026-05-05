@@ -49,10 +49,8 @@ in
       anyEnabled = mkOption {
         readOnly = true;
         type = bool;
-        default = (
-          any (user: config.home-manager.users.${user}.baseline.${name}.enable) (
-            attrNames config.baseline.host.users
-          )
+        default = any (user: config.home-manager.users.${user}.baseline.${name}.enable) (
+          attrNames config.baseline.host.users
         );
       };
       root = mkEnableOption "Apply ${name} home-manager configuration for the root user";
@@ -87,16 +85,14 @@ in
     baseline.homeCommon =
       { name, ... }:
       {
-        baseline = (
-          filterAttrs (n: _: elem n passthru) (
-            mapAttrs (
-              n: v:
-              mkMerge [
-                { enable = mkIf (v.enable && (elem name v.users || (v.root && name == "root"))) true; }
-                v.common
-              ]
-            ) config.baseline
-          )
+        baseline = filterAttrs (n: _: elem n passthru) (
+          mapAttrs (
+            _n: v:
+            mkMerge [
+              { enable = mkIf (v.enable && (elem name v.users || (v.root && name == "root"))) true; }
+              v.common
+            ]
+          ) config.baseline
         );
       };
   };

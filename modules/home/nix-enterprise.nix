@@ -154,19 +154,17 @@ in
 
     # Support build time fetchers
     home.activation = mkIf cfg.enableBuildTimeFetchers {
-      chownHome = (
-        builtins.concatStringsSep "\n" (
-          builtins.map
-            (path: ''
-              chown ${config.home.username}:root ${path}
-              chmod 710 ${path}
-            '')
-            [
-              config.home.homeDirectory
-              "${config.home.homeDirectory}/.config"
-              "${config.home.homeDirectory}/.config/nix "
-            ]
-        )
+      chownHome = builtins.concatStringsSep "\n" (
+        builtins.map
+          (path: ''
+            chown ${config.home.username}:root ${path}
+            chmod 710 ${path}
+          '')
+          [
+            config.home.homeDirectory
+            "${config.home.homeDirectory}/.config"
+            "${config.home.homeDirectory}/.config/nix "
+          ]
       );
     };
 
@@ -179,7 +177,7 @@ in
         mode = mkIf cfg.enableBuildTimeFetchers "0644";
         group = mkIf cfg.enableBuildTimeFetchers "root";
         generator = {
-          dependencies = (builtins.map (val: val.secret) cfg.netrc.logins);
+          dependencies = builtins.map (val: val.secret) cfg.netrc.logins;
           tags = [
             "nix"
             "netrc"
@@ -203,7 +201,7 @@ in
             "nix"
             "nix-access-tokens"
           ];
-          dependencies = (builtins.map (val: val.secret) cfg.access-tokens.tokens);
+          dependencies = builtins.map (val: val.secret) cfg.access-tokens.tokens;
           script =
             { decrypt, deps, ... }:
             ''
@@ -222,18 +220,18 @@ in
     };
 
     nix = {
-      extraOptions = mkIf (cfg.access-tokens.enabled) ''
+      extraOptions = mkIf cfg.access-tokens.enabled ''
         !include ${config.age.secrets.nix-access-tokens.path}
       '';
 
       settings =
         let
-          filterdCaches = (builtins.filter (val: val.pubkey != null) cfg.netrc.logins);
+          filterdCaches = builtins.filter (val: val.pubkey != null) cfg.netrc.logins;
         in
         {
           netrc-file = mkIf cfg.netrc.enabled config.age.secrets.netrc.path;
-          substituters = (builtins.map (val: "https://${val.url}") filterdCaches);
-          trusted-public-keys = (builtins.map (val: val.pubkey) filterdCaches);
+          substituters = builtins.map (val: "https://${val.url}") filterdCaches;
+          trusted-public-keys = builtins.map (val: val.pubkey) filterdCaches;
         };
     };
   };

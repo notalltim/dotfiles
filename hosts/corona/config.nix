@@ -13,110 +13,108 @@ let
   host = config.baseline.host.name;
 in
 {
-  config = (
-    mkIf (host == "corona") {
-      # Modules
-      baseline = {
-        audio.enable = true;
-        displays.enable = true;
-        stylix.enable = true;
-        networking.enable = true;
-        secureboot = {
+  config = mkIf (host == "corona") {
+    # Modules
+    baseline = {
+      audio.enable = true;
+      displays.enable = true;
+      stylix.enable = true;
+      networking.enable = true;
+      secureboot = {
+        enable = true;
+        factorySignatures = {
+          dell-KEK = {
+            file = ./secureboot/factory/dell-KEK.esl;
+            type = "KEK";
+          };
+          dell-db = {
+            file = ./secureboot/factory/dell-db.esl;
+            type = "db";
+          };
+        };
+      };
+      homeCommon = {
+        programs.firefox.package = GPUOffloadApp pkgs.firefox "firefox";
+        services.kanshi = {
           enable = true;
-          factorySignatures = {
-            dell-KEK = {
-              file = ./secureboot/factory/dell-KEK.esl;
-              type = "KEK";
-            };
-            dell-db = {
-              file = ./secureboot/factory/dell-db.esl;
-              type = "db";
-            };
-          };
-        };
-        homeCommon = {
-          programs.firefox.package = (GPUOffloadApp pkgs.firefox "firefox");
-          services.kanshi = {
-            enable = true;
-            settings = [
-              {
-                profile = {
-                  name = "roaming";
-                  outputs = [
-                    {
-                      criteria = "Sharp Corporation 0x149A Unknown";
-                      status = "enable";
-                      scale = 1.0;
-                      mode = "1920x1080@60.00Hz";
-                    }
-                  ];
-                };
-              }
-              {
-                profile = {
-                  name = "docked-office";
-                  outputs = [
-                    {
-                      criteria = "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 20120B000001";
-                      status = "enable";
-                      scale = 1.0;
-                      position = "1920,0";
-                      mode = "--custom 2560x1440@143.86Hz";
-                    }
-                    {
-                      criteria = "Sceptre Tech Inc T27 Unknown";
-                      status = "enable";
-                      scale = 1.0;
-                      position = "0,0";
-                      mode = "1920x1080@74.97Hz";
-                    }
-                    {
-                      criteria = "Sharp Corporation 0x149A Unknown";
-                      status = "disable";
-                    }
-                  ];
-                };
-              }
-            ];
-          };
+          settings = [
+            {
+              profile = {
+                name = "roaming";
+                outputs = [
+                  {
+                    criteria = "Sharp Corporation 0x149A Unknown";
+                    status = "enable";
+                    scale = 1.0;
+                    mode = "1920x1080@60.00Hz";
+                  }
+                ];
+              };
+            }
+            {
+              profile = {
+                name = "docked-office";
+                outputs = [
+                  {
+                    criteria = "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 20120B000001";
+                    status = "enable";
+                    scale = 1.0;
+                    position = "1920,0";
+                    mode = "--custom 2560x1440@143.86Hz";
+                  }
+                  {
+                    criteria = "Sceptre Tech Inc T27 Unknown";
+                    status = "enable";
+                    scale = 1.0;
+                    position = "0,0";
+                    mode = "1920x1080@74.97Hz";
+                  }
+                  {
+                    criteria = "Sharp Corporation 0x149A Unknown";
+                    status = "disable";
+                  }
+                ];
+              };
+            }
+          ];
         };
       };
-      # Bootloader.
-      boot.loader.systemd-boot.enable = true;
-      boot.loader.efi.canTouchEfiVariables = true;
+    };
+    # Bootloader.
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
 
-      # Automatically update the timezone based on location
-      services.automatic-timezoned.enable = true;
+    # Automatically update the timezone based on location
+    services.automatic-timezoned.enable = true;
 
-      # Configure keymap in X11
-      services.xserver.xkb = {
-        layout = "us";
-        variant = "";
-      };
+    # Configure keymap in X11
+    services.xserver.xkb = {
+      layout = "us";
+      variant = "";
+    };
 
-      # Enable CUPS to print documents.
-      services.printing.enable = true;
-      services.openssh.enable = true;
+    # Enable CUPS to print documents.
+    services.printing.enable = true;
+    services.openssh.enable = true;
 
-      # Install firefox.
-      programs.firefox.enable = true;
-      programs.fish.enable = true;
-      # Allow unfree packages
+    # Install firefox.
+    programs.firefox.enable = true;
+    programs.fish.enable = true;
+    # Allow unfree packages
 
-      # List packages installed in system profile. To search, run:
-      # $ nix search wget
-      environment.systemPackages = with pkgs; [
-        git
-        nvtopPackages.full
-      ];
+    # List packages installed in system profile. To search, run:
+    # $ nix search wget
+    environment.systemPackages = with pkgs; [
+      git
+      nvtopPackages.full
+    ];
 
-      # This value determines the NixOS release from which the default
-      # settings for stateful data, like file locations and database versions
-      # on your system were taken. It‘s perfectly fine and recommended to leave
-      # this value at the release version of the first install of this system.
-      # Before changing this value read the documentation for this option
-      # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-      system.stateVersion = "24.11"; # Did you read the comment?
-    }
-  );
+    # This value determines the NixOS release from which the default
+    # settings for stateful data, like file locations and database versions
+    # on your system were taken. It‘s perfectly fine and recommended to leave
+    # this value at the release version of the first install of this system.
+    # Before changing this value read the documentation for this option
+    # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+    system.stateVersion = "24.11"; # Did you read the comment?
+  };
 }

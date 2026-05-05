@@ -9,7 +9,7 @@ let
   inherit (lib) mkIf versionAtLeast;
   inherit (lib.attrsets) mapAttrsToList;
   cfg = config.baseline.nixvim.lsp;
-  nixvim = config.programs.nixvim;
+  inherit (config.programs) nixvim;
 in
 {
   options = {

@@ -95,7 +95,7 @@ let
                   let
                     buildOutputs = builtins.filter (output: output.keepBuildDependencies) flake.outputs;
                   in
-                  (optionalString (buildOutputs != [ ]) (
+                  optionalString (buildOutputs != [ ]) (
                     "echo \"Caching build dependencies of ${
                       concatMapStringsSep " " (output: output.path) buildOutputs
                     } for ${flake.name} from ${flake.url} (rev: $FLAKE_REV) \"\n"
@@ -104,7 +104,7 @@ let
                       output: "${flake.url}#${output.path}.inputDerivation "
                     ) buildOutputs)
                     + ">> \"$TMPFILE\"\n"
-                  ))
+                  )
                 )
               ))
             ) flakes
@@ -263,61 +263,59 @@ in
       };
     };
   };
-  config = (
-    mkMerge [
-      (mkIf (cfg.flakes != { }) { home.packages = [ cfg.script ]; })
-      (mkIf cfg.automatic (mkMerge [
-        (mkIf (cfg.automatic -> !config.nix.gc.automatic) {
-          warnings = [
-            "Enabling auto-gc-roots without garbage collection can cause high disk usage use caution"
-          ];
-        })
-        (mkIf pkgs.stdenv.isLinux {
-          systemd.user = {
-            timers.auto-gc-roots = {
-              Unit = {
-                Description = "auto-gc-roots: peroidically refresh flake based gc roots";
-              };
-              Timer = {
-                OnCalendar = cfg.frequency;
-                Unit = "auto-gc-roots.service";
-                RandomizedDelaySec = cfg.randomizedDelaySec;
-                Persistent = cfg.persistent;
-              };
-              Install = {
-                WantedBy = [ "timers.target" ];
-              };
+  config = mkMerge [
+    (mkIf (cfg.flakes != { }) { home.packages = [ cfg.script ]; })
+    (mkIf cfg.automatic (mkMerge [
+      (mkIf (cfg.automatic -> !config.nix.gc.automatic) {
+        warnings = [
+          "Enabling auto-gc-roots without garbage collection can cause high disk usage use caution"
+        ];
+      })
+      (mkIf pkgs.stdenv.isLinux {
+        systemd.user = {
+          timers.auto-gc-roots = {
+            Unit = {
+              Description = "auto-gc-roots: peroidically refresh flake based gc roots";
             };
-            services.auto-gc-roots = {
-              Unit = {
-                Description = "auto-gc-roots: Keep a set of flakes / flake outputs as gc roots";
-                Before = mkIf cfg.runBeforeGC [ "nix-gc.service" ];
-              };
-              # Force service to run right before gc
-              Install = mkIf cfg.runBeforeGC { RequiredBy = [ "nix-gc.service" ]; };
-              Service = {
-                Type = "oneshot";
-                ExecStart = "${getExe cfg.script}";
-                ReadWritePaths = [ "${config.xdg.stateHome}/nix/profiles" ];
-              };
+            Timer = {
+              OnCalendar = cfg.frequency;
+              Unit = "auto-gc-roots.service";
+              RandomizedDelaySec = cfg.randomizedDelaySec;
+              Persistent = cfg.persistent;
+            };
+            Install = {
+              WantedBy = [ "timers.target" ];
             };
           };
-        })
-        (lib.mkIf pkgs.stdenv.isDarwin {
-          assertions = [
-            (lib.hm.darwin.assertInterval "serivices.auto-gc-roots.frequency" cfg.frequency pkgs)
-          ];
-
-          launchd.agents.nix-gc = {
-            enable = true;
-            config = {
-              ProgramArguments = [ "${getExe cfg.script}" ];
-              StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
+          services.auto-gc-roots = {
+            Unit = {
+              Description = "auto-gc-roots: Keep a set of flakes / flake outputs as gc roots";
+              Before = mkIf cfg.runBeforeGC [ "nix-gc.service" ];
+            };
+            # Force service to run right before gc
+            Install = mkIf cfg.runBeforeGC { RequiredBy = [ "nix-gc.service" ]; };
+            Service = {
+              Type = "oneshot";
+              ExecStart = "${getExe cfg.script}";
+              ReadWritePaths = [ "${config.xdg.stateHome}/nix/profiles" ];
             };
           };
-        })
+        };
+      })
+      (lib.mkIf pkgs.stdenv.isDarwin {
+        assertions = [
+          (lib.hm.darwin.assertInterval "serivices.auto-gc-roots.frequency" cfg.frequency pkgs)
+        ];
 
-      ]))
-    ]
-  );
+        launchd.agents.nix-gc = {
+          enable = true;
+          config = {
+            ProgramArguments = [ "${getExe cfg.script}" ];
+            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
+          };
+        };
+      })
+
+    ]))
+  ];
 }

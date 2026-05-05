@@ -10,15 +10,13 @@ final: prev: {
       patches = (oldAttrs.patches or [ ]) ++ [ ../pkgs/json-encode-crash.patch ];
     });
   };
-  hello-cpp = prev.hello-cpp.overrideAttrs (old: {
+  hello-cpp = prev.hello-cpp.overrideAttrs (_old: {
     separateDebugInfo = true;
   });
 
   obs-studio-plugins = prev.obs-studio-plugins // {
     droidcam-obs =
-      (prev.obs-studio-plugins.droidcam-obs.override {
-        ffmpeg_7 = final.ffmpeg;
-      }).overrideAttrs
+      (prev.obs-studio-plugins.droidcam-obs.override { ffmpeg_7 = final.ffmpeg; }).overrideAttrs
         (_prev: {
           version = "2.4.3";
 
@@ -80,13 +78,9 @@ final: prev: {
         openssl
       ];
 
-      nativeCheckInputs = [
-        writableTmpDirAsHomeHook
-      ];
+      nativeCheckInputs = [ writableTmpDirAsHomeHook ];
 
-      nativeInstallCheckInputs = [
-        versionCheckHook
-      ];
+      nativeInstallCheckInputs = [ versionCheckHook ];
       versionCheckProgramArg = "--version";
       doInstallCheck = true;
 

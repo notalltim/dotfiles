@@ -9,16 +9,14 @@ let
     path
     submodule
     ;
-  fingerType =
-    { ... }:
-    {
-      options = {
-        name = mkOption { type = str; };
-        slot = mkOption { type = str; };
-        module = mkOption { type = str; };
-        path = mkOption { type = path; };
-      };
+  fingerType = _: {
+    options = {
+      name = mkOption { type = str; };
+      slot = mkOption { type = str; };
+      module = mkOption { type = str; };
+      path = mkOption { type = path; };
     };
+  };
 in
 {
   options = {

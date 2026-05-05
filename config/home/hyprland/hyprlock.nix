@@ -10,7 +10,7 @@ in
 
   config = mkIf cfg.enable {
     baseline.apps.lock = {
-      package = config.programs.hyprlock.package;
+      inherit (config.programs.hyprlock) package;
       command = "pgrep hyprlock || ${getExe config.programs.hyprlock.package}";
     };
 

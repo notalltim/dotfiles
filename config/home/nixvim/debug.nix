@@ -11,7 +11,7 @@ let
   inherit (lib.attrsets) mapAttrs mapAttrsToList;
   inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.debug;
-  nixvim = config.programs.nixvim;
+  inherit (config.programs) nixvim;
 in
 {
   options = {

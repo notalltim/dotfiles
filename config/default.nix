@@ -1,32 +1,26 @@
 { inputs, lib, ... }:
 let
-  shared = (
-    lib.attrsets.concatMapAttrs (name: value: { "shared-${name}" = value; }) {
-      secrets = ./shared/secrets;
-      userspec = ./shared/userspec.nix;
-      hostspec = ./shared/hostspec.nix;
-      stylix = ./shared/stylix.nix;
-      lib = ./shared/lib.nix;
-    }
-  );
-  homeUpstream = (
-    lib.attrsets.concatMapAttrs (name: value: { "upstream-${name}" = value; }) {
-      spicetify = inputs.spicetify-nix.homeManagerModules.spicetify;
-      stylix = inputs.stylix.homeModules.stylix;
-      nixvim = (inputs.nixvim.homeModules or inputs.nixvim.homeManagerModules).nixvim;
-      agenix = inputs.agenix.homeManagerModules.default;
-      agenix-rekey = import "${inputs.agenix-rekey}/modules/agenix-rekey.nix" inputs.nixpkgs;
-    }
-  );
-  nixosUpstream = (
-    lib.attrsets.concatMapAttrs (name: value: { "upstream-${name}" = value; }) {
-      home-manager = inputs.home-manager.nixosModules.home-manager;
-      disko = inputs.disko.nixosModules.default;
-      agenix = inputs.agenix.nixosModules.default;
-      agenix-rekey = inputs.agenix-rekey.nixosModules.default;
-      stylix = inputs.stylix.nixosModules.stylix;
-    }
-  );
+  shared = lib.attrsets.concatMapAttrs (name: value: { "shared-${name}" = value; }) {
+    secrets = ./shared/secrets;
+    userspec = ./shared/userspec.nix;
+    hostspec = ./shared/hostspec.nix;
+    stylix = ./shared/stylix.nix;
+    lib = ./shared/lib.nix;
+  };
+  homeUpstream = lib.attrsets.concatMapAttrs (name: value: { "upstream-${name}" = value; }) {
+    inherit (inputs.spicetify-nix.homeManagerModules) spicetify;
+    inherit (inputs.stylix.homeModules) stylix;
+    inherit ((inputs.nixvim.homeModules or inputs.nixvim.homeManagerModules)) nixvim;
+    agenix = inputs.agenix.homeManagerModules.default;
+    agenix-rekey = import "${inputs.agenix-rekey}/modules/agenix-rekey.nix" inputs.nixpkgs;
+  };
+  nixosUpstream = lib.attrsets.concatMapAttrs (name: value: { "upstream-${name}" = value; }) {
+    inherit (inputs.home-manager.nixosModules) home-manager;
+    disko = inputs.disko.nixosModules.default;
+    agenix = inputs.agenix.nixosModules.default;
+    agenix-rekey = inputs.agenix-rekey.nixosModules.default;
+    inherit (inputs.stylix.nixosModules) stylix;
+  };
 in
 {
   flake = {

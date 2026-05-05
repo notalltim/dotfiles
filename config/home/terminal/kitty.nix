@@ -16,7 +16,7 @@ let
     ) types;
   cfg = config.programs.kitty;
   baseline = config.baseline.kitty;
-  terminal = config.baseline.terminal;
+  inherit (config.baseline) terminal;
 in
 {
   options = {

@@ -12,36 +12,34 @@ let
   enabled = versionOlder release "25.11";
 in
 {
-  options = (
-    optionalAttrs enabled {
-      nix.gc.dates = mkOption { type = str; };
+  options = optionalAttrs enabled {
+    nix.gc.dates = mkOption { type = str; };
 
-      programs.git.settings.user = {
-        name = mkOption {
-          type = str;
+    programs.git.settings.user = {
+      name = mkOption {
+        type = str;
 
-        };
-        email = mkOption { type = str; };
       };
+      email = mkOption { type = str; };
+    };
 
-      programs.ssh = {
-        enableDefaultConfig = mkOption {
-          type = bool;
-          default = false;
-        };
-        matchBlocks = mkOption {
-          type = lib.hm.types.dagOf (
-            submodule (_: {
-              options = {
-                addKeysToAgent = mkOption { type = str; };
-              };
-            })
-          );
-        };
+    programs.ssh = {
+      enableDefaultConfig = mkOption {
+        type = bool;
+        default = false;
       };
+      matchBlocks = mkOption {
+        type = lib.hm.types.dagOf (
+          submodule (_: {
+            options = {
+              addKeysToAgent = mkOption { type = str; };
+            };
+          })
+        );
+      };
+    };
 
-    }
-  );
+  };
 
   config = mkIf enabled {
     nix.gc.frequency = config.nix.gc.dates;

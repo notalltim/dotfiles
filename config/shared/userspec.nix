@@ -46,19 +46,17 @@ let
       };
     };
   # User specific host specific options
-  hostComponent =
-    { ... }:
-    {
-      options = {
-        userPubkey = mkOption {
-          type = nullOr options.age.rekey.hostPubkey.type;
-          default = null;
-          description = ''
-            The user scope key to use for rekey
-          '';
-        };
+  hostComponent = _: {
+    options = {
+      userPubkey = mkOption {
+        type = nullOr options.age.rekey.hostPubkey.type;
+        default = null;
+        description = ''
+          The user scope key to use for rekey
+        '';
       };
     };
+  };
   # User settings that do not depend on the host
   userType = submodule userComponent;
 

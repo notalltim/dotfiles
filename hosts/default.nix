@@ -25,7 +25,7 @@ let
     ];
   };
 
-  flake = config.flake;
+  inherit (config) flake;
 
   mkNixOSHost = host: extraModules: {
     ${host} = withSystem "x86_64-linux" (
@@ -42,7 +42,7 @@ let
       { pkgs, ... }:
       inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = (builtins.attrValues config.flake.homeModules);
+        modules = builtins.attrValues config.flake.homeModules;
         extraSpecialArgs = {
           inherit
             self

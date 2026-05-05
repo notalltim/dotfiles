@@ -28,7 +28,7 @@ in
     };
   };
   config = {
-    home.packages = optional (cfg.enableWayland) pkgs.wl-clipboard-rs;
+    home.packages = optional cfg.enableWayland pkgs.wl-clipboard-rs;
     baseline.nixvim = mkIf cfg.enableAll {
       enable = true;
       lsp.enable = true;

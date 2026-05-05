@@ -80,7 +80,7 @@ in
     };
   };
   config = mkMerge [
-    (mkIf (cfg.enableMicrosoftKeys) {
+    (mkIf cfg.enableMicrosoftKeys {
       baseline.secureboot.factorySignatures =
         let
           fetchMicrosoft =
@@ -108,7 +108,7 @@ in
         mapAttrs
           (name: info: {
             inherit (info) type;
-            file = (pkgs.callPackage (fetchMicrosoft (info // { inherit name; })) { });
+            file = pkgs.callPackage (fetchMicrosoft (info // { inherit name; })) { };
           })
           {
             "ms-db-2011" = {
@@ -143,7 +143,7 @@ in
             };
           };
     })
-    (mkIf (cfg.enable) {
+    (mkIf cfg.enable {
       age = {
         generators =
           let
@@ -227,7 +227,7 @@ in
               }:
               keyScript {
                 inherit pkgs;
-                name = (removeSuffix "-key" (removePrefix "secureboot-" name));
+                name = removeSuffix "-key" (removePrefix "secureboot-" name);
                 crtFile = fromSecret file "key" "crt";
                 cerFile = fromSecret file "key" "cer";
               };
@@ -243,7 +243,7 @@ in
               }:
               authScript {
                 inherit pkgs;
-                name = (removeSuffix "-auth" (removePrefix "secureboot-" name));
+                name = removeSuffix "-auth" (removePrefix "secureboot-" name);
                 guidCommand = decryptFile decrypt deps.secureboot-GUID.file;
                 keyCommand = decryptFile decrypt deps.signingKey.file;
                 keyCrt = fromSecret deps.signingKey.file "key" "crt";

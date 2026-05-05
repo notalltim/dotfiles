@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   baseline = {
     users.tgallion = {
       username = "tgallion";
@@ -7,7 +6,7 @@
     };
     userModule = {
 
-      fingerprints = (
+      fingerprints =
         builtins.map
           (finger: {
             inherit (finger) name path;
@@ -56,8 +55,7 @@
               name = "3";
               path = ./secrets/fingerprint/left-thumb.age;
             }
-          ]
-      );
+          ];
     };
   };
 }

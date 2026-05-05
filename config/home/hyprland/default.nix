@@ -76,7 +76,7 @@ in
           # Add default apps to the environment
           ++ (map (x: x.package) (attrValues config.baseline.apps));
 
-        sessionVariables = cfg.sessionVariables;
+        inherit (cfg) sessionVariables;
       };
 
       # Enable default programs and services for a complete

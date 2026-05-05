@@ -15,7 +15,7 @@ let
     mapAttrs
     mkMerge
     ;
-  baseline = config.baseline;
+  inherit (config) baseline;
 in
 {
   stylix.homeManagerIntegration = {
@@ -51,5 +51,5 @@ in
         shell = pkgs.fish;
       }
     ]
-  ) (config.home-manager.users);
+  ) config.home-manager.users;
 }

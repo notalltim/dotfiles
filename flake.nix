@@ -129,6 +129,8 @@
                 enable = true;
                 strict = true;
               };
+              deadnix.enable = true;
+              statix.enable = true;
             };
             devShells.default = pkgs.mkShell { inputsFrom = [ pkgs.hello ]; };
           };

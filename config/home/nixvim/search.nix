@@ -4,7 +4,7 @@ let
   inherit (lib) mkIf;
   inherit (config.lib.nixvim) mkRaw;
   cfg = config.baseline.nixvim.search;
-  nixvim = config.programs.nixvim;
+  inherit (config.programs) nixvim;
 in
 {
   options = {
