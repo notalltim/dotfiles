@@ -65,7 +65,7 @@ in
     };
     # Needed to allow derivation storageMode
     systemd.user.tmpfiles.rules = [
-      "D ${config.age.rekey.cacheDir} 755 ${config.home.username} - - -"
+      "d ${config.age.rekey.cacheDir} 755 ${config.home.username} - - -"
     ];
   };
 }

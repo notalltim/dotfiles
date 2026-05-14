@@ -6,4 +6,8 @@ inputs: final: _prev: {
   ulauncher-uwsm = final.callPackage ../pkgs/ulauncher-uwsm.nix { };
   # This was removed upstream and replaced with a less capable version...
   nixseparatedebuginfod = final.callPackage ../pkgs/nixseparatedebuginfod.nix { };
+  inherit (inputs.calibre-plugins.packages.${final.stdenv.hostPlatform.system})
+    acsm-calibre-plugin
+    dedrm-plugin
+    ;
 }

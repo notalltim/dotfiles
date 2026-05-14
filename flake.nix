@@ -93,6 +93,11 @@
       flake = false;
     };
 
+    calibre-plugins = {
+      url = "github:nydragon/calibre-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =

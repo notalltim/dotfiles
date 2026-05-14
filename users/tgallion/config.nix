@@ -87,6 +87,19 @@ mkIf (user.name == "tgallion") {
       enable = true;
     };
     obs-studio.enable = true;
+
+    ereader = {
+      enable = true;
+      calibrePlugins = [
+        pkgs.dedrm-plugin
+        pkgs.acsm-calibre-plugin
+      ];
+      dpt = {
+        serial = "5026958";
+        deviceid = ./secrets/dpt-deviceid.age;
+        privatekey = ./secrets/dpt-private-key.age;
+      };
+    };
   };
 
   services.gpg-agent.enable = true;
