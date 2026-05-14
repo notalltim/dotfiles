@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) attrNames;
   inherit (config.baseline) host;
@@ -27,4 +32,5 @@ in
 
   # Smart card (yubi key PIV)
   services.pcscd.enable = true;
+  services.udev.packages = with pkgs; [ yubikey-personalization ];
 }
