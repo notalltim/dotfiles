@@ -31,6 +31,9 @@ in
   nix.settings.trusted-users = attrNames host.users;
 
   # Smart card (yubi key PIV)
-  services.pcscd.enable = true;
+  services.pcscd = {
+    enable = true;
+    plugins = [ pkgs.ccid ];
+  };
   services.udev.packages = with pkgs; [ yubikey-personalization ];
 }
