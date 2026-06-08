@@ -24,7 +24,7 @@ mkIf (user.name == "tgallion") {
       jellyfin-media-player
       discord
       radeontop
-      bitwarden-desktop
+      # bitwarden-desktop
       audacity
       mprime
       kanshi
