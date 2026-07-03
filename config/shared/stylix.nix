@@ -12,7 +12,12 @@ in
   config = mkIf cfg.enable {
     stylix = {
       enable = true;
-      base16Scheme = "${pkgs.vimPlugins.nightfox-nvim.src.outPath}/extra/nightfox/base16.yaml";
+      base16Scheme =
+        builtins.fetchGit {
+          url = "https://github.com/EdenEast/nightfox.nvim";
+          rev = "ccefc3e8b3dfe41d9fab2e0dd7ebe2e30c5f8feb";
+        }
+        + "/extra/nightfox/base16.yaml";
       image = pkgs.fetchurl {
         url = "https://images.pexels.com/photos/3081835/pexels-photo-3081835.jpeg";
         hash = "sha256-qhkXsZHZCMJP40347QajOfIsaskYl+zCVGAeUWkoEig=";
