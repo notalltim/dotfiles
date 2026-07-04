@@ -39,7 +39,7 @@ in
     # $ nix search wget
     environment.systemPackages = with pkgs; [
       git
-      nvtopPackages.full
+      nvtopPackages.amd
     ];
     # common home-manager options
     baseline.homeCommon = {

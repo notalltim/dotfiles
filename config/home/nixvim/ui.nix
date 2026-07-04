@@ -83,7 +83,7 @@ in
         # Syntax highlighting
         treesitter = {
           enable = mkDefault true;
-          folding = mkDefault true;
+          folding.enable = mkDefault true;
           settings = {
             incremental_selection.enable = mkDefault true;
             indent.enable = mkDefault true;

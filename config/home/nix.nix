@@ -42,7 +42,7 @@ in
         nix-diff
         nix-du
         nil
-        nixfmt-rfc-style
+        nixfmt
         nix-tree
         cachix
         qemu

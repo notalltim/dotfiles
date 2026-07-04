@@ -34,6 +34,7 @@ in
       programs.firefox = {
         enable = true;
         package = mkDefault (config.lib.nixGL.wrap pkgs.firefox);
+        configPath = "${config.xdg.configHome}/mozilla/firefox";
       };
     }
     {

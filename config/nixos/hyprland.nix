@@ -19,6 +19,10 @@ in
       xwayland.enable = true;
     };
 
+    # bluetooth frontend
+    services.blueman.enable = true;
+    baseline.homeCommon.services.blueman-applet.enable = true;
+
     baseline = {
       greetd.enable = true;
       hyprland = {

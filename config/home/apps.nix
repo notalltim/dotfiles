@@ -55,7 +55,7 @@ in
 
   config.baseline.apps = with pkgs; {
     terminal.package = mkDefault config.programs.kitty.package;
-    bluetoothManager.package = mkDefault blueberry;
+    bluetoothManager.package = mkDefault blueman;
     audioManager.package = mkDefault pavucontrol;
     launcher.package = mkDefault config.baseline.ulauncher.package;
     displayManager.package = mkDefault wdisplays;

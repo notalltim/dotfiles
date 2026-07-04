@@ -24,7 +24,7 @@ in
         enable = true;
         settings = {
           default_session = {
-            command = "${getExe cfg.package} --time --time-format '%I:%M %p | %a • %h | %F' #--cmd \"uwsm start -S hyprland-uwsm.desktop\"";
+            command = "${getExe cfg.package} --time --time-format '%I:%M %p | %a • %h | %F' --cmd 'uwsm start hyprland-uwsm.desktop'";
             user = "greeter";
           };
         };

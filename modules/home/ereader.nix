@@ -76,17 +76,17 @@ in
       };
     };
 
-    home.activation.installCalibrePlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      plugin_hash="${(builtins.concatStringsSep "" cfg.calibrePlugins)}"
-      marker="$HOME/.config/calibre/.plugins-installed-hash"
-      if [ ! -f "$marker" ] || [ "$(cat "$marker")" != "$plugin_hash" ]; then
-        for plugin in ${
-          lib.concatMapStringsSep " " (plugin: builtins.toString plugin) cfg.calibrePlugins
-        }; do
-          $DRY_RUN_CMD ${lib.getExe' pkgs.calibre "calibre-customize"} -a "$plugin"
-        done
-        echo -n "$plugin_hash" > "$marker"
-      fi
-    '';
+    # home.activation.installCalibrePlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    #   plugin_hash="${(builtins.concatStringsSep "" cfg.calibrePlugins)}"
+    #   marker="$HOME/.config/calibre/.plugins-installed-hash"
+    #   if [ ! -f "$marker" ] || [ "$(cat "$marker")" != "$plugin_hash" ]; then
+    #     for plugin in ${
+    #       lib.concatMapStringsSep " " (plugin: builtins.toString plugin) cfg.calibrePlugins
+    #     }; do
+    #       $DRY_RUN_CMD ${lib.getExe' pkgs.calibre "calibre-customize"} -a "$plugin"
+    #     done
+    #     echo -n "$plugin_hash" > "$marker"
+    #   fi
+    # '';
   };
 }

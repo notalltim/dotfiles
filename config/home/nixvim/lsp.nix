@@ -82,7 +82,7 @@ in
             biome.enable = true;
             nixfmt = {
               enable = true;
-              package = pkgs.nixfmt-rfc-style;
+              package = pkgs.nixfmt;
             };
             black.enable = true;
             clang_format = {

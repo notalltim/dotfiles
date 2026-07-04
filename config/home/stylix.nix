@@ -28,7 +28,7 @@ in
         waybar.font = "sansSerif";
         kde.enable = config.baseline.host.desktopEnvironment != "gnome";
       };
-      iconTheme = {
+      icons = {
         enable = true;
         package = pkgs.morewaita-icon-theme;
         dark = "Adwaita";

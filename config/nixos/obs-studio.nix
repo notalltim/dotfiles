@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
 
@@ -7,7 +12,7 @@ in
 {
   config = mkIf cfg.anyEnabled {
     programs.droidcam.enable = true;
-    programs.adb.enable = true;
+    environment.systemPackages = [ pkgs.android-tools ];
     programs.obs-studio = {
       enable = true;
       package = null; # Installed via home-manager

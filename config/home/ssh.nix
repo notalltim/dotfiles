@@ -32,11 +32,11 @@ in
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
-        "*" = {
-          forwardAgent = true;
-          addKeysToAgent = "yes";
-          identityFile = [ config.age.secrets.ssh-key.path ];
+      settings = {
+        "Host *" = {
+          ForwardAgent = true;
+          AddKeysToAgent = "yes";
+          IdentityFile = [ config.age.secrets.ssh-key.path ];
         };
       };
     };
