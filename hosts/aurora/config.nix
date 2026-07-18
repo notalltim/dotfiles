@@ -41,6 +41,23 @@ in
       git
       nvtopPackages.amd
     ];
+
+    # make sure that tuigreet scales correctly
+    services.greetd.settings.outputs = [
+      {
+        connector = "DP-1";
+        enabled = false;
+      }
+      {
+        connector = "DP-2";
+        enabled = false;
+      }
+      {
+        connector = "DP-3";
+        primary = true;
+      }
+    ];
+
     # common home-manager options
     baseline.homeCommon = {
       services.kanshi = {
@@ -55,7 +72,7 @@ in
                   status = "enable";
                   scale = 1.0;
                   position = "1920,0";
-                  mode = "--custom 2560x1440@143.86Hz";
+                  mode = "--custom 2560x1440@169.83Hz";
                 }
                 {
                   criteria = "DP-1";
