@@ -100,7 +100,11 @@ in
                 formatter.trim_trailing_whitespace = true;
               };
             };
-            nix_flake_fmt.enable = mkIf (versionAtLeast "2.29" config.nix.package.version) true;
+            # `nix.package` is null when Nix is managed externally (Determinate Nix),
+            # which always ships a modern nix — keep the gate satisfied in that case.
+            nix_flake_fmt.enable = mkIf (
+              config.nix.package == null || versionAtLeast "2.29" config.nix.package.version
+            ) true;
           };
           hover.printenv.enable = true;
         };

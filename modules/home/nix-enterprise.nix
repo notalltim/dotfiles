@@ -50,6 +50,15 @@ in
           The file path relative to the current flake that the generated secret will be stored in
         '';
       };
+      setNetrcFile = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Whether to set the `netrc-file` Nix setting to the generated netrc. Disable this
+          when the Nix daemon consumes the netrc via another mechanism (e.g. Determinate Nix's
+          `/etc/determinate/config.json` `additionalNetrcSources`)
+        '';
+      };
       logins = mkOption {
         type = listOf (submodule {
           options = {
@@ -229,7 +238,7 @@ in
           filterdCaches = builtins.filter (val: val.pubkey != null) cfg.netrc.logins;
         in
         {
-          netrc-file = mkIf cfg.netrc.enabled config.age.secrets.netrc.path;
+          netrc-file = mkIf (cfg.netrc.enabled && cfg.netrc.setNetrcFile) config.age.secrets.netrc.path;
           substituters = map (val: "https://${val.url}") filterdCaches;
           trusted-public-keys = map (val: val.pubkey) filterdCaches;
         };

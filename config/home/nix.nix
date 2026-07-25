@@ -21,12 +21,25 @@ let
 
   cfg = config.baseline.nix;
 
-  nixVerAtLeast = versionAtLeast (majorMinor config.nix.package.version);
-  nixVerAtMost = versionOlder (majorMinor config.nix.package.version);
+  # When `nix.package` is null the binary is managed externally (Determinate Nix),
+  # which is always a modern release: treat version gates as "latest".
+  nixVerAtLeast =
+    ver: config.nix.package == null || versionAtLeast (majorMinor config.nix.package.version) ver;
+  nixVerAtMost =
+    ver: config.nix.package != null && versionOlder (majorMinor config.nix.package.version) ver;
 in
 {
   options.baseline.nix = {
     enable = mkEnableOption "Enable my basic nix configuration";
+    installPackage = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether to install `config.nix.package` into the user profile. Disable this when
+        the Nix binary is managed outside of home-manager (e.g. Determinate Nix, where the
+        system daemon owns the only Nix and `nix.package` is `null`).
+      '';
+    };
     flakeSource = mkOption {
       type = nullOr pathInStore;
       default = null;
@@ -37,19 +50,22 @@ in
 
     # Install the correct nix interpreter version
     home = {
-      packages = with pkgs; [
-        config.nix.package
-        nix-diff
-        nix-du
-        nil
-        nixfmt
-        nix-tree
-        cachix
-        qemu
-        comma-with-db
-        nix-melt
-        nix-output-monitor
-      ];
+      packages =
+        # Only install the Nix binary when home-manager owns it. Determinate Nix
+        # manages the binary/daemon itself and sets `nix.package = null`.
+        (optional (cfg.installPackage && config.nix.package != null) config.nix.package)
+        ++ (with pkgs; [
+          nix-diff
+          nix-du
+          nil
+          nixfmt
+          nix-tree
+          cachix
+          qemu
+          comma-with-db
+          nix-melt
+          nix-output-monitor
+        ]);
       file."${config.xdg.cacheHome}/nix-index/files".source = pkgs.nix-index-database;
 
     };
