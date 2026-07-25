@@ -1,13 +1,10 @@
-{ config, inputs, ... }:
-{
-  perSystem =
-    { system, pkgs, ... }:
-    {
-      legacyPackages = pkgs;
-      _module.args.pkgs = import inputs.nixpkgs {
-        inherit system;
-        overlays = [ config.flake.overlays.default ];
-        config.allowUnfree = true;
-      };
+{ config, inputs, ... }: {
+  perSystem = { system, pkgs, ... }: {
+    legacyPackages = pkgs;
+    _module.args.pkgs = import inputs.nixpkgs {
+      inherit system;
+      overlays = [ config.flake.overlays.default ];
+      config.allowUnfree = true;
     };
+  };
 }

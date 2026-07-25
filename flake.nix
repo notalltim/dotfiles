@@ -103,8 +103,7 @@
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      { inputs, ... }:
-      {
+      { inputs, ... }: {
         imports = with inputs; [
           home-manager.flakeModules.default
           treefmt-nix.flakeModule
@@ -122,23 +121,21 @@
           "x86_64-linux"
           # ...
         ];
-        perSystem =
-          { pkgs, ... }:
-          {
-            treefmt.programs = {
-              nixf-diagnose = {
-                enable = true;
-                variableLookup = true;
-              };
-              nixfmt = {
-                enable = true;
-                strict = true;
-              };
-              deadnix.enable = true;
-              statix.enable = true;
+        perSystem = { pkgs, ... }: {
+          treefmt.programs = {
+            nixf-diagnose = {
+              enable = true;
+              variableLookup = true;
             };
-            devShells.default = pkgs.mkShell { inputsFrom = [ pkgs.hello ]; };
+            nixfmt = {
+              enable = true;
+              strict = true;
+            };
+            deadnix.enable = true;
+            statix.enable = true;
           };
+          devShells.default = pkgs.mkShell { inputsFrom = [ pkgs.hello ]; };
+        };
       }
     );
 }

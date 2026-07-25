@@ -59,7 +59,7 @@ let
           "echo \"No flakes given ending...\""
         else
           (builtins.concatStringsSep "\n" (
-            builtins.map (
+            map (
               flake:
               (optionalString flake.cacheFlakeInputs ''
 
@@ -76,8 +76,7 @@ let
               + (optionalString (flake.outputs != [ ]) (
                 let
                   outputs = builtins.foldl' (
-                    acc: output:
-                    acc ++ [ output.path ] ++ (builtins.map (add: "${output.path}.${add}") output.additionalOutputs)
+                    acc: output: acc ++ [ output.path ] ++ (map (add: "${output.path}.${add}") output.additionalOutputs)
                   ) [ ] flake.outputs;
                 in
 
@@ -144,8 +143,7 @@ in
       flakes = mkOption {
         type = attrsOf (
           submodule (
-            { name, ... }:
-            {
+            { name, ... }: {
               options = {
                 cacheFlakeInputs = mkOption {
                   type = bool;

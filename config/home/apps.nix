@@ -25,8 +25,7 @@ in
     description = "Default apps";
     type = attrsOf (
       submodule (
-        { name, config, ... }:
-        {
+        { name, config, ... }: {
           options = {
             enable = (mkEnableOption "Enable default app") // {
               default = true;

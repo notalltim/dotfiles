@@ -16,6 +16,6 @@ let
     )
     ++ [ inputPaths.path ];
 in
-(pkgs.writeClosure (builtins.map (path: builtins.storePath (/. + path)) inputs)).overrideAttrs (_: {
+(pkgs.writeClosure (map (path: builtins.storePath (/. + path)) inputs)).overrideAttrs (_: {
   inherit name;
 })

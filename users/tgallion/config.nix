@@ -72,7 +72,6 @@ mkIf (user.name == "tgallion") {
     terminal.enable = true;
     non-nixos = {
       enable = host.platform != "nixos";
-      gpu.enableVulkan = true;
     };
     ssh = {
       enable = true;

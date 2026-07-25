@@ -55,8 +55,7 @@ in
     factorySignatures = mkOption {
       type = attrsOf (
         submodule (
-          { name, ... }:
-          {
+          { name, ... }: {
             options = {
               name = mkOption {
                 type = str;
@@ -212,11 +211,9 @@ in
               '';
           in
           {
-            GUID =
-              { pkgs, ... }:
-              ''
-                ${pkgs.util-linux}/bin/uuidgen --random
-              '';
+            GUID = { pkgs, ... }: ''
+              ${pkgs.util-linux}/bin/uuidgen --random
+            '';
 
             secureboot-key =
               {

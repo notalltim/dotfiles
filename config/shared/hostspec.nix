@@ -18,8 +18,7 @@ let
     ;
   inherit (baselineLib) mkPathReproducible;
   hostType = submodule (
-    { name, ... }:
-    {
+    { name, ... }: {
       options = {
         name = mkOption {
           type = str;

@@ -7,7 +7,7 @@ _: {
     userModule = {
 
       fingerprints =
-        builtins.map
+        map
           (finger: {
             inherit (finger) name path;
             module = "uru4000";

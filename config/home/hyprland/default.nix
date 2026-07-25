@@ -99,6 +99,8 @@ in
 
       wayland.windowManager.hyprland = {
         enable = true;
+        configType = "hyprlang";
+
         extraConfig = builtins.readFile ./config/hyprland.conf;
         settings = mkMerge [
           {

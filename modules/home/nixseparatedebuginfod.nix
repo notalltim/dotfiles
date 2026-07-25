@@ -31,7 +31,7 @@ let
       "--expiration ${cfg.cacheExpirationDelay}"
       "--cache-dir ${cfg.cacheDir}"
     ]
-    ++ builtins.map (substituter: "--substituter ${substituter}") cfg.substituters
+    ++ map (substituter: "--substituter ${substituter}") cfg.substituters
   );
 in
 {

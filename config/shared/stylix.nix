@@ -13,7 +13,7 @@ in
     stylix = {
       enable = true;
       base16Scheme =
-        builtins.fetchGit {
+        fetchGit {
           url = "https://github.com/EdenEast/nightfox.nvim";
           rev = "ccefc3e8b3dfe41d9fab2e0dd7ebe2e30c5f8feb";
         }

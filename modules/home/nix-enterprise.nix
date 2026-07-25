@@ -155,7 +155,7 @@ in
     # Support build time fetchers
     home.activation = mkIf cfg.enableBuildTimeFetchers {
       chownHome = builtins.concatStringsSep "\n" (
-        builtins.map
+        map
           (path: ''
             chown ${config.home.username}:root ${path}
             chmod 710 ${path}
@@ -177,7 +177,7 @@ in
         mode = mkIf cfg.enableBuildTimeFetchers "0644";
         group = mkIf cfg.enableBuildTimeFetchers "root";
         generator = {
-          dependencies = builtins.map (val: val.secret) cfg.netrc.logins;
+          dependencies = map (val: val.secret) cfg.netrc.logins;
           tags = [
             "nix"
             "netrc"
@@ -185,7 +185,7 @@ in
           script =
             { decrypt, ... }:
             builtins.concatStringsSep "\n" (
-              builtins.map (
+              map (
                 key:
                 "printf 'machine ${key.url} login ${key.user} password %s\n' $(${decrypt} ${escapeShellArg key.secret.rekeyFile})"
               ) cfg.netrc.logins
@@ -201,7 +201,7 @@ in
             "nix"
             "nix-access-tokens"
           ];
-          dependencies = builtins.map (val: val.secret) cfg.access-tokens.tokens;
+          dependencies = map (val: val.secret) cfg.access-tokens.tokens;
           script =
             { decrypt, deps, ... }:
             ''
@@ -230,8 +230,8 @@ in
         in
         {
           netrc-file = mkIf cfg.netrc.enabled config.age.secrets.netrc.path;
-          substituters = builtins.map (val: "https://${val.url}") filterdCaches;
-          trusted-public-keys = builtins.map (val: val.pubkey) filterdCaches;
+          substituters = map (val: "https://${val.url}") filterdCaches;
+          trusted-public-keys = map (val: val.pubkey) filterdCaches;
         };
     };
   };

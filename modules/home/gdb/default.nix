@@ -56,7 +56,7 @@ in
           mkPrinter = type: (pkgs.callPackage ./${type}-pretty-printers.nix { }).gdbinit;
         in
         builtins.listToAttrs (
-          builtins.map (type: (nameValuePair type (mkPrinter type))) [
+          map (type: (nameValuePair type (mkPrinter type))) [
             "libcxx"
             "libc++"
             "eigen"
@@ -67,9 +67,7 @@ in
     (mkIf cfg.enable {
       home.packages = [ pkgs.gdb ];
       home.file."${config.xdg.configHome}/gdb/gdbinit".text = builtins.concatStringsSep "\n" (
-        (unique (
-          builtins.map (printer: cfg.pretty-printers.available.${printer}) cfg.pretty-printers.selected
-        ))
+        (unique (map (printer: cfg.pretty-printers.available.${printer}) cfg.pretty-printers.selected))
         ++ [
           "set print pretty on"
           cfg.extraConfig

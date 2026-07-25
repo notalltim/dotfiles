@@ -6,7 +6,6 @@ let
     mkEnableOption
     attrNames
     mkMerge
-    map
     mkIf
     filterAttrs
     mapAttrs
@@ -82,18 +81,16 @@ in
       };
     };
   config = {
-    baseline.homeCommon =
-      { name, ... }:
-      {
-        baseline = filterAttrs (n: _: elem n passthru) (
-          mapAttrs (
-            _n: v:
-            mkMerge [
-              { enable = mkIf (v.enable && (elem name v.users || (v.root && name == "root"))) true; }
-              v.common
-            ]
-          ) config.baseline
-        );
-      };
+    baseline.homeCommon = { name, ... }: {
+      baseline = filterAttrs (n: _: elem n passthru) (
+        mapAttrs (
+          _n: v:
+          mkMerge [
+            { enable = mkIf (v.enable && (elem name v.users || (v.root && name == "root"))) true; }
+            v.common
+          ]
+        ) config.baseline
+      );
+    };
   };
 }

@@ -16,35 +16,33 @@ let
     deferredModule
     ;
   # User specific host agnostic options
-  userComponent =
-    { name, ... }:
-    {
-      options = {
-        name = mkOption {
-          type = str;
-          default = name;
-        };
-        username = mkOption {
-          type = str;
-          default = name;
-          description = ''
-            primary user on the system
-          '';
-        };
-        fullName = mkOption {
-          type = str;
-          default = name;
-          description = ''
-            Full name in the form "First Last";
-          '';
-        };
+  userComponent = { name, ... }: {
+    options = {
+      name = mkOption {
+        type = str;
+        default = name;
+      };
+      username = mkOption {
+        type = str;
+        default = name;
+        description = ''
+          primary user on the system
+        '';
+      };
+      fullName = mkOption {
+        type = str;
+        default = name;
+        description = ''
+          Full name in the form "First Last";
+        '';
+      };
 
-        defaultIdentity = mkOption {
-          type = path;
-          default = ./secrets/identities/yubikey-3314879-piv.pub;
-        };
+      defaultIdentity = mkOption {
+        type = path;
+        default = ./secrets/identities/yubikey-3314879-piv.pub;
       };
     };
+  };
   # User specific host specific options
   hostComponent = _: {
     options = {

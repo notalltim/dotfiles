@@ -33,7 +33,7 @@ in
     mkIf (chownSecrets != [ ]) {
       home.activation.chownSecrets = lib.hm.dag.entryAfter [ "reloadSystemd" ] (
         builtins.concatStringsSep "\n" (
-          builtins.map (secret: ''
+          map (secret: ''
             if [ !  -f ${secret.path} ]; then
               systemctl --user restart agenix.service
             fi
