@@ -5,7 +5,18 @@
   name ? "test",
 }:
 let
-
+  writeClosure =
+    paths:
+    pkgs.runCommandLocal "runtime-deps"
+      {
+        # Get the cleaner exportReferencesGraph interface
+        __structuredAttrs = true;
+        exportReferencesGraph.graph = paths;
+        nativeBuildInputs = [ pkgs.jq ];
+      }
+      ''
+        jq -r ".graph | map(.path) | sort | .[]" "$NIX_ATTRS_JSON_FILE" > "$out"
+      '';
   inputPaths = builtins.fromJSON inputsJSON;
   collectFlakeInputs =
     input:
@@ -16,6 +27,6 @@ let
     )
     ++ [ inputPaths.path ];
 in
-(pkgs.writeClosure (map (path: builtins.storePath (/. + path)) inputs)).overrideAttrs (_: {
+(writeClosure (map (path: builtins.storePath (/. + path)) inputs)).overrideAttrs (_: {
   inherit name;
 })
