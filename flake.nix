@@ -126,6 +126,11 @@
             nixf-diagnose = {
               enable = true;
               variableLookup = true;
+              ignore = [
+                # Experimental primop `getFlake` false-positive unknown
+                # https://github.com/nix-community/nixd/issues/762
+                "sema-primop-unknown"
+              ];
             };
             nixfmt = {
               enable = true;

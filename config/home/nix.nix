@@ -83,9 +83,9 @@ in
     nix = {
       gc = {
         automatic = true;
-        dates = "monthly";
+        dates = "weekly";
         persistent = true;
-        options = "--delete-older-than 31d";
+        options = "--delete-older-than 14d";
       };
 
       # Default to the current nix

@@ -21,7 +21,8 @@ in
 
     # bluetooth frontend
     services.blueman.enable = true;
-    baseline.homeCommon.services.blueman-applet.enable = true;
+    # disabled in favor of waybar
+    # baseline.homeCommon.services.blueman-applet.enable = true;
 
     baseline = {
       greetd.enable = true;

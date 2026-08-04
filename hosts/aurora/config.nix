@@ -10,6 +10,32 @@ let
 in
 {
   config = mkIf (host == "aurora") {
+    # Hardware
+    hardware.facter.reportPath = ./facter.json;
+    hardware.facter.enable = true;
+
+    # TODO(tgallion): Add this to facter
+    hardware.keyboard.qmk.enable = true;
+    boot.kernelModules = [ "nct6687d" ];
+    boot.extraModulePackages = with config.boot.kernelPackages; [ nct6687d ];
+
+    # TODO(tgallion): Move to disko
+    fileSystems."/" = {
+      device = "/dev/disk/by-uuid/08a834fe-8fb3-4231-991a-cbcde5ad4fd9";
+      fsType = "ext4";
+    };
+
+    fileSystems."/boot" = {
+      device = "/dev/disk/by-uuid/FD8D-57C9";
+      fsType = "vfat";
+      options = [
+        "fmask=0077"
+        "dmask=0077"
+      ];
+    };
+
+    swapDevices = [ ];
+
     # Modules
     baseline = {
       audio.enable = true;
@@ -19,6 +45,7 @@ in
     };
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
+    boot.loader.systemd-boot.consoleMode = "max";
     boot.loader.efi.canTouchEfiVariables = true;
 
     # Configure keymap in X11
@@ -42,22 +69,6 @@ in
       nvtopPackages.amd
     ];
 
-    # make sure that tuigreet scales correctly
-    services.greetd.settings.outputs = [
-      {
-        connector = "DP-1";
-        enabled = false;
-      }
-      {
-        connector = "DP-2";
-        enabled = false;
-      }
-      {
-        connector = "DP-3";
-        primary = true;
-      }
-    ];
-
     # common home-manager options
     baseline.homeCommon = {
       services.kanshi = {
@@ -75,7 +86,7 @@ in
                   mode = "--custom 2560x1440@169.83Hz";
                 }
                 {
-                  criteria = "DP-1";
+                  criteria = "DP-3";
                   status = "enable";
                   scale = 1.0;
                   position = "0,0";

@@ -70,7 +70,7 @@ in
     nixosConfigurations =
       (mkNixOSHost "corona" [ ./corona/hardware.nix ])
       // (mkNixOSHost "piezo" [ ./piezo ])
-      // (mkNixOSHost "aurora" [ ./aurora/hardware.nix ]);
+      // (mkNixOSHost "aurora" [ ]);
 
     homeConfigurations = mkHomeManagerHost "tgallion" "corona";
   }

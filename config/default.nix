@@ -62,6 +62,7 @@ in
         displays = ./nixos/displays.nix;
         "25-05-compat" = ./nixos/25-05-compat.nix;
         obs-studio = ./nixos/obs-studio.nix;
+        facter = ./nixos/facter.nix;
       })
       // shared
       // nixosUpstream;
