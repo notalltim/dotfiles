@@ -35,24 +35,36 @@ in
         key = "${config.home.homeDirectory}/.ssh/id_${config.home.username}.pub";
       };
 
-      includes = [
-        {
-          contents = {
-            core = {
-              editor = mkIf nixvimEnabled "nvim";
-              autocrlf = mkDefault "input";
-              fsmonitor = mkDefault true;
-            };
-            color = {
-              ui = mkDefault "auto";
-            };
-            push = {
-              autoSetupRemote = mkDefault true;
-            };
-            gpg.ssh.allowedSignersFile = "${config.xdg.configHome}/git/allowed_signers";
-          };
-        }
-      ];
+      settings = {
+        core = {
+          editor = mkIf nixvimEnabled "nvim";
+          autocrlf = mkDefault "input";
+          fsmonitor = mkDefault true;
+        };
+
+        column.ui = "auto";
+        tag.sort = "version:refname";
+        branch.sort = "-committerdate";
+        help.autocorrect = "prompt";
+
+        diff = {
+          coloredMove = true;
+          mnemonicPrefix = true;
+          renames = true;
+          algorithm = "histogram";
+        };
+
+        merge.conflictStyle = "zdiff3";
+        rerere.enable = true;
+        color = {
+          ui = mkDefault "auto";
+        };
+        push = {
+          autoSetupRemote = mkDefault true;
+        };
+        rebase.updateRefs = true;
+        gpg.ssh.allowedSignersFile = "${config.xdg.configHome}/git/allowed_signers";
+      };
     };
   };
 }

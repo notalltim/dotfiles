@@ -22,9 +22,9 @@ in
     programs.nixvim = {
       extraPlugins = [ pkgs.vimPlugins.nvim-web-devicons ];
 
-      plugins.git-conflict = {
+      plugins.conflict = {
         enable = true;
-        settings.disable_diagnostics = true;
+        settings.default_mappings.none = "cn";
       };
 
       plugins.gitsigns.enable = true;
