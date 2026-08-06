@@ -125,10 +125,7 @@ in
         substituters = [ "https://cache.nixos.org" ];
         trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
       }
-      // optionalAttrs (nixVerAtLeast "2.20") {
-        upgrade-nix-store-path-url = "https://install.determinate.systems/nix-upgrade/stable/universal";
-        always-allow-substitutes = true;
-      };
+      // optionalAttrs (nixVerAtLeast "2.20") { always-allow-substitutes = true; };
     };
   };
 }

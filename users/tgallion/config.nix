@@ -115,14 +115,16 @@ mkIf (user.name == "tgallion") {
       "self" = {
         url = "path:${config.baseline.nix.flakeSource}";
         outputs = [
-          "hello"
+          "legacyPackages.x86_64-linux.hello"
           {
-            path = "hello-cpp";
+            path = "legacyPackages.x86_64-linux.hello-cpp";
             keepBuildDependencies = true;
             additionalOutputs = [ "debug" ];
           }
         ];
+
       };
+      "github:notalltim/dotfiles".outputs = [ "nixosConfigurations.aurora.config.system.build.toplevel" ];
     };
   };
 

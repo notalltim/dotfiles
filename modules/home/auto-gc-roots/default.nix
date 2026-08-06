@@ -42,6 +42,7 @@ let
     name = "refresh-gc-roots";
     runtimeInputs = with pkgs; [
       cfg.nixPackage
+      nix-eval-jobs
       jq
     ];
     text =
@@ -75,36 +76,28 @@ let
               '')
               + (optionalString (flake.outputs != [ ]) (
                 let
-                  outputs = builtins.foldl' (
-                    acc: output: acc ++ [ output.path ] ++ (map (add: "${output.path}.${add}") output.additionalOutputs)
-                  ) [ ] flake.outputs;
+                  outputPaths = map (output: output.path) flake.outputs;
+                  outputName = output: builtins.replaceStrings [ "." ] [ "-" ] output.path;
                 in
-
                 ''
-                  echo "Building outputs ${builtins.concatStringsSep " " outputs} of ${flake.name} from ${flake.url} (rev: $FLAKE_REV)"
+                  echo "Building outputs ${builtins.concatStringsSep " " outputPaths} of ${flake.name} from ${flake.url} (rev: $FLAKE_REV)"
                   # Build the set of outputs and link them to the correct location\n# shellcheck disable=SC2129
                   nix-build ${flakeDerivationsExpression} --no-out-link \
-                                                            --argstr nixBuildOutput "$(nix build --no-link --json ${
-                                                              concatMapStringsSep " " (output: "${flake.url}#${output}") outputs
-                                                            })" \
+                                                            --argstr nixBuildOutput "$(nix-eval-jobs --flake ${flake.url} --select 'flake: { ${
+                                                              concatMapStringsSep " " (
+                                                                output:
+                                                                "${outputName output} = flake.${output.path};${optionalString output.keepBuildDependencies " ${outputName output}-inputDerivation = flake.${output.path}.inputDerivation;"}"
+                                                              ) flake.outputs
+                                                            }}' | jq -s '${
+                                                              builtins.toJSON (
+                                                                builtins.listToAttrs (
+                                                                  map (output: (lib.nameValuePair (outputName output) output.additionalOutputs)) flake.outputs
+                                                                )
+                                                              )
+                                                            } as $rules | map(.attr as $a | if $rules[$a] then .outputs |= with_entries(select(.key as $k | any($rules[$a][]; . == $k))) else . end)')" \
                                                             --argstr name "${flake.name}-output-closure" \
                                                             --arg nixpkgs ${pkgs.path} >> "$TMPFILE"
                 ''
-                + (
-                  let
-                    buildOutputs = builtins.filter (output: output.keepBuildDependencies) flake.outputs;
-                  in
-                  optionalString (buildOutputs != [ ]) (
-                    "echo \"Caching build dependencies of ${
-                      concatMapStringsSep " " (output: output.path) buildOutputs
-                    } for ${flake.name} from ${flake.url} (rev: $FLAKE_REV) \"\n"
-                    + "# Build the set of inputDerivations\n# shellcheck disable=SC2129\nnix build --no-link --print-out-paths \\\n\t\t\t"
-                    + (concatMapStringsSep "\\\n\t\t\t" (
-                      output: "${flake.url}#${output.path}.inputDerivation "
-                    ) buildOutputs)
-                    + ">> \"$TMPFILE\"\n"
-                  )
-                )
               ))
             ) flakes
           ))
@@ -161,26 +154,39 @@ in
                 };
                 outputs = mkOption {
                   type = listOf (
-                    coercedTo str (p: if builtins.isAttrs p then p else { path = p; }) (submodule {
-                      options = {
-                        path = mkOption {
-                          type = str;
-                          description = "Path to the flake output to create a gc root for";
-                          example = "devShells.x86_64-linux.default";
-                        };
-                        additionalOutputs = mkOption {
-                          type = listOf str;
-                          default = [ ];
-                          example = literalExpression "[ \"dev\"  \"doc\"]";
-                          description = "Additonal outputs to build such as `dev` or `doc`";
-                        };
-                        keepBuildDependencies = mkOption {
-                          type = bool;
-                          default = false;
-                          description = "Add a gc root for the `inputDerivation` which will link the build time dependencies";
-                        };
-                      };
-                    })
+                    coercedTo str (p: if builtins.isAttrs p then p else { path = p; }) (
+                      submodule (
+                        { config, ... }: {
+                          options = {
+                            path = mkOption {
+                              type = str;
+                              description = "Path to the flake output to create a gc root for";
+                              example = "devShells.x86_64-linux.default";
+                            };
+                            additionalOutputs = mkOption {
+                              type = listOf str;
+                              default = [ ];
+                              example = literalExpression "[ \"dev\"  \"doc\"]";
+                              description = "Additonal outputs to build such as `dev` or `doc`";
+                            };
+                            keepBuildDependencies = mkOption {
+                              type = bool;
+                              default = false;
+                              description = "Add a gc root for the `inputDerivation` which will link the build time dependencies";
+                            };
+                            outputs = mkOption {
+                              type = listOf str;
+                              default = [ "out" ];
+                              example = literalExpression "[ \"out\" \"dev\" \"doc\"]";
+                              description = "Outputs to build";
+                            };
+                          };
+                          config = {
+                            outputs = [ "out" ] ++ config.additionalOutputs;
+                          };
+                        }
+                      )
+                    )
                   );
                   default = [ ];
                   description = ''
@@ -205,10 +211,10 @@ in
             # registry also works
             nixpkgs = {
               outputs = [
-                "hello"
+                "legacyPackages.x86_64-linux.hello"
                 {
                   # cache build dependencies
-                  path = "hello-cpp";
+                  path = "legacyPackages.x86_64-linux.hello-cpp";
                   keepBuildDependencies = true;
                 }
               ];
