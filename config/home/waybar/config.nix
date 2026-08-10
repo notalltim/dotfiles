@@ -40,8 +40,8 @@ in
     };
     clock = {
       timezone = "America/New_York";
-      format = "{:%H:%M}  ";
-      format-alt = "{:%A, %B %d, %Y (%R)}  ";
+      format = "{:%H:%M} ";
+      format-alt = "{:%A, %B %d, %Y (%R)}";
       tooltip-format = "<tt><small>{calendar}</small></tt>";
       calendar = {
         mode = "year";
@@ -90,7 +90,7 @@ in
         "(.*) - Brave Search" = "$1";
         "(.*) - Outlook" = "$1";
         "(.*) Microsoft Teams" = "$1";
-        "Zellij (.*) - (.*)" = "$2";
+        "Zellij (.*) | (.*)" = "$2";
         "(.*) - Mozilla Firefox" = "$1";
       };
       separate-outputs = true;
@@ -145,8 +145,8 @@ in
         car = "";
         default = [
           ""
-          " "
-          " "
+          ""
+          ""
         ];
       };
     };
@@ -161,6 +161,7 @@ in
     };
     tray = {
       spacing = 10;
+      ignore-list = [ "ulauncher" ];
     };
     modules-left = [
       "custom/launcher"
