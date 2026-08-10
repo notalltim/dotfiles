@@ -65,6 +65,7 @@ in
           comma-with-db
           nix-melt
           nix-output-monitor
+          nix-eval-jobs
         ]);
       file."${config.xdg.cacheHome}/nix-index/files".source = pkgs.nix-index-database;
 

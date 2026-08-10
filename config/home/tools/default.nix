@@ -23,6 +23,7 @@ in
     baseline.git.enable = mkDefault true;
     baseline.debugging.enable = mkDefault true;
     programs.bat.enable = true;
+    programs.jq.enable = true;
 
     home.packages = with pkgs; [
       clang-tools
