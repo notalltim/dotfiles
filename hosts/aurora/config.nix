@@ -18,6 +18,21 @@ in
     hardware.keyboard.qmk.enable = true;
     boot.kernelModules = [ "nct6687d" ];
     boot.extraModulePackages = with config.boot.kernelPackages; [ nct6687d ];
+    # TODO: add this to a module
+    power.ups = {
+      enable = true;
+      mode = "standalone";
+      ups."MAIN-UPS" = {
+        description = "Cyber Power System, Inc. PR1500LCDRT2U UPS";
+
+        # driver name from https://networkupstools.org/stable-hcl.html
+        driver = "usbhid-ups";
+
+        # usbhid-ups driver always use value "auto"
+        port = "auto";
+      };
+      upsmon.enable = false;
+    };
 
     # TODO(tgallion): Move to disko
     fileSystems."/" = {
