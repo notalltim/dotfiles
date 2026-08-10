@@ -153,7 +153,7 @@ in
                 "@nix-manual"
               ];
             };
-
+            # TODO: migrate to search.nixos.org
             home-manager = {
               name = "Home Manager";
               urls = [
@@ -218,6 +218,19 @@ in
               definedAliases = [
                 "@nv"
                 "@nixvim"
+              ];
+            };
+
+            nerd-font = {
+              name = "Nerd Font Icons";
+              urls = [
+                { template = "https://www.nerdfonts.com/cheat-sheet?q={searchTerms}"; }
+              ];
+              iconMapObj."16" = "https://www.nerdfonts.com/assets/img/favicon.ico";
+
+              definedAliases = [
+                "@nf"
+                "@nerdfont"
               ];
 
             };
