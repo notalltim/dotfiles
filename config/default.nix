@@ -44,6 +44,7 @@ in
         spotify = ./home/spotify.nix;
         "25-05-compat" = ./home/25-05-compat.nix;
         obs-studio = ./home/obs-studio.nix;
+        flameshot = ./home/flameshot.nix;
       })
       // shared
       // homeUpstream;
@@ -63,6 +64,7 @@ in
         "25-05-compat" = ./nixos/25-05-compat.nix;
         obs-studio = ./nixos/obs-studio.nix;
         facter = ./nixos/facter.nix;
+        udisk = ./nixos/udisk.nix;
       })
       // shared
       // nixosUpstream;

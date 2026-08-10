@@ -20,5 +20,21 @@ final: prev: {
       hash = "sha256-5Q4E8nnmQ109gcfxxctn/rne5N4Qvz2Pft6o7as2fSc=";
     };
   };
+  # Needed because 14 actually supports wayland and 26.05 is stuck on 13.3
+  flameshot = prev.flameshot.overrideAttrs (
+    finalAttrs: _oldAttrs: {
+      version = "14.0.0";
+      patches = [
+        ./load-missing-deps.patch
+        ./macos-build.patch
+      ];
+      src = final.fetchFromGitHub {
+        owner = "flameshot-org";
+        repo = "flameshot";
+        tag = "v${finalAttrs.version}";
+        hash = "sha256-GnJ3nOJyyqQbCTMrTYhnQfEOXqCy0x3IapX/PsaZ3VI=";
+      };
+    }
+  );
 
 }
