@@ -30,10 +30,18 @@ in
         enable = true;
         common = {
           uwsm = true;
-          # nvidia = true;
         };
       };
     };
+
+    # TODO: settle on wether to drive this from nixos or home-manager
+    # Automatic mounting of removable drives
+    services.udisks2.enable = true;
+    # Network file shares with nemo
+    services.gvfs.enable = true;
+
+    # Allow services to save passwords to a consistent location
+    services.gnome.gnome-keyring.enable = true;
 
     environment.systemPackages = with pkgs; [
       kdePackages.qtwayland
