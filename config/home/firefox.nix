@@ -153,12 +153,11 @@ in
                 "@nix-manual"
               ];
             };
-            # TODO: migrate to search.nixos.org
             home-manager = {
               name = "Home Manager";
               urls = [
                 {
-                  template = "https://home-manager-options.extranix.com";
+                  template = "https://search.nixos.org/options";
                   params = [
                     {
                       name = "query";
@@ -167,6 +166,14 @@ in
                     {
                       name = "release";
                       value = "release-${release}";
+                    }
+                    {
+                      name = "source";
+                      value = "home_manager";
+                    }
+                    {
+                      name = "type";
+                      value = "options";
                     }
                   ];
                 }
