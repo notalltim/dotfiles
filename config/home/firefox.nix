@@ -230,9 +230,7 @@ in
 
             nerd-font = {
               name = "Nerd Font Icons";
-              urls = [
-                { template = "https://www.nerdfonts.com/cheat-sheet?q={searchTerms}"; }
-              ];
+              urls = [ { template = "https://www.nerdfonts.com/cheat-sheet?q={searchTerms}"; } ];
               iconMapObj."16" = "https://www.nerdfonts.com/assets/img/favicon.ico";
 
               definedAliases = [

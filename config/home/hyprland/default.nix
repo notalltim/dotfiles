@@ -35,12 +35,7 @@ let
     _args = [
       (mkModifier mod key)
       (mkLuaInline dispatcher)
-      (
-        {
-          inherit description;
-        }
-        // (builtins.listToAttrs (map (flag: lib.nameValuePair flag true) flags))
-      )
+      ({ inherit description; } // (builtins.listToAttrs (map (flag: lib.nameValuePair flag true) flags)))
     ];
   };
 
@@ -97,18 +92,12 @@ let
 
   mkRepeatingBinds =
     mkMultiBindWithFlags
-      [
-        "locked"
-        "repeat"
-      ]
+      [ "locked" "repeat" ]
       [ "XF86AudioRaiseVolume" "XF86AudioLowerVolume" "XF86MonBrightnessUp" "XF86MonBrightnessDown" ]
       null;
   mkMediaBinds =
     mkMultiBindWithFlags
-      [
-        "locked"
-        "repeat"
-      ]
+      [ "locked" "repeat" ]
       [
         "XF86AudioMute"
         "XF86AudioMicMute"
@@ -289,64 +278,60 @@ in
                     name
                     {
                       type = "bezier";
-                      points = mkLuaInline "{ ${
-                        (lib.concatMapStringsSep ", " (point: "{ ${toString point.x}, ${toString point.y} }") points)
-                      } }";
+                      inherit points;
                     }
                   ];
               in
               [
                 (mkBezierCurve "easeOutQuint" [
-                  {
-                    x = 0.23;
-                    y = 1.;
-
-                  }
-                  {
-                    x = 0.32;
-                    y = 1.;
-                  }
+                  [
+                    0.23
+                    1.
+                  ]
+                  [
+                    0.32
+                    1.
+                  ]
                 ])
                 (mkBezierCurve "easeInOutCubic" [
-                  {
-                    x = 0.65;
-                    y = 0.05;
-
-                  }
-                  {
-                    x = 0.36;
-                    y = 1.;
-                  }
+                  [
+                    0.65
+                    0.05
+                  ]
+                  [
+                    0.36
+                    1.
+                  ]
                 ])
                 (mkBezierCurve "linear" [
-                  {
-                    x = 0.0;
-                    y = 0.0;
-                  }
-                  {
-                    x = 1.0;
-                    y = 1.0;
-                  }
+                  [
+                    0.0
+                    0.0
+                  ]
+                  [
+                    1.0
+                    1.0
+                  ]
                 ])
                 (mkBezierCurve "almostLinear" [
-                  {
-                    x = 0.5;
-                    y = 0.5;
-                  }
-                  {
-                    x = 0.75;
-                    y = 1.0;
-                  }
+                  [
+                    0.5
+                    0.5
+                  ]
+                  [
+                    0.75
+                    1.0
+                  ]
                 ])
                 (mkBezierCurve "quick" [
-                  {
-                    x = 0.15;
-                    y = 0.0;
-                  }
-                  {
-                    x = 0.1;
-                    y = 1.;
-                  }
+                  [
+                    0.15
+                    0.0
+                  ]
+                  [
+                    0.1
+                    1.
+                  ]
                 ])
               ];
             animation =
@@ -356,10 +341,7 @@ in
                   mkMultiArgFunction [
                     (
                       {
-                        inherit
-                          leaf
-                          speed
-                          ;
+                        inherit leaf speed;
                         # TODO(tgallion): this sucks because now we need to pass around the curve type :(
                         bezier = curve;
 
@@ -477,10 +459,10 @@ in
               (
                 key:
                 {
-                  "XF86AudioRaiseVolume" = "Volume up";
-                  "XF86AudioLowerVolume" = "Volume down";
-                  "XF86MonBrightnessUp" = "Brightnesss up";
-                  "XF86MonBrightnessDown" = "Brightnesss down";
+                  XF86AudioRaiseVolume = "Volume up";
+                  XF86AudioLowerVolume = "Volume down";
+                  XF86MonBrightnessUp = "Brightnesss up";
+                  XF86MonBrightnessDown = "Brightnesss down";
                 }
                 .${key}
               )
@@ -503,12 +485,12 @@ in
               (
                 key:
                 {
-                  "XF86AudioMute" = "Mute audio";
-                  "XF86AudioMicMute" = "Mute microphone";
-                  "XF86AudioNext" = "Next track";
-                  "XF86AudioPrev" = "Previous track";
-                  "XF86AudioPlay" = "Play";
-                  "XF86AudioPause" = "Pause";
+                  XF86AudioMute = "Mute audio";
+                  XF86AudioMicMute = "Mute microphone";
+                  XF86AudioNext = "Next track";
+                  XF86AudioPrev = "Previous track";
+                  XF86AudioPlay = "Play";
+                  XF86AudioPause = "Pause";
                 }
                 .${key}
               )
@@ -517,7 +499,7 @@ in
                 let
                   command =
                     {
-                      "XF86AudioMute" = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+                      XF86AudioMute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
                       XF86AudioMicMute = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
                       XF86AudioNext = "playerctl next";
                       XF86AudioPrev = "playerctl previous";
@@ -528,8 +510,7 @@ in
                 in
                 "hl.dsp.exec_cmd(\"${command}\")"
               )
-            )
-            ++ [ ];
+            );
           }
           # Winow rules
           {
@@ -614,7 +595,7 @@ in
             workspace_rule = [
               {
                 workspace = "special:magic";
-                on_created_empty = (mkLuaInline "terminal");
+                on_created_empty = mkLuaInline "terminal";
               }
             ];
           }
