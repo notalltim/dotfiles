@@ -26,7 +26,8 @@ in
     (mkIf cfg.enable {
 
       xdg.enable = true;
-
+      xdg.userDirs.enable = true;
+      xdg.userDirs.setSessionVariables = false;
       news.display = "silent";
       manual = {
         html.enable = true;

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  baselineLib,
   ...
 }:
 {
@@ -20,9 +21,7 @@
     };
     wayland.windowManager.hyprland.settings = {
       #TODO: Create bindings for sreenshots
-      bind = [
-
-      ];
+      bind = [ (baselineLib.hypr.mkBind null "Print" "Screenshot" "hl.dsp.exec_cmd(\"flameshot gui\")") ];
       window_rule = [
         {
           match.class = "flameshot";

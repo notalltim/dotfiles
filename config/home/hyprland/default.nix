@@ -4,6 +4,7 @@
   lib,
   pkgs,
   wrapHyprCommand,
+  baselineLib,
   ...
 }:
 let
@@ -22,24 +23,15 @@ let
     ;
   inherit (lib.types) str attrsOf;
   inherit (lib.generators) mkLuaInline;
+  inherit (baselineLib.hypr)
+    mkVar
+    mkMultiArgFunction
+    mkBindWithFlags
+    mkBind
+    mkMultiBindWithFlags
+    mkMultiBind
+    ;
   cfg = config.baseline.hyprland;
-
-  # TODO: move all these to a lib so that other modules can declare bindings
-  mkVar = val: { _var = val; };
-
-  mkModifier = mod: keys: if mod != null then mkLuaInline "${mod} .. \" + ${keys}\"" else keys;
-
-  mkMultiArgFunction = args: { _args = args; };
-
-  mkBindWithFlags = flags: mod: key: description: dispatcher: {
-    _args = [
-      (mkModifier mod key)
-      (mkLuaInline dispatcher)
-      ({ inherit description; } // (builtins.listToAttrs (map (flag: lib.nameValuePair flag true) flags)))
-    ];
-  };
-
-  mkBind = mkBindWithFlags [ ];
 
   toDir =
     key:
@@ -61,17 +53,6 @@ let
     }
     .${key};
 
-  mkMultiBindWithFlags =
-    flags: keys: mod: descriptionByKey: dispatcherByKey:
-    map (
-      key:
-      let
-        evalByKey = byKey: if builtins.isFunction byKey then byKey key else byKey;
-      in
-      mkBindWithFlags flags mod key (evalByKey descriptionByKey) (evalByKey dispatcherByKey)
-    ) keys;
-
-  mkMultiBind = mkMultiBindWithFlags [ ];
   mkLRBinds = mkMultiBind [
     "left"
     "right"
@@ -145,8 +126,6 @@ in
       # Make QT apps happy
       baseline.hyprland.sessionVariables = {
         QT_QPA_PLATFORM = "wayland";
-        XCURSOR_SIZE = "16";
-        HYPRCURSOR_SIZE = "16";
       };
 
       # Wrapping all executables called from hyprland. This will wrap
@@ -158,6 +137,8 @@ in
     # Hyprland
     (mkIf cfg.enable {
       home = {
+        # TODO(26.11): Remove this once upstream handles this
+        pointerCursor.hyprcursor.enable = true;
         packages =
           with pkgs;
           [

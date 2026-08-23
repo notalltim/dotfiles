@@ -17,6 +17,8 @@ in
       adwaita-qt6
       adw-gtk3
     ];
+    # TODO(26.11): Remove this once upstream handles this
+    home.pointerCursor.enable = true;
     stylix = {
       overlays.enable = false;
       targets = {
