@@ -91,7 +91,12 @@ let
                                                             }}' | jq -s '${
                                                               builtins.toJSON (
                                                                 builtins.listToAttrs (
-                                                                  map (output: (lib.nameValuePair (outputName output) output.additionalOutputs)) flake.outputs
+                                                                  map (
+                                                                    output:
+                                                                    (lib.nameValuePair (outputName output) (
+                                                                      output.outputs ++ lib.optional output.keepBuildDependencies "inputDerivation"
+                                                                    ))
+                                                                  ) flake.outputs
                                                                 )
                                                               )
                                                             } as $rules | map(.attr as $a | if $rules[$a] then .outputs |= with_entries(select(.key as $k | any($rules[$a][]; . == $k))) else . end)')" \

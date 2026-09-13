@@ -24,9 +24,7 @@ mkIf (user.name == "tgallion") {
       jellyfin-media-player
       discord
       radeontop
-      # bitwarden-desktop
       audacity
-      mprime
       kanshi
       read-edid
       edid-decode
@@ -34,6 +32,7 @@ mkIf (user.name == "tgallion") {
       pciutils
       glib
       avahi
+      mpvpaper
     ];
   };
   programs.fish.functions = {
@@ -119,7 +118,7 @@ mkIf (user.name == "tgallion") {
           {
             path = "legacyPackages.x86_64-linux.hello-cpp";
             keepBuildDependencies = true;
-            additionalOutputs = [ "debug" ];
+            # additionalOutputs = [ "debug" ];
           }
         ];
 
