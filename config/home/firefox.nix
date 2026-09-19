@@ -46,6 +46,15 @@ in
 
         settings = {
           "extensions.autoDisableScopes" = 0;
+          # Disables recommended stories (Pocket) on the Home/New Tab page
+          "browser.newtabpage.activity-stream.feeds.system.topstories" = false;
+
+          # Optional: Completely disable Pocket browser integration if desired
+          "extensions.pocket.enabled" = false;
+
+          # Optional: Disable sponsored shortcuts/stories on the New Tab page
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
         };
 
         bookmarks = {
