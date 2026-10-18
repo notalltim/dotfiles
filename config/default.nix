@@ -45,6 +45,7 @@ in
         "25-05-compat" = ./home/25-05-compat.nix;
         obs-studio = ./home/obs-studio.nix;
         flameshot = ./home/flameshot.nix;
+        claude = ./home/claude.nix;
       })
       // shared
       // homeUpstream;

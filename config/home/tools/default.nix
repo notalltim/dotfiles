@@ -59,7 +59,7 @@ in
       # fido2-token
       libfido2
       # GUI tools
-      solaar
+      # solaar
       openvpn3
       inkscape
       gimp
