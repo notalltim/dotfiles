@@ -11,19 +11,25 @@ in
 {
   options.baseline.claudecode-nvim = {
     enable = mkEnableOption "Enable claudecode.nvim integration";
+    src = lib.mkOption {
+      type = lib.types.pathInStore;
+      description = "Source for the plugin";
+      default = pkgs.fetchFromGitHub {
+        owner = "coder";
+        repo = "claudecode.nvim";
+        rev = "6ad8e0fdbda84486f13f7f1fa4802942f4877f13";
+        sha256 = "sha256-omHrOlIFqRbiEO3Oqr5DNnlq04C69bzS567PgplBGKc=";
+      };
+
+    };
   };
   config = mkIf cfg.enable {
     programs.nixvim = {
       extraPlugins = [
-        (pkgs.vimUtils.buildVimPlugin rec {
+        (pkgs.vimUtils.buildVimPlugin {
           pname = "claudecode.nvim";
           version = "main";
-          src = pkgs.fetchFromGitHub {
-            owner = "coder";
-            repo = "claudecode.nvim";
-            rev = version;
-            sha256 = "sha256-EwR9IFpjPU55a25MpMqum5B2lfOT+Hsdrp8/o+tz594=";
-          };
+          inherit (cfg) src;
         })
       ];
 
